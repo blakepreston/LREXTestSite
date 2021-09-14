@@ -582,6 +582,8 @@ html, body{
         flex-direction: column;
     }
 
+    
+
     .homepage{
       display: none;
     }
@@ -599,7 +601,7 @@ html, body{
     }
 
     .mobileNavigation nav{
-      display: flex;
+      display: none;
     }
 
     .logo_nav img{
@@ -615,7 +617,7 @@ html, body{
     }
 
     .menu_icon{
-      width: 5vw;
+      width: 8vw;
       margin-left: 10px;
     }
 
