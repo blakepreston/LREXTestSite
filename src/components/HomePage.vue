@@ -665,6 +665,7 @@ html, body{
 /* || Shipment Offerings Syles */
   .container_offerings{
     width: 90vw;
+    margin-left: 3vw;
   }
 
   .offering_headers h1{
