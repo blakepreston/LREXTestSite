@@ -10,13 +10,34 @@
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans&display=swap" rel="stylesheet">
 </head>
 <body>
+  <div class="mobileNavigation">
+    <header>
+        <div class="logo_nav">
+            <a href="#"><img class="logo" src="../assets/lrexLogo.png" alt="LREX"></a>
+        </div>
+
+        <div class="create_account">
+          <button class="button_signin">Sign in</button>
+          <img src="../assets/Hamburger_icon.png" alt="" @click.prevent="moveNav" class="menu_icon">
+        </div>
+    </header>
+        <nav id="mobileLinks">
+            <ul class="nav_links">
+                <li><a href="#">Our solutions</a></li>
+                <li><a href="#">About us</a></li>
+                <li><a href="#">Get in touch</a></li>
+                <li><a href="#">Create an account</a></li>
+            </ul>
+        </nav>
+  </div>
+
   <div class="homepage">
     <header>
         <div class="logo_nav">
             <a href="#"><img class="logo" src="../assets/lrexLogo.png" alt="LREX"></a>
         <nav>
             <ul class="nav_links">
-                <li><a href="">Our solutions</a></li>
+                <li><a href="#">Our solutions</a></li>
                 <li><a href="#">About us</a></li>
                 <li><a href="#">Get in touch</a></li>
                 
@@ -152,7 +173,20 @@
 </template>
 
 <script>
-
+  export default{
+    methods:{
+      moveNav(){
+      var x = document.getElementById("mobileLinks");
+      if (x.style.display === "block") {
+        x.style.display = "none";
+        x.style.transitionDuration = "1s"
+      } else {
+        x.style.display = "block";
+        x.style.transitionDuration = "1s"
+        }
+      }
+    }
+  }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -162,6 +196,10 @@ html, body{
   width: 100%;
 }
 /* || Header Syles */
+    .mobileNavigation{
+      display: none;
+    }
+
     .homepage{
       position: fixed;
       top: 0;
@@ -539,9 +577,46 @@ html, body{
 @media only screen and (max-width: 650px){
 /**************************/
 /* || Header Syles */
-  .nav_links li{
-        padding: 0px 10px;
-        margin-right: auto;
+  .nav_links{
+        display: flex;
+        flex-direction: column;
+    }
+
+    .homepage{
+      display: none;
+    }
+
+    .mobileNavigation{
+      display: block;
+      margin-bottom: 0;
+      position: fixed;
+      width: 100vw;
+      z-index: 10;
+      background-color: white;
+      top: 0;
+      left: 0;
+      box-shadow: 0 6px 6px -6px rgb(218, 218, 218);
+    }
+
+    .mobileNavigation nav{
+      display: flex;
+    }
+
+    .logo_nav img{
+      width: 30vw;
+    }
+
+    .create_account button{
+      font-size: 3vw;
+    }
+
+    .nav_links li{
+      margin-bottom: 5vw;
+    }
+
+    .menu_icon{
+      width: 5vw;
+      margin-left: 10px;
     }
 
 /**************************/
