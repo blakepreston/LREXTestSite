@@ -544,14 +544,6 @@ html, body{
         margin-right: auto;
     }
 
-  header{
-    font-size: 2vw;
-  }
-
-  .button_signin{
-    font-size: 2vw;
-  }
-
 /**************************/
 /* || Shipment Tracking Syles */
   .track_package{
