@@ -651,6 +651,10 @@ html, body{
     padding: 15px;
   }
 
+  .footer_dino{
+    margin-left: 30vw;
+  }
+
   .footer_dino img{
   top: 1.5em;
   }
