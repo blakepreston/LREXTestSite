@@ -16,7 +16,7 @@
             <a href="#"><img class="logo" src="../assets/lrexLogo.png" alt="LREX"></a>
         <nav>
             <ul class="nav_links">
-                <li><a href="">Our solutions</a></li>
+                <li><a href="#">Our solutions</a></li>
                 <li><a href="#">About us</a></li>
                 <li><a href="#">Get in touch</a></li>
                 
@@ -31,81 +31,47 @@
     </header>
   </div>
 
-  <div class="track_package">
+  <div class="ship_with_us">
         <img src="../assets/Delivery-Truck.jpg" alt="Truck">
-        <div class="form_shiptrack">
-            <h1>Big Headline.</h1>
-            <p>Track a package</p>
-                <form>
-                    <input type="text" name="shipmentId"> <br>
-                </form>
+        <div class="ship_with_us_layout">
+            <h1>Ship with us.</h1>
+            <p>Subcopy.</p>
+                <button>Create an account</button>
         </div>
     </div>
 
-    <div class="lrex_paragraph">
-      <p>
-        A short paragraph that summarizes
-        the value of working with a partner like LRex and talks
-        briefly about our history and ambitions.
-      </p>
-    </div>
-
-    <!-- <div>
-        <scrollview  :data-source-ref="'datasource1'"
-                    :enable-pager="true"
-                    :template="itemTemplate"
-                    v-bind:style="{ height: '300px', width: '600px',background: '#eee'}"
-                    >
-        </scrollview>
-    </div> -->
-
-    <!-- Slider Goes Here -->
-
-    <!-- <div class="shipment_offerings">
-      <div class="same_day">
-        <h1>Same day</h1>
-        <p>A brief description of the same day offering.</p>
-      </div>
-        <div class="next_day">
-          <h1>Next day</h1>
-          <p>A brief description of the next day offering</p>
+    <div class="industry_solutions">
+        <h1>Industry Solutions</h1>
+        <div class="legal_solution">
+            <div>Legal</div>
+            <p>A longer description of legal
+                industry solutions.</p>
         </div>
-        <div class="dropbox_offering">
-          <h1>Find a dropbox</h1>
-          <p>A brief description of the dropbox offering.</p>
-        </div>
-    </div> -->
 
-    <div class="container_offerings">
-      <div class="offering_headers">
-        <h1>Same Day</h1>
-        <h1>Next day</h1>
-        <h1>Find a dropbox</h1>
-      </div>
-      <div class="offering_description">
-        <p>A brief description of the same day offering.</p>
-        <p>A brief description of the next day offering</p>
-        <p>A brief description of the dropbox offering.</p>
-      </div>
-    </div>
-    
-    <div class="headline_container">
-      <div class="headline_article">
-        <p>Leste ne ne et am lanihit iaeperuntibernam seque alicil ipsant.</p>
-        <p>Natecta turesti que nihit velest asperit, cus dolest, ne etur autatio
-            omnissi maiore conse mod quam,eic tem
-        </p>
-      </div>
-      <div class="headline_bubble">
-        <div>A headline about custom solutions</div>
-      </div>
+        <div class="realestate_solution">
+            <div>Real Estate</div>
+            <p>A longer description of real estate
+                industry solutions.</p>
+        </div>
+
+        <div class="pharma_solution">
+            <div>Pharma</div>
+            <p>A longer description of pharma
+                industry solutions.</p>
+        </div>
+
+        <div class="general_solution">
+            <div>General</div>
+            <p>A longer description of general
+                industry solutions.</p>
+        </div>
     </div>
 
     <div class="headline_recruiting">
-      <h1>Headline about recruiting</h1>
-      <p>Learn about working for Lrex</p>
+      <!-- <h1>Headline about recruiting</h1>
+      <p>Learn about working for Lrex</p> -->
       <img src="../assets/delivery-woman.jpg" alt="">
-      <div class="drive_with_us"><a href="">Drive with us</a></div>
+      <div class="sign_up"><a href="">Sign Up</a></div>
     </div>
 
     <div class="footer">
@@ -240,7 +206,7 @@ html, body{
 /**************************************/
 /* || Shipment Tracking Syles */
 
-    .form_shiptrack{
+    .ship_with_us_layout{
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
@@ -249,13 +215,13 @@ html, body{
         right: 20vw;
     }
 
-    .form_shiptrack h1{
+    .ship_with_us_layout h1{
         display: flex;
         font-size: 4.5vw;
         margin-bottom: 0;
     }
 
-    .form_shiptrack p{
+    .ship_with_us_layout p{
         display: flex;
         color: white;
         z-index: 5;
@@ -263,148 +229,168 @@ html, body{
         margin-top: 20px;
     }
 
-    .form_shiptrack input{
+    .ship_with_us_layout button{
         display: flex;
-        padding: 1.5vw;
-        padding-right: 30vw;
-        background-color: white;
-        border: none;
-        border-radius: 50px;
-        cursor: pointer;
-        transition: all 0.3s ease 0s;
-    }
-
-    .form_shiptrack button{
-        display: flex;
-        padding: 15px 20px;
+        padding: 1vw;
         background-color: #33f18a;
         border: none;
         border-radius: 50px;
         cursor: pointer;
         transition: all 0.3s ease 0s;
+        font-size: 2vw;
+        width: 20vw;
+        justify-content: center;
     }
 
-    .track_package{
+    .ship_with_us{
         position: relative;
         display: flex;
         justify-content: center;
         margin-top: 20vh;
     }
 
-    .track_package img{
+    .ship_with_us img{
         position: absolute;
         z-index: 1;
         width: 90vw;
         height: auto;
     }
 
-    .track_package h1{
+    .ship_with_us h1{
         position:relative;
         z-index:5;
         color:white;
     }
 
-    .track_package form{
+    .ship_with_us button{
         position:relative;
         z-index:5;
-        color:white;
+        color: black;
+        text-align: center;
     }
-/**************************************/
-/* || LREX Paragraph Syles */
-    .lrex_paragraph{
-      margin-top: 17vw;
-      z-index: 1;
-      display: flex;
-      justify-content: center;
-    }
-
-    .lrex_paragraph p{
-      font-family: 'Work Sans', sans-serif;
-      font-size: 2vw;
-      width: 55vw;
-      color: black;
-    }
-
-/**************************************/
-/* || Slider Syles */
-
-
 
 /**************************/
-/* || Shipment Offerings Syles */
-.container_offerings{
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  color: black;
-}
+/* || Industry Solutions Syles */
+    .industry_solutions{
+        font-family: 'Work Sans', sans-serif;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20%;
+    }
 
-.offering_headers{
-  margin-right: 5%;
-}
+    .industry_solutions h1{
+        color: black;
+        font-size: 4vw;
+    }
 
-.offering_description{
-  margin-left: 5%;
-}
+/*Legal*/
+    .legal_solution{
+        padding-top: 3vw;
+        border-top: black 2px solid;
+        width: 80vw;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+    }
 
-.offering_headers h1{
-  display: flex;
-  justify-content: flex-start;
-  font-family: 'Work Sans', sans-serif;
-  font-size: 4.5vw;
-  font-weight: bold;
-}
+    .legal_solution div{
+        background-color: black;
+        color: white;
+        padding-top: 5vw;
+        padding-bottom: 5vw;
+        width: 50vw;
+        border-radius: 55%;
+        font-size: 4vw;
+    }
 
-.offering_description p{
-  display: flex;
-  justify-content: flex-start;
-  margin-top: 12%;
-  margin-bottom: 12%;
-  font-family: 'Work Sans', sans-serif;
-  font-size: 2vw;
-}
+    .legal_solution p{
+        font-size: 2vw;
+        width: 40vw;
+    }
+/*Real Estate*/
+    .realestate_solution{
+        padding-top: 3vw;
+        border-top: black 2px solid;
+        width: 80vw;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+    }
 
-/**************************/
-/* || Custom Solutions Syles */
-.headline_container{
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  color: black;
-  margin-top: 5%;
-}
+    .realestate_solution div{
+        background-color: black;
+        color: white;
+        padding-top: 5vw;
+        padding-bottom: 5vw;
+        width: 50vw;
+        border-radius: 50% / 100%;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        font-size: 4vw;
+    }
 
-.headline_article{
-  margin-right: 5%;
-  width: 40vw;
-  display: flex;
-  flex-direction: column;
-}
+    .realestate_solution p{
+        font-size: 2vw;
+        width: 40vw;
+    }
 
-.headline_bubble{
-  margin-left: 5%;
-  width: 40vw;
-}
+/*Pharma*/
+    .pharma_solution{
+        padding-top: 3vw;
+        border-top: black 2px solid;
+        width: 80vw;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+    }
 
-.headline_article p{
-  display: flex;
-  font-family: 'Work Sans', sans-serif;
-  font-size: 2vw;
-  margin-top: 0;
-  text-align: left;
-}
+    .pharma_solution div{
+        background-color: black;
+        color: white;
+        padding-top: 5vw;
+        padding-bottom: 5vw;
+        width: 50vw;
+        border-radius: 200px;
+        font-size: 4vw;
+    }
 
-.headline_bubble div{
-  background-color: #308ef8;
-  font-family: 'Work Sans', sans-serif;
-  font-size: 4vw;
-  padding-top: 10%;
-  padding-bottom: 10%;
-  border-radius: 150px;
-}
+    .pharma_solution p{
+        font-size: 2vw;
+        width: 40vw;
+    }
+/*General*/
+        .general_solution{
+        padding-top: 3vw;
+        padding-bottom: 3vw;
+        border-top: black 2px solid;
+        border-bottom: black 2px solid;
+        width: 80vw;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+    }
 
+    .general_solution div{
+        background-color: black;
+        color: white;
+        padding-top: 5vw;
+        padding-bottom: 5vw;
+        width: 50vw;
+        /* border-radius: 200px; */
+        font-size: 4vw;
+        clip-path: polygon(0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%);
+    }
+
+    .general_solution p{
+        font-size: 2vw;
+        width: 40vw;
+    }
 /**************************/
 /* || Recruiting Syles */
 .headline_recruiting{
@@ -416,21 +402,6 @@ html, body{
   position: relative;
 }
 
-.headline_recruiting h1{
-  font-family: 'Work Sans', sans-serif;
-  font-size: 4.5vw;
-  font-weight: bold;
-  color: black;
-  margin-bottom: 0;
-}
-
-.headline_recruiting p{
-  justify-content: flex-start;
-  font-family: 'Work Sans', sans-serif;
-  font-size: 2vw;
-  color: black;
-}
-
 .headline_recruiting img{
   width: 60vw;
   border-radius: 600px 600px 0 0;
@@ -438,7 +409,7 @@ html, body{
   position: relative;
 }
 
-.drive_with_us{
+.sign_up{
   width: 15vw;
   height: 15vw;
   background-color: #33f18a;
@@ -447,11 +418,11 @@ html, body{
   align-items: center;
   border-radius: 180px;
   position: absolute;
-  top: 38vw;
+  top: 24vw;
   z-index: 5;
 }
 
-.drive_with_us a{
+.sign_up a{
   text-decoration: none;
   font-family: 'Work Sans', sans-serif;
   font-size: 2vw;
@@ -546,100 +517,87 @@ html, body{
 
 /**************************/
 /* || Shipment Tracking Syles */
-  .track_package{
+  .ship_with_us{
     margin-top: 10vh;
     height: 40vh;
     overflow: hidden;
   }
 
-  .track_package h1{
+  .ship_with_us h1{
     font-size: 8vw;
   }
 
-  .track_package p{
+  .ship_with_us p{
     font-size: 4vw;
   }
 
-  .track_package img{
+  .ship_with_us img{
     object-fit: cover;
     height: 40vh;
   }
 
-  .form_shiptrack{
+  .ship_with_us_layout{
         right: 15vw;
         margin-bottom: 15vw;
     }
 
-  .form_shiptrack input{
-    padding-right: 15vw;
-    padding: 1vw;
-  }
-
-/**************************************/
-/* || LREX Paragraph Syles */
-
-    .lrex_paragraph p{
-      margin-top: -3vw;
-      font-size: 4vw;
+    .ship_with_us_layout button{
+        font-size: 4vw;
+        width: 40vw;
     }
 
-/**************************************/
 /**************************/
-/* || Shipment Offerings Syles */
-  .container_offerings{
-    width: 90vw;
-  }
+/* || Industry Solutions Syles */
+.industry_solutions{
+    margin-top: 10%;
+}
 
-  .offering_headers h1{
-    font-size: 6.5vw;
-  }
-
-  .offering_description p{
-    font-size: 4vw;
-  }
-
-/**************************/
-/* || Custom Solutions Syles */
-  .headline_container{
-    flex-direction: column-reverse;
-  }
-
-  .headline_article{
-    width: 70vw;
-    margin-right: 0;
-    margin-top: 5vh;
-    margin-left: 5vw;
-  }
-
-  .headline_bubble{
-    width: 90vw;
-  }
-
-  .headline_article p{
-    font-size: 4vw;
-  }
-
-  .headline_bubble div{
+.industry_solutions h1{
     font-size: 8vw;
-  }
+}
 
+.legal_solution div{
+    font-size: 7vw;
+}
+
+.legal_solution p{
+    font-size: 4vw;
+}
+
+.realestate_solution div{
+    font-size: 7vw;
+}
+
+.realestate_solution p{
+    font-size: 4vw;
+}
+
+.pharma_solution div{
+    font-size: 7vw;
+}
+
+.pharma_solution p{
+    font-size: 4vw;
+}
+
+.general_solution div{
+    font-size: 7vw;
+}
+
+.general_solution p{
+    font-size: 4vw;
+}
 /**************************/
 /* || Recruiting Syles */
-.headline_recruiting h1{
-  font-size: 8vw;
-}
 
-.headline_recruiting p{
-  font-size: 4vw;
-}
 
-.drive_with_us{
-  top: 60vw;
+.sign_up{
+  top: 22vw;
   width: 18vw;
   height: 18vw;
 }
 
-.drive_with_us a{
+.sign_up a{
   font-size: 4vw;
   width: 10vw;
 }

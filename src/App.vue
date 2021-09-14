@@ -1,14 +1,20 @@
 <template>
   <HomePage/>
+  <OurSolutions/>
+  <AboutUs/>
 </template>
 
 <script>
 import HomePage from './components/HomePage.vue'
+import OurSolutions from './components/OurSolutions.vue'
+import AboutUs from './components/AboutUs.vue'
 
 export default {
   name: 'App',
   components: {
-    HomePage
+    HomePage,
+    OurSolutions,
+    AboutUs
   }
 }
 </script>
