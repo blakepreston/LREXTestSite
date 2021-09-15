@@ -745,7 +745,9 @@ html, body{
 
     .lrex_paragraph p{
       margin-top: -3vw;
+      margin-bottom: 5vw;
       font-size: 4vw;
+      width: 80vw;
     }
 
 /**************************************/
@@ -812,13 +814,14 @@ html, body{
   }
 
   .headline_article{
-    width: 70vw;
+    width: 80vw;
     margin-right: 0;
     margin-top: 5vh;
     margin-left: 5vw;
   }
 
   .headline_bubble{
+    margin-left: 0;
     width: 90vw;
   }
 
