@@ -71,6 +71,16 @@
       </p>
     </div>
 
+  <div class="sliderTestimonial">
+    <!-- <button class="prev" @click.prevent="prev">Prev</button> -->
+    <div class="arrow_left" @click.prevent="prev"></div>
+    <div>
+      <div class="testimonialSlide" :visibleSlide="visibleSlide">{{items[visibleSlide]}}</div>
+    </div>
+    <!-- <button class="next" @click.prevent="next">Next</button> -->
+    <div class="arrow_right" @click.prevent="next"></div>
+  </div>
+
     <!-- <div>
         <scrollview  :data-source-ref="'datasource1'"
                     :enable-pager="true"
@@ -173,7 +183,21 @@
 </template>
 
 <script>
+  
+
   export default{
+    data: function () {
+      return {
+          items:[
+            '"This service is great!"',
+            '"I would come back again!"',
+            '"The best customer service in town."',
+            '"Terrific!"',
+            '"Fantastic"'
+          ],
+          visibleSlide: 0
+        }
+    },
     methods:{
       moveNav(){
       var x = document.getElementById("mobileLinks");
@@ -184,8 +208,27 @@
         x.style.display = "block";
         x.style.transitionDuration = "1s"
         }
+      },
+      next(){
+      if(this.visibleSlide >= this.itemLength - 1){
+          this.visibleSlide = 0;
+        }else{
+          this.visibleSlide++;
+        } 
+      },
+      prev(){
+      if(this.visibleSlide <= 0){
+          this.visibleSlide = this.itemLength - 1;
+        }else{
+          this.visibleSlide--;
+        } 
       }
-    }
+    },
+    computed:{
+      itemLength(){
+        return this.items.length;
+      }
+    },
   }
 </script>
 
@@ -366,6 +409,49 @@ html, body{
 /**************************************/
 /* || Slider Syles */
 
+.sliderTestimonial{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.testimonialSlide{
+  width: 60vw;
+  height: 20vh;
+  background-color: #33f18a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 4vw;
+  margin-left: 5vw;
+  margin-right: 5vw;
+  border-radius: 300px;
+  font-size: 2.5vw;
+  color: black;
+}
+
+.arrow_right{
+  width: 20px;
+  height: 20px;
+  border-right: 10px solid #33f18a;
+  border-top: 10px solid #33f18a;
+  border-radius: 5px;
+  transform: rotate(45deg);
+  cursor: pointer;
+}
+
+.arrow_left{
+  width: 20px;
+  height: 20px;
+  border-right: 10px solid #33f18a;
+  border-top: 10px solid #33f18a;
+  border-radius: 5px;
+  transform: rotate(-135deg);
+  cursor: pointer;
+}
 
 
 /**************************/
@@ -574,7 +660,7 @@ html, body{
   top: 4em;
 }
 
-@media only screen and (max-width: 650px){
+@media only screen and (max-width: 1000px){
 /**************************/
 /* || Header Syles */
   .nav_links{
@@ -614,11 +700,13 @@ html, body{
 
     .nav_links li{
       margin-bottom: 5vw;
+      font-size: 4vw;
     }
 
     .menu_icon{
       width: 8vw;
       margin-left: 10px;
+      cursor: pointer;
     }
 
 /**************************/
@@ -661,6 +749,47 @@ html, body{
     }
 
 /**************************************/
+/**************************************/
+/* || Slider Syles */
+.sliderTestimonial{
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.testimonialSlide{
+  width: 50vw;
+  height: 10vh;
+  background-color: #33f18a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 4vw;
+  margin-left: 10vw;
+  margin-right: 10vw;
+  padding: 1vw;
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
+.arrow_right{
+  width: 20px;
+  height: 20px;
+  border-right: 5px solid #33f18a;
+  border-top: 5px solid #33f18a;
+  border-radius: 5px;
+  transform: rotate(45deg);
+  cursor: pointer;
+}
+
+.arrow_left{
+  width: 20px;
+  height: 20px;
+  border-right: 5px solid #33f18a;
+  border-top: 5px solid #33f18a;
+  border-radius: 5px;
+  transform: rotate(-135deg);
+  cursor: pointer;
+}
 /**************************/
 /* || Shipment Offerings Syles */
   .container_offerings{
