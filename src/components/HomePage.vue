@@ -132,6 +132,18 @@
       </div>
     </div>
 
+    <div class="logoSlider">
+      <!-- <button class="prev" @click.prevent="Imagesprev">Prev</button> -->
+      <div class="logo_arrow_left" @click.prevent="Imagesprev"></div>
+      <div class="slideContainer">
+        <div class="logoSlide" :visibleSlideImg="visibleSlideImg" style="background-color: #fee354;"><img :src="images[visibleSlideImg + 1]" style="width: 15vw; border-radius: 150px;" /></div>
+        <div class="logoSlide" :visibleSlideImg="visibleSlideImg" style="background-color: #ffcccc;"><img :src="images[visibleSlideImg]" style="width: 15vw; border-radius: 150px;" /></div>
+        <div class="logoSlide" :visibleSlideImg="visibleSlideImg" style="background-color: #ff5534;"><img :src="images[visibleSlideImg + 2]" style="width: 15vw; border-radius: 150px;" /></div>
+      </div>
+      <!-- <button class="next" @click.prevent="Imagesnext">Next</button> -->
+      <div class="logo_arrow_right" @click.prevent="Imagesnext"></div>
+    </div>
+
     <div class="headline_recruiting">
       <h1>Headline about recruiting</h1>
       <p>Learn about working for Lrex</p>
@@ -183,11 +195,22 @@
 </template>
 
 <script>
-  
+  import image from "../assets/fakecompany1.png"
+  import image2 from "../assets/fakecompany2.jpg"
+  import image3 from "../assets/fakecompany3.jpg"
+  import image4 from "../assets/fakecompany4.jpg"
+  import image5 from "../assets/fakecompany5.png"
 
   export default{
     data: function () {
       return {
+          images: [
+            image,
+            image2,
+            image3,
+            image4,
+            image5
+          ],
           items:[
             '"This service is great!"',
             '"I would come back again!"',
@@ -195,10 +218,25 @@
             '"Terrific!"',
             '"Fantastic"'
           ],
-          visibleSlide: 0
+          visibleSlide: 0,
+          visibleSlideImg: 0
         }
     },
     methods:{
+      Imagesnext(){
+      if(this.visibleSlideImg >= this.imagesLength - 1){
+          this.visibleSlideImg = 0;
+        }else{
+          this.visibleSlideImg++;
+        } 
+      },
+      Imagesprev(){
+      if(this.visibleSlideImg <= 0){
+          this.visibleSlideImg = this.imagesLength - 1;
+        }else{
+          this.visibleSlideImg--;
+        } 
+      },
       moveNav(){
       var x = document.getElementById("mobileLinks");
       if (x.style.display === "block") {
@@ -227,6 +265,9 @@
     computed:{
       itemLength(){
         return this.items.length;
+      },
+      imagesLength(){
+        return this.images.length;
       }
     },
   }
@@ -453,6 +494,51 @@ html, body{
   cursor: pointer;
 }
 
+.logoSlide{
+  width: 20vw;
+  height: 20vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 4vw;
+  margin-left: 5vw;
+  margin-right: 5vw;
+  border-radius: 150px;
+}
+
+.logoSlider{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 60px;
+  margin-bottom: 50px;
+}
+
+.slideContainer{
+  display: flex;
+  flex-direction: row;
+}
+
+.logo_arrow_right{
+  width: 20px;
+  height: 20px;
+  border-right: 10px solid #33f18a;
+  border-top: 10px solid #33f18a;
+  border-radius: 5px;
+  transform: rotate(45deg);
+  cursor: pointer;
+}
+
+.logo_arrow_left{
+  width: 20px;
+  height: 20px;
+  border-right: 10px solid #33f18a;
+  border-top: 10px solid #33f18a;
+  border-radius: 5px;
+  transform: rotate(-135deg);
+  cursor: pointer;
+}
 
 /**************************/
 /* || Shipment Offerings Syles */
@@ -791,6 +877,48 @@ html, body{
   border-radius: 5px;
   transform: rotate(-135deg);
   cursor: pointer;
+}
+
+.logo_arrow_right{
+  width: 20px;
+  height: 20px;
+  border-right: 5px solid #33f18a;
+  border-top: 5px solid #33f18a;
+  border-radius: 5px;
+  transform: rotate(45deg);
+  cursor: pointer;
+}
+
+.logo_arrow_left{
+  width: 20px;
+  height: 20px;
+  border-right: 5px solid #33f18a;
+  border-top: 5px solid #33f18a;
+  border-radius: 5px;
+  transform: rotate(-135deg);
+  cursor: pointer;
+}
+
+.logoSlide{
+  width: 20vw;
+  height: 20vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 4vw;
+  margin-left: 1vw;
+  margin-right: 1vw;
+  border-radius: 250px;
+}
+
+
+.logoSlider{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40px;
+  margin-bottom: 40px;
 }
 /**************************/
 /* || Shipment Offerings Syles */
