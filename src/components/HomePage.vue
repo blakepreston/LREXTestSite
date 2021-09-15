@@ -136,9 +136,9 @@
       <!-- <button class="prev" @click.prevent="Imagesprev">Prev</button> -->
       <div class="logo_arrow_left" @click.prevent="Imagesprev"></div>
       <div class="slideContainer">
-        <div class="logoSlide" :visibleSlideImg="visibleSlideImg" style="background-color: #fee354;"><img :src="images[visibleSlideImg + 1]" style="width: 15vw; border-radius: 150px;" /></div>
+        <div class="logoSlide" :visibleSlideImg="visibleSlideImg" style="background-color: #fee354;"><img :src="images[visibleSlideImg - 1]" style="width: 15vw; border-radius: 150px;" /></div>
         <div class="logoSlide" :visibleSlideImg="visibleSlideImg" style="background-color: #ffcccc;"><img :src="images[visibleSlideImg]" style="width: 15vw; border-radius: 150px;" /></div>
-        <div class="logoSlide" :visibleSlideImg="visibleSlideImg" style="background-color: #ff5534;"><img :src="images[visibleSlideImg + 2]" style="width: 15vw; border-radius: 150px;" /></div>
+        <div class="logoSlide" :visibleSlideImg="visibleSlideImg" style="background-color: #ff5534;"><img :src="images[visibleSlideImg + 1]" style="width: 15vw; border-radius: 150px;" /></div>
       </div>
       <!-- <button class="next" @click.prevent="Imagesnext">Next</button> -->
       <div class="logo_arrow_right" @click.prevent="Imagesnext"></div>
@@ -219,20 +219,20 @@
             '"Fantastic"'
           ],
           visibleSlide: 0,
-          visibleSlideImg: 0
+          visibleSlideImg: 1
         }
     },
     methods:{
       Imagesnext(){
-      if(this.visibleSlideImg >= this.imagesLength - 1){
-          this.visibleSlideImg = 0;
+      if(this.visibleSlideImg >= this.imagesLength - 2){
+          this.visibleSlideImg = 1;
         }else{
           this.visibleSlideImg++;
         } 
       },
       Imagesprev(){
-      if(this.visibleSlideImg <= 0){
-          this.visibleSlideImg = this.imagesLength - 1;
+      if(this.visibleSlideImg <= 1){
+          this.visibleSlideImg = this.imagesLength - 2;
         }else{
           this.visibleSlideImg--;
         } 
