@@ -503,7 +503,7 @@ html, body{
   font-size: 4vw;
   margin-left: 5vw;
   margin-right: 5vw;
-  border-radius: 150px;
+  border-radius: 250px;
 }
 
 .logoSlider{
@@ -518,6 +518,8 @@ html, body{
 .slideContainer{
   display: flex;
   flex-direction: row;
+  margin-left: 1vw;
+  margin-right: 1vw;
 }
 
 .logo_arrow_right{
@@ -911,6 +913,10 @@ html, body{
   border-radius: 250px;
 }
 
+.slideContainer{
+  margin-left: 5vw;
+  margin-right: 5vw;
+}
 
 .logoSlider{
   display: flex;
