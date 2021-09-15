@@ -32,7 +32,7 @@
   </div>
 
   <div class="ship_with_us">
-        <img src="../assets/Delivery-Truck.jpg" alt="Truck">
+        <img src="../assets/Delivery-Truck-Dropoff.png" alt="Truck">
         <div class="ship_with_us_layout">
             <h1>Ship with us.</h1>
             <p>Subcopy.</p>
@@ -70,7 +70,7 @@
     <div class="headline_recruiting">
       <!-- <h1>Headline about recruiting</h1>
       <p>Learn about working for Lrex</p> -->
-      <img src="../assets/delivery-woman.jpg" alt="">
+      <img src="../assets/delivery-man.jpg" alt="">
       <div class="sign_up"><a href="">Sign Up</a></div>
     </div>
 
@@ -534,6 +534,7 @@ html, body{
 
   .ship_with_us img{
     object-fit: cover;
+    object-position: 70%;
     height: 40vh;
   }
 
