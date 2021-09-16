@@ -239,11 +239,11 @@
       },
       moveNav(){
       var x = document.getElementById("mobileLinks");
-      if (x.style.display === "block") {
-        x.style.display = "none";
+      if (x.style.marginTop === "0%") {
+        x.style.marginTop = "-100%";
         x.style.transitionDuration = "1s"
       } else {
-        x.style.display = "block";
+        x.style.marginTop = "0%";
         x.style.transitionDuration = "1s"
         }
       },
@@ -756,7 +756,11 @@ html, body{
         flex-direction: column;
     }
 
-    
+    .mobileNavigation header{
+      position: relative;
+      background-color: white;
+      z-index: 11;
+    }
 
     .homepage{
       display: none;
@@ -775,7 +779,8 @@ html, body{
     }
 
     .mobileNavigation nav{
-      display: none;
+      /* display: none; */
+      margin-top: -100%;
     }
 
     .logo_nav img{
