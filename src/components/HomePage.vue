@@ -244,7 +244,7 @@
         x.style.transitionDuration = "1s"
       } else {
         x.style.marginTop = "0%";
-        x.style.transitionDuration = "1s"
+        x.style.transitionDuration = ".5s"
         }
       },
       next(){
