@@ -39,7 +39,7 @@
         </div>
     </header>
   </div>
-  <div ref="homepage" style="height: 2vh"></div>
+  <div ref="homepage"></div>
   <HomePage/>
   <div ref="oursolutions"></div>
   <OurSolutions/>
