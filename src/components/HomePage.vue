@@ -71,41 +71,29 @@
       </p>
     </div>
 
-  <div class="sliderTestimonial">
-    <!-- <button class="prev" @click.prevent="prev">Prev</button> -->
+  <!-- <div class="sliderTestimonial">
     <div class="arrow_left" @click.prevent="prev"></div>
     <div>
       <div class="testimonialSlide" :visibleSlide="visibleSlide">{{items[visibleSlide]}}</div>
     </div>
-    <!-- <button class="next" @click.prevent="next">Next</button> -->
+    <div class="arrow_right" @click.prevent="next"></div>
+  </div> -->
+
+  <div class="carouselContainer">
+    <div class="arrow_left" @click.prevent="prev"></div>
+    <carousel 
+    @next = 'next'
+    @prev = 'prev'
+    >
+      <carousel-slide v-for="(text,index) in texts" :key="text" :index="index" :visibleSlide ="visibleSlide" :direction="direction">
+        <div class="textSlideContainer">
+          <p  class="textSlide">{{texts[index]}}</p>
+        </div>
+      </carousel-slide>
+    </carousel>
     <div class="arrow_right" @click.prevent="next"></div>
   </div>
-
-    <!-- <div>
-        <scrollview  :data-source-ref="'datasource1'"
-                    :enable-pager="true"
-                    :template="itemTemplate"
-                    v-bind:style="{ height: '300px', width: '600px',background: '#eee'}"
-                    >
-        </scrollview>
-    </div> -->
-
-    <!-- Slider Goes Here -->
-
-    <!-- <div class="shipment_offerings">
-      <div class="same_day">
-        <h1>Same day</h1>
-        <p>A brief description of the same day offering.</p>
-      </div>
-        <div class="next_day">
-          <h1>Next day</h1>
-          <p>A brief description of the next day offering</p>
-        </div>
-        <div class="dropbox_offering">
-          <h1>Find a dropbox</h1>
-          <p>A brief description of the dropbox offering.</p>
-        </div>
-    </div> -->
+    
 
     <div class="container_offerings">
       <div class="offering_headers">
@@ -195,6 +183,8 @@
 </template>
 
 <script>
+  import Carousel from './Carousel/Carousel.vue'
+  import CarouselSlide from './Carousel/CarouselSlide.vue'
   import image from "../assets/fakecompany1.png"
   import image2 from "../assets/fakecompany2.jpg"
   import image3 from "../assets/fakecompany3.jpg"
@@ -211,15 +201,16 @@
             image4,
             image5
           ],
-          items:[
-            '"This service is great!"',
-            '"I would come back again!"',
-            '"The best customer service in town."',
-            '"Terrific!"',
-            '"Fantastic"'
-          ],
+          texts: [
+          '"This service is great!"',
+          '"I would come back again!"',
+          '"The best customer service in town."',
+          '"Terrific!"',
+          '"Fantastic"'
+        ],
           visibleSlide: 0,
-          visibleSlideImg: 1
+          visibleSlideImg: 1,
+          direction: 'left'
         }
     },
     methods:{
@@ -248,28 +239,34 @@
         }
       },
       next(){
-      if(this.visibleSlide >= this.itemLength - 1){
+      if(this.visibleSlide >= this.textsLength - 1){
           this.visibleSlide = 0;
         }else{
           this.visibleSlide++;
         } 
+        this.direction = "left";
       },
       prev(){
       if(this.visibleSlide <= 0){
-          this.visibleSlide = this.itemLength - 1;
+          this.visibleSlide = this.textsLength - 1;
         }else{
           this.visibleSlide--;
         } 
+        this.direction = "right";
       }
     },
     computed:{
-      itemLength(){
-        return this.items.length;
+      textsLength(){
+        return this.texts.length;
       },
       imagesLength(){
         return this.images.length;
       }
     },
+      components:{
+      Carousel,
+      CarouselSlide
+    }
   }
 </script>
 
@@ -449,6 +446,12 @@ html, body{
 
 /**************************************/
 /* || Slider Syles */
+.carouselContainer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+/****************************/
 
 .sliderTestimonial{
   display: flex;
@@ -475,6 +478,7 @@ html, body{
 }
 
 .arrow_right{
+  margin-left: 5vw;
   width: 20px;
   height: 20px;
   border-right: 10px solid #33f18a;
@@ -485,6 +489,7 @@ html, body{
 }
 
 .arrow_left{
+  margin-right: 5vw;
   width: 20px;
   height: 20px;
   border-right: 10px solid #33f18a;
