@@ -39,15 +39,12 @@
         </div>
     </header>
   </div>
-  <div ref="homepage">
-    <HomePage/>
-  </div>
-  <div ref="oursolutions">
-    <OurSolutions/>
-  </div>
-  <div ref="aboutus">
-    <AboutUs/>
-  </div>
+  <div ref="homepage" style="height: 2vh"></div>
+  <HomePage/>
+  <div ref="oursolutions"></div>
+  <OurSolutions/>
+  <div ref="aboutus" style="height: 5vh"></div>
+  <AboutUs/>
 </template>
 
 <script>
