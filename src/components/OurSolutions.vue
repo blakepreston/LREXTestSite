@@ -248,7 +248,7 @@ html, body{
         display: flex;
         justify-content: center;
         margin-top: 20vh;
-        padding-top: 15vh;
+        padding-top: 5vh;
     }
 
     .ship_with_us img{
