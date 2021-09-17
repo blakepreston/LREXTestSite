@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="mobileNavigation">
+  <!-- <div class="mobileNavigation">
     <header>
         <div class="logo_nav">
             <a href="#"><img class="logo" src="../assets/lrexLogo.png" alt="LREX"></a>
@@ -50,7 +50,7 @@
             <button class="button_signin">Sign in</button>
         </div>
     </header>
-  </div>
+  </div> -->
 
   <div class="track_package">
         <img src="../assets/Delivery-Truck.jpg" alt="Truck">
@@ -155,7 +155,7 @@
       <div class="drive_with_us"><a href="">Drive with us</a></div>
     </div>
 
-    <div class="footer">
+    <!-- <div class="footer">
       <img src="../assets/lrexLogo.png" alt="">
       <div class="site_map">
         <div>
@@ -192,7 +192,7 @@
       <div class="footer_dino">
         <img src="../assets/lrexDino.png" alt="">
       </div>
-    </div>
+    </div> -->
 </body>
 </html>
 
@@ -246,16 +246,16 @@
       //     this.visibleSlideImg--;
       //   } 
       // },
-      moveNav(){
-      var x = document.getElementById("mobileLinks");
-      if (x.style.marginTop === "0%") {
-        x.style.marginTop = "-100%";
-        x.style.transitionDuration = "1s"
-      } else {
-        x.style.marginTop = "0%";
-        x.style.transitionDuration = ".5s"
-        }
-      },
+      // moveNav(){
+      // var x = document.getElementById("mobileLinks");
+      // if (x.style.marginTop === "0%") {
+      //   x.style.marginTop = "-100%";
+      //   x.style.transitionDuration = "1s"
+      // } else {
+      //   x.style.marginTop = "0%";
+      //   x.style.transitionDuration = ".5s"
+      //   }
+      // },
       next(){
       if(this.visibleSlide >= this.textsLength - 1){
           this.visibleSlide = 0;

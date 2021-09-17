@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="homepage">
+  <!-- <div class="homepage">
     <header>
         <div class="logo_nav">
             <a href="#"><img class="logo" src="../assets/lrexLogo.png" alt="LREX"></a>
@@ -29,7 +29,7 @@
             <button class="button_signin">Sign in</button>
         </div>
     </header>
-  </div>
+  </div> -->
 
 
   <div class="our_story">
@@ -178,7 +178,7 @@ html, body{
   width: 100%;
 }
 /* || Header Syles */
-    .homepage{
+    /* .homepage{
       display: none;
       position: fixed;
       top: 0;
@@ -253,13 +253,13 @@ html, body{
         transition: all 0.3s ease 0s;
         font-family: 'Work Sans', sans-serif;
         font-size: 1.2vw;
-    }
+    } */
 
 /**************************/    
 /* || Our Story Syles */
 .our_story{
   font-family: 'Work Sans', sans-serif;
-  padding-top: 2vw;
+  padding-top: 10vw;
   /* border-top: black solid 2px; */
   color: black;
   display: flex;

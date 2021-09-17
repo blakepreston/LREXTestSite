@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="homepage">
+  <!-- <div class="homepage">
     <header>
         <div class="logo_nav">
             <a href="#"><img class="logo" src="../assets/lrexLogo.png" alt="LREX"></a>
@@ -29,7 +29,7 @@
             <button class="button_signin">Sign in</button>
         </div>
     </header>
-  </div>
+  </div> -->
 
   <div class="ship_with_us">
         <img src="../assets/Delivery-Truck-Dropoff.png" alt="Truck">
@@ -74,7 +74,7 @@
       <div class="sign_up"><a href="">Sign Up</a></div>
     </div>
 
-    <div class="footer">
+    <!-- <div class="footer">
       <img src="../assets/lrexLogo.png" alt="">
       <div class="site_map">
         <div>
@@ -111,7 +111,7 @@
       <div class="footer_dino">
         <img src="../assets/lrexDino.png" alt="">
       </div>
-    </div>
+    </div> -->
 </body>
 </html>
 
@@ -128,7 +128,7 @@ html, body{
   width: 100%;
 }
 /* || Header Syles */
-    .homepage{
+    /* .homepage{
         display: none;
       position: fixed;
       top: 0;
@@ -203,7 +203,7 @@ html, body{
         transition: all 0.3s ease 0s;
         font-family: 'Work Sans', sans-serif;
         font-size: 1.2vw;
-    }
+    } */
 /**************************************/
 /* || Shipment Tracking Syles */
 
@@ -248,6 +248,7 @@ html, body{
         display: flex;
         justify-content: center;
         margin-top: 20vh;
+        padding-top: 15vh;
     }
 
     .ship_with_us img{
@@ -519,9 +520,10 @@ html, body{
 /**************************/
 /* || Shipment Tracking Syles */
   .ship_with_us{
-    margin-top: 10vh;
-    height: 40vh;
+    margin-top: 8vh;
+    height: 38vh;
     overflow: hidden;
+    padding-top: 0;
   }
 
   .ship_with_us h1{
