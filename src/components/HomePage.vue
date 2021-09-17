@@ -362,9 +362,14 @@ html, body{
         margin-right: auto;
     }
 
+    .nav_links li a:hover{
+      border-bottom: 2px solid #33f18a;
+    }
+
     .nav_links li a{
       text-decoration: none;
       color: black;
+      transition: all .5s ease;
     }
 
     .create_account{
@@ -378,9 +383,18 @@ html, body{
         padding-right: 20px;
     }
 
+    .create_account li a:hover{
+      border-bottom: 2px solid #33f18a;
+    }
+
     .create_account li a{
       text-decoration: none;
       color: black;
+      transition: all .5s ease;
+    }
+
+    .button_signin:hover{
+      background-color: #2ee480;
     }
 
     .button_signin{
@@ -392,6 +406,7 @@ html, body{
         transition: all 0.3s ease 0s;
         font-family: 'Work Sans', sans-serif;
         font-size: 1.2vw;
+        transition: all .5s ease;
     }
 /**************************************/
 /* || Shipment Tracking Syles */
