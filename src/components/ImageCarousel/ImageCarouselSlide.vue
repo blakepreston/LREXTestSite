@@ -2,7 +2,7 @@
 
 <div class="mainContainer">
 <transition :name="direction" mode="in-out">
-    <div v-show="visibleSlide === index" class="carousel-slide">
+    <div v-show="visibleSlideImg === index" class="image-carousel-slide">
         <slot></slot>
     </div>
 </transition>
@@ -12,7 +12,7 @@
 <script>
 
 export default {
-    props: ['visibleSlide', 'index', 'direction'],
+    props: ['visibleSlideImg', 'index', 'direction'],
     data(){
       return{
 
@@ -27,21 +27,25 @@ export default {
     justify-content: center;
 }
 
-.carousel-slide{
-    font-size: 2vw;
-    font-family: 'Work Sans', sans-serif;
-    color: black;
-    background-color: #33f18a;
+.image-carousel-slide{
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 65vw;
-    height: 10vw;
+    flex-direction: row;
+    width: 60vw;
+    height: 15vw;
     border-radius: 150px;
     position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
+}
+
+.image-carousel-slide img{
+    width: 12vw;
+    margin-left: 2vw;
+    margin-right: 2vw;
+    padding: 1vw;
 }
 
 .left-enter-active{
@@ -81,11 +85,16 @@ export default {
 }
 
 @media only screen and (max-width: 1000px){
-    .carousel-slide{
-        height: 18vw;
-        font-size: 4vw;
-        font-family: 'Work Sans', sans-serif;
-        color: black;
+    .image-carousel-slide{
+        height: 25vw;
+        width: 80vw;
     }
+
+    .image-carousel-slide img{
+        width: 20vw;
+        margin-left: 2vw;
+        margin-right: 2vw;
+        padding: 1vw;
+}
 }
 </style>

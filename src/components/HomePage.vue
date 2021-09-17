@@ -120,16 +120,32 @@
       </div>
     </div>
 
-    <div class="logoSlider">
-      <!-- <button class="prev" @click.prevent="Imagesprev">Prev</button> -->
+    <!-- <div class="logoSlider">
       <div class="logo_arrow_left" @click.prevent="Imagesprev"></div>
       <div class="slideContainer">
         <div class="logoSlide" :visibleSlideImg="visibleSlideImg" style="background-color: #fee354;"><img :src="images[visibleSlideImg - 1]" style="width: 15vw; border-radius: 150px;" /></div>
         <div class="logoSlide" :visibleSlideImg="visibleSlideImg" style="background-color: #ffcccc;"><img :src="images[visibleSlideImg]" style="width: 15vw; border-radius: 150px;" /></div>
         <div class="logoSlide" :visibleSlideImg="visibleSlideImg" style="background-color: #ff5534;"><img :src="images[visibleSlideImg + 1]" style="width: 15vw; border-radius: 150px;" /></div>
       </div>
-      <!-- <button class="next" @click.prevent="Imagesnext">Next</button> -->
       <div class="logo_arrow_right" @click.prevent="Imagesnext"></div>
+    </div> -->
+
+    <div class="imageSliderContainer">
+      <h1>Associations section</h1>
+      <div class="imageSlider">
+      <div class="logo_arrow_left" @click="Imageprev"></div>
+      <image-carousel 
+      @Imagenext = 'Imagenext'
+      @Imageprev = 'Imageprev'
+      >
+        <image-carousel-slide v-for="(image,index) in images" :key="image" :index="index" :visibleSlideImg ="visibleSlideImg" :direction="direction">
+          <img style="background-color: #fee354; border-radius: 150px;" :src="images[index-1]"/>
+          <img style="background-color: #ffcccc; border-radius: 150px;" :src="image"/>
+          <img style="background-color: #ff5534; border-radius: 150px;" :src="images[index+1]"/>
+        </image-carousel-slide>
+      </image-carousel>
+      <div class="logo_arrow_right" @click="Imagenext"></div>
+    </div>
     </div>
 
     <div class="headline_recruiting">
@@ -185,7 +201,9 @@
 <script>
   import Carousel from './Carousel/Carousel.vue'
   import CarouselSlide from './Carousel/CarouselSlide.vue'
-  import image from "../assets/fakecompany1.png"
+  import ImageCarousel from './ImageCarousel/ImageCarousel.vue'
+  import ImageCarouselSlide from './ImageCarousel/ImageCarouselSlide.vue'
+  import image1 from "../assets/fakecompany1.png"
   import image2 from "../assets/fakecompany2.jpg"
   import image3 from "../assets/fakecompany3.jpg"
   import image4 from "../assets/fakecompany4.jpg"
@@ -195,7 +213,7 @@
     data: function () {
       return {
           images: [
-            image,
+            image1,
             image2,
             image3,
             image4,
@@ -214,20 +232,20 @@
         }
     },
     methods:{
-      Imagesnext(){
-      if(this.visibleSlideImg >= this.imagesLength - 2){
-          this.visibleSlideImg = 1;
-        }else{
-          this.visibleSlideImg++;
-        } 
-      },
-      Imagesprev(){
-      if(this.visibleSlideImg <= 1){
-          this.visibleSlideImg = this.imagesLength - 2;
-        }else{
-          this.visibleSlideImg--;
-        } 
-      },
+      // Imagesnext(){
+      // if(this.visibleSlideImg >= this.imagesLength - 2){
+      //     this.visibleSlideImg = 1;
+      //   }else{
+      //     this.visibleSlideImg++;
+      //   } 
+      // },
+      // Imagesprev(){
+      // if(this.visibleSlideImg <= 1){
+      //     this.visibleSlideImg = this.imagesLength - 2;
+      //   }else{
+      //     this.visibleSlideImg--;
+      //   } 
+      // },
       moveNav(){
       var x = document.getElementById("mobileLinks");
       if (x.style.marginTop === "0%") {
@@ -253,6 +271,23 @@
           this.visibleSlide--;
         } 
         this.direction = "right";
+      },
+      Imagenext(){
+      if(this.visibleSlideImg >= this.imagesLength - 2){
+        this.visibleSlideImg = 1;
+      }else{
+        this.visibleSlideImg++;
+      }
+      this.direction = "left";
+    },
+      Imageprev(){
+        if(this.visibleSlideImg <= 1){
+          this.visibleSlideImg = this.imagesLength - 2;
+        }else{
+          this.visibleSlideImg--;
+        }
+        this.direction = "right";
+        console.log("The buttons works");
       }
     },
     computed:{
@@ -265,7 +300,9 @@
     },
       components:{
       Carousel,
-      CarouselSlide
+      CarouselSlide,
+      ImageCarousel,
+      ImageCarouselSlide
     }
   }
 </script>
@@ -497,6 +534,22 @@ html, body{
   border-radius: 5px;
   transform: rotate(-135deg);
   cursor: pointer;
+}
+
+.imageSliderContainer h1{
+  margin-top: 10vh;
+  margin-bottom: 0;
+  font-size: 4vw;
+  font-family: 'Work Sans', sans-serif;
+  color: black;
+}
+
+.imageSlider{
+  margin-top: 10vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 
 .logoSlide{
@@ -851,6 +904,18 @@ html, body{
 /**************************************/
 /**************************************/
 /* || Slider Syles */
+.imageSlider{
+  margin-top: 3vh;
+}
+
+.imageSliderContainer h1{
+  margin-top: 5vh;
+  margin-bottom: -1vh;
+  font-size: 7vw;
+  font-family: 'Work Sans', sans-serif;
+  color: black;
+}
+
 .sliderTestimonial{
   margin-top: 20px;
   margin-bottom: 20px;
@@ -899,6 +964,7 @@ html, body{
   border-radius: 5px;
   transform: rotate(45deg);
   cursor: pointer;
+  margin-left: -5vw;
 }
 
 .logo_arrow_left{
@@ -909,6 +975,7 @@ html, body{
   border-radius: 5px;
   transform: rotate(-135deg);
   cursor: pointer;
+  margin-right: -5vw;
 }
 
 .logoSlide{

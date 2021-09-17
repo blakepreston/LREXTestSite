@@ -1,5 +1,5 @@
 <template>
-    <div class="carousel">
+    <div class="image-carousel">
         <slot></slot>
 
         <!-- <button @click="next" class="next">Next</button>
@@ -16,29 +16,33 @@ export default {
       }
   },
   methods:{
-      next(){
-          this.$emit('next');
+      Imagenext(){
+          this.$emit('Imagenext');
       },
-      prev(){
-          this.$emit('prev');
+      Imageprev(){
+          this.$emit('Imageprev');
       }
   }
 }
 </script>
 
 <style>
-.carousel{
+.image-carousel{
     margin-top: 20px;
     margin-bottom: 20px;
+    margin-right: 3vw;
+    margin-left: 3vw;
     position: relative;
-    width: 65vw;
-    height: 10vw;
+    width: 60vw;
+    height: 15vw;
     overflow-x: hidden;
+
 }
 
 @media only screen and (max-width: 1000px){
-    .carousel{
-        height: 18vw;
+    .image-carousel{
+        height: 25vw;
+        width: 80vw;
     }
 }
 </style>
