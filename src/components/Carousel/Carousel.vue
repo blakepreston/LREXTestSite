@@ -28,6 +28,8 @@ export default {
 
 <style>
 .carousel{
+    margin-top: 20px;
+    margin-bottom: 20px;
     position: relative;
     width: 60vw;
     height: 10vw;
