@@ -69,8 +69,9 @@
     </div>
 
     <div class="headline_recruiting">
-      <img src="../assets/woman-in-car.jpg" alt="">
+      <!-- <img src="../assets/woman-in-car.jpg" alt=""> -->
       <!-- <img src="../assets/woman-with-package.jpg" alt=""> -->
+      <img src="../assets/box-by-door.jpg" alt="">
       <div class="sign_up"><a href="">Sign Up</a></div>
     </div>
 
