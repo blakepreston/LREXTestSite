@@ -125,7 +125,7 @@
     </div>
 
     <div class="footer">
-      <img src="../assets/lrexLogo.png" alt="">
+      <img src="../assets/LREXFooterLogo.jpg" alt="">
       <div class="site_map">
         <div>
           <p>Site map</p>
