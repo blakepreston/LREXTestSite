@@ -69,8 +69,8 @@
     </div>
 
     <div class="headline_recruiting">
-      <!-- <img src="../assets/delivery-man.jpg" alt=""> -->
-      <img src="../assets/woman-with-package.jpg" alt="">
+      <img src="../assets/woman-in-car.jpg" alt="">
+      <!-- <img src="../assets/woman-with-package.jpg" alt=""> -->
       <div class="sign_up"><a href="">Sign Up</a></div>
     </div>
 
@@ -402,7 +402,7 @@ html, body{
   align-items: center;
   margin-top: 5%;
   position: relative;
-  margin-bottom: 8vw;
+  margin-bottom: 10vw;
 }
 
 .headline_recruiting img{
