@@ -19,7 +19,7 @@
         </nav>
   </div>
 
-  <div class="homepage" ref="homepage">
+  <div class="homepage" ref="homepage" :class="{ 'is-hidden': !showHeader }">
     <header>
         <div class="logo_nav">
             <a href="#" @click="scrollTo('#')"><img class="logo" src="./assets/LREXHeaderLogo.jpg" alt="LREX"></a>
@@ -39,12 +39,18 @@
         </div>
     </header>
   </div>
-  <div ref="homepage"></div>
-  <HomePage/>
-  <div ref="oursolutions"></div>
-  <OurSolutions/>
-  <div ref="aboutus" style="height: 5vh"></div>
-  <AboutUs/>
+  <div ref="homepage">
+    <HomePage/>
+  </div>
+  
+  <div ref="oursolutions">
+    <OurSolutions/>
+  </div>
+  
+  <div ref="aboutus">
+    <AboutUs/>
+  </div>
+  
 </template>
 
 <script>
@@ -54,12 +60,36 @@ import AboutUs from './components/AboutUs.vue'
 
 export default {
   name: 'App',
+  data(){
+    return{
+      showHeader: true,
+      lastScrollPosition: 0,
+      scrollOffset: 40
+    }
+  },
+  mounted() {
+    this.lastScrollPosition = window.pageYOffset
+    window.addEventListener('scroll', this.onScroll)
+  },
+  beforeUnmount() {
+    window.removeEventListener('scroll', this.onScroll)
+  },
   components: {
     HomePage,
     OurSolutions,
     AboutUs
   },
   methods: {
+    onScroll() {
+      if (window.pageYOffset < 0) {
+        return
+      }
+      if (Math.abs(window.pageYOffset - this.lastScrollPosition) < this.scrollOffset) {
+        return
+      }
+      this.showHeader = window.pageYOffset < this.lastScrollPosition
+      this.lastScrollPosition = window.pageYOffset
+    },
     scrollTo(refName){
       const el = this.$refs[refName];
       el.scrollIntoView({behavior: 'smooth'})
@@ -103,6 +133,12 @@ export default {
       background-color: white;
       z-index: 10;
       box-shadow: 0 6px 6px -6px rgb(218, 218, 218);
+      transform: translateY(0);
+      transition: transform 300ms linear;
+    }
+
+    .homepage.is-hidden{
+      transform: translateY(-100%);
     }
 
     header{
@@ -215,6 +251,12 @@ export default {
       top: 0;
       left: 0;
       box-shadow: 0 6px 6px -6px rgb(218, 218, 218);
+      transform: translateY(0);
+      transition: transform 300ms linear;
+    }
+
+    .mobileNavigation.is-hidden {
+    transform: translateY(-100%);
     }
 
     .mobileNavigation nav{

@@ -255,11 +255,17 @@ html, body{
         font-size: 1.2vw;
     } */
 
+    .ship_with_us img{
+        position: absolute;
+        z-index: 1;
+        width: 90vw;
+        height: auto;
+    }
+
 /**************************/    
 /* || Our Story Syles */
 .our_story{
   font-family: 'Work Sans', sans-serif;
-  padding-top: 10vw;
   /* border-top: black solid 2px; */
   color: black;
   display: flex;
@@ -492,7 +498,7 @@ html, body{
   top: 4em;
 }
 
-@media only screen and (max-width: 650px){
+@media only screen and (max-width: 1000px){
 /**************************/
 /* || Header Syles */
   .nav_links li{
@@ -533,6 +539,10 @@ html, body{
 
 /**************************/    
 /* || Our Story Syles */
+.our_story{
+  padding-top: 25vw;
+}
+
 .our_story h1{
   font-size: 8vw;
 }

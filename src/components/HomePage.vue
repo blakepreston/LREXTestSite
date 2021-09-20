@@ -821,6 +821,8 @@ html, body{
   top: 4em;
 }
 
+
+
 @media only screen and (max-width: 1000px){
 /**************************/
 /* || Header Syles */
@@ -833,6 +835,7 @@ html, body{
       position: relative;
       background-color: white;
       z-index: 11;
+      
     }
 
     .homepage{
@@ -849,6 +852,7 @@ html, body{
       top: 0;
       left: 0;
       box-shadow: 0 6px 6px -6px rgb(218, 218, 218);
+      
     }
 
     .mobileNavigation nav{
@@ -878,7 +882,7 @@ html, body{
 /**************************/
 /* || Shipment Tracking Syles */
   .track_package{
-    margin-top: 10vh;
+    margin-top: 15vh;
     height: 40vh;
     overflow: hidden;
   }
@@ -1061,6 +1065,10 @@ html, body{
 
 /**************************/
 /* || Recruiting Syles */
+.headline_recruiting{
+  margin-bottom: 5vw;
+}
+
 .headline_recruiting h1{
   font-size: 8vw;
 }

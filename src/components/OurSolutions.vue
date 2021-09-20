@@ -402,6 +402,7 @@ html, body{
   align-items: center;
   margin-top: 5%;
   position: relative;
+  margin-bottom: 8vw;
 }
 
 .headline_recruiting img{
@@ -509,7 +510,8 @@ html, body{
   top: 4em;
 }
 
-@media only screen and (max-width: 650px){
+
+@media only screen and (max-width: 1000px){
 /**************************/
 /* || Header Syles */
   .nav_links li{
@@ -520,10 +522,10 @@ html, body{
 /**************************/
 /* || Shipment Tracking Syles */
   .ship_with_us{
-    margin-top: 8vh;
+    margin-top: 10vh;
     height: 38vh;
     overflow: hidden;
-    padding-top: 0;
+    padding-top: 10vw;
   }
 
   .ship_with_us h1{
