@@ -32,7 +32,8 @@
   </div> -->
 
   <div class="ship_with_us">
-        <img src="../assets/Delivery-Truck-Dropoff.png" alt="Truck">
+        <!-- <img src="../assets/Delivery-Truck-Dropoff.png" alt="Truck"> -->
+        <img src="../assets/man-opening-truck.jpg" alt="Truck">
         <div class="ship_with_us_layout">
             <h1>Ship with us.</h1>
             <p>Subcopy.</p>
@@ -68,9 +69,8 @@
     </div>
 
     <div class="headline_recruiting">
-      <!-- <h1>Headline about recruiting</h1>
-      <p>Learn about working for Lrex</p> -->
-      <img src="../assets/delivery-man.jpg" alt="">
+      <!-- <img src="../assets/delivery-man.jpg" alt=""> -->
+      <img src="../assets/woman-with-package.jpg" alt="">
       <div class="sign_up"><a href="">Sign Up</a></div>
     </div>
 

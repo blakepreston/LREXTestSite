@@ -118,9 +118,8 @@
 </div>
 
     <div class="headline_recruiting">
-      <!-- <h1>Headline about recruiting</h1>
-      <p>Learn about working for Lrex</p> -->
-      <img src="../assets/delivery-man2.jpg" alt="">
+      <!-- <img src="../assets/delivery-man2.jpg" alt=""> -->
+      <img src="../assets/green-uniform-man.jpg" alt="">
       <div class="sign_up"><a href="">Join our team</a></div>
     </div>
 

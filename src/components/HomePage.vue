@@ -151,7 +151,8 @@
     <div class="headline_recruiting">
       <h1>Headline about recruiting</h1>
       <p>Learn about working for Lrex</p>
-      <img src="../assets/delivery-woman.jpg" alt="">
+      <!-- <img src="../assets/delivery-woman.jpg" alt=""> -->
+      <img src="../assets/woman-in-car.jpg" alt="">
       <div class="drive_with_us"><a href="">Drive with us</a></div>
     </div>
 
