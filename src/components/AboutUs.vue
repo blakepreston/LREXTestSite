@@ -159,7 +159,7 @@
                 </form>
       </div>
       <div class="footer_dino">
-        <img src="../assets/lrexDino.png" alt="">
+        <img src="../assets/LREXDinoFooter.jpg" alt="">
       </div>
     </div>
 </body>

@@ -2,7 +2,7 @@
 <div class="mobileNavigation">
     <header>
         <div class="logo_nav">
-            <a href="#homepage" @click="scrollTo('homepage')"><img class="logo" src="./assets/lrexLogo.png" alt="LREX"></a>
+            <a href="#homepage" @click="scrollTo('homepage')"><img class="logo" src="./assets/LREXHeaderLogo.jpg" alt="LREX"></a>
         </div>
         <div class="create_account">
           <button class="button_signin">Sign in</button>
@@ -22,7 +22,7 @@
   <div class="homepage" ref="homepage">
     <header>
         <div class="logo_nav">
-            <a href="#homepage" @click="scrollTo('homepage')"><img class="logo" src="./assets/lrexLogo.png" alt="LREX"></a>
+            <a href="#homepage" @click="scrollTo('homepage')"><img class="logo" src="./assets/LREXHeaderLogo.jpg" alt="LREX"></a>
         <nav>
             <ul class="nav_links">
                 <li><a href="#oursolutions" @click="scrollTo('oursolutions')">Our solutions</a></li>
