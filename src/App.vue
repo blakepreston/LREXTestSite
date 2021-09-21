@@ -261,6 +261,7 @@ export default {
   justify-content: center;
   align-items: center;
   animation: drop .5s ease forwards;
+  margin-bottom: -50px;
 }
 
 .popup-container h2{
