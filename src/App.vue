@@ -346,6 +346,5 @@ export default {
   border: rgb(151, 151, 151) 1px solid;
   background-color: rgb(235, 235, 235);
   width: 70%;
-  opacity: 70%;
 }
 </style>
