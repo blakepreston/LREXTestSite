@@ -10,55 +10,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans&display=swap" rel="stylesheet">
 </head>
 <body>
-  <!-- <div class="mobileNavigation">
-    <header>
-        <div class="logo_nav">
-            <a href="#"><img class="logo" src="../assets/lrexLogo.png" alt="LREX"></a>
-        </div>
-
-        <div class="create_account">
-          <button class="button_signin">Sign in</button>
-          <img src="../assets/Hamburger_icon.png" alt="" @click.prevent="moveNav" class="menu_icon">
-        </div>
-    </header>
-        <nav id="mobileLinks">
-            <ul class="nav_links">
-                <li><a href="#">Our solutions</a></li>
-                <li><a href="#">About us</a></li>
-                <li><a href="#">Get in touch</a></li>
-                <li><a href="#">Create an account</a></li>
-            </ul>
-        </nav>
-  </div>
-
-  <div class="homepage">
-    <header>
-        <div class="logo_nav">
-            <a href="#"><img class="logo" src="../assets/lrexLogo.png" alt="LREX"></a>
-        <nav>
-            <ul class="nav_links">
-                <li><a href="#">Our solutions</a></li>
-                <li><a href="#">About us</a></li>
-                <li><a href="#">Get in touch</a></li>
-                
-            </ul>
-        </nav>
-        </div>
-
-        <div class="create_account">
-            <li><a href="#">Create an account</a></li>
-            <button class="button_signin">Sign in</button>
-        </div>
-    </header>
-  </div> -->
-
   <div class="track_package">
         <img src="../assets/Delivery-Truck.jpg" alt="Truck">
         <div class="form_shiptrack">
             <h1>Big Headline.</h1>
             <p>Track a package</p>
                 <form>
-                    <input type="text" name="shipmentId"> <br>
+                    <input type="text" name="shipment"> <br>
                 </form>
         </div>
     </div>
@@ -70,14 +28,6 @@
         briefly about our history and ambitions.
       </p>
     </div>
-
-  <!-- <div class="sliderTestimonial">
-    <div class="arrow_left" @click.prevent="prev"></div>
-    <div>
-      <div class="testimonialSlide" :visibleSlide="visibleSlide">{{items[visibleSlide]}}</div>
-    </div>
-    <div class="arrow_right" @click.prevent="next"></div>
-  </div> -->
 
   <div class="carouselContainer">
     <div class="arrow_left" @click.prevent="prev"></div>
@@ -120,16 +70,6 @@
       </div>
     </div>
 
-    <!-- <div class="logoSlider">
-      <div class="logo_arrow_left" @click.prevent="Imagesprev"></div>
-      <div class="slideContainer">
-        <div class="logoSlide" :visibleSlideImg="visibleSlideImg" style="background-color: #fee354;"><img :src="images[visibleSlideImg - 1]" style="width: 15vw; border-radius: 150px;" /></div>
-        <div class="logoSlide" :visibleSlideImg="visibleSlideImg" style="background-color: #ffcccc;"><img :src="images[visibleSlideImg]" style="width: 15vw; border-radius: 150px;" /></div>
-        <div class="logoSlide" :visibleSlideImg="visibleSlideImg" style="background-color: #ff5534;"><img :src="images[visibleSlideImg + 1]" style="width: 15vw; border-radius: 150px;" /></div>
-      </div>
-      <div class="logo_arrow_right" @click.prevent="Imagesnext"></div>
-    </div> -->
-
     <div class="imageSliderContainer">
       <h1>Associations section</h1>
       <div class="imageSlider">
@@ -156,44 +96,6 @@
       <div class="drive_with_us"><a href="">Drive with us</a></div>
     </div>
 
-    <!-- <div class="footer">
-      <img src="../assets/lrexLogo.png" alt="">
-      <div class="site_map">
-        <div>
-          <p>Site map</p>
-          <p>Site map</p>
-          <p>Site map</p>
-          <p>Site map</p>
-        </div>
-        
-        <div>
-          <p>Site map</p>
-          <p>Site map</p>
-          <p>Site map</p>
-          <p>Site map</p>
-        </div>
-
-        <div>
-          <p>Download</p>
-          <p>Download</p>
-          <p>Download</p>
-          <p>Download</p>
-        </div>
-        
-      </div>
-    </div>
-
-    <div class="footer_two">
-      <div class="footer_track">
-            <p>Track a package.</p>
-                <form>
-                    <input type="text"> <br>
-                </form>
-      </div>
-      <div class="footer_dino">
-        <img src="../assets/lrexDino.png" alt="">
-      </div>
-    </div> -->
 </body>
 </html>
 
@@ -233,30 +135,6 @@
         }
     },
     methods:{
-      // Imagesnext(){
-      // if(this.visibleSlideImg >= this.imagesLength - 2){
-      //     this.visibleSlideImg = 1;
-      //   }else{
-      //     this.visibleSlideImg++;
-      //   } 
-      // },
-      // Imagesprev(){
-      // if(this.visibleSlideImg <= 1){
-      //     this.visibleSlideImg = this.imagesLength - 2;
-      //   }else{
-      //     this.visibleSlideImg--;
-      //   } 
-      // },
-      // moveNav(){
-      // var x = document.getElementById("mobileLinks");
-      // if (x.style.marginTop === "0%") {
-      //   x.style.marginTop = "-100%";
-      //   x.style.transitionDuration = "1s"
-      // } else {
-      //   x.style.marginTop = "0%";
-      //   x.style.transitionDuration = ".5s"
-      //   }
-      // },
       next(){
       if(this.visibleSlide >= this.textsLength - 1){
           this.visibleSlide = 0;

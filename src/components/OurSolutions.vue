@@ -33,7 +33,8 @@
 
   <div class="ship_with_us">
         <!-- <img src="../assets/Delivery-Truck-Dropoff.png" alt="Truck"> -->
-        <img src="../assets/man-opening-truck.jpg" alt="Truck">
+        <!-- <img src="../assets/man-opening-truck.jpg" alt="Truck"> -->
+        <img src="../assets/box-by-door.jpg" alt="Truck">
         <div class="ship_with_us_layout">
             <h1>Ship with us.</h1>
             <p>Subcopy.</p>
@@ -69,9 +70,9 @@
     </div>
 
     <div class="headline_recruiting">
-      <!-- <img src="../assets/woman-in-car.jpg" alt=""> -->
+      <img src="../assets/woman-in-car.jpg" alt="">
       <!-- <img src="../assets/woman-with-package.jpg" alt=""> -->
-      <img src="../assets/box-by-door.jpg" alt="">
+      <!-- <img src="../assets/box-by-door.jpg" alt=""> -->
       <div class="sign_up"><a href="">Sign Up</a></div>
     </div>
 
@@ -539,7 +540,7 @@ html, body{
 
   .ship_with_us img{
     object-fit: cover;
-    object-position: 70%;
+    object-position: 40%;
     height: 40vh;
   }
 

@@ -5,7 +5,7 @@
             <a href="#" @click="scrollTo('#')"><img class="logo" src="./assets/LREXHeaderLogo.jpg" alt="LREX"></a>
         </div>
         <div class="create_account">
-          <button class="button_signin">Sign in</button>
+          <button class="button_signin" @click="()=> SignInTogglePopup('SignInButtonTrigger')">Sign in</button>
           <img src="./assets/Hamburger_icon.png" alt="" @click.prevent="moveNav" class="menu_icon">
         </div>
     </header>
@@ -35,10 +35,24 @@
 
         <div class="create_account">
             <li><a href="#">Create an account</a></li>
-            <button class="button_signin">Sign in</button>
+            <button class="button_signin" @click="()=> SignInTogglePopup('SignInButtonTrigger')">Sign in</button>
         </div>
     </header>
   </div>
+
+  <div class="popup-container">
+      <!-- <h1>Vue Sign In Popup</h1>
+      <button @click="()=> SignInTogglePopup('SignInButtonTrigger')">Open Popup</button> -->
+    <SignInPopup 
+      v-if="SignInPopupTriggers.SignInButtonTrigger" 
+      :SignInTogglePopup="()=> SignInTogglePopup('SignInButtonTrigger')"
+      class="signin-popup">
+        <h2>Sign In</h2>
+        <input type="text" placeholder="UserName">
+        <input type="text" placeholder="Password">
+    </SignInPopup>
+  </div>
+
   <div ref="homepage">
     <HomePage/>
   </div>
@@ -57,6 +71,8 @@
 import HomePage from './components/HomePage.vue'
 import OurSolutions from './components/OurSolutions.vue'
 import AboutUs from './components/AboutUs.vue'
+import SignInPopup from './components/Popups/SignInPopup.vue'
+import {ref} from 'vue';
 
 export default {
   name: 'App',
@@ -77,7 +93,8 @@ export default {
   components: {
     HomePage,
     OurSolutions,
-    AboutUs
+    AboutUs,
+    SignInPopup
   },
   methods: {
     onScroll() {
@@ -106,6 +123,21 @@ export default {
         x.style.transitionDuration = ".5s"
         }
       },
+  },
+  setup(){
+
+    const SignInPopupTriggers = ref({
+      SignInButtonTrigger: false
+    });
+
+    const SignInTogglePopup = (trigger) =>{
+      SignInPopupTriggers.value[trigger] = !SignInPopupTriggers.value[trigger]
+    }
+
+    return{
+      SignInTogglePopup,
+      SignInPopupTriggers
+    }
   }
 }
 </script>
@@ -222,6 +254,28 @@ export default {
         transition: all .5s ease;
     }
 /**************************************/
+/****Sign in Popup */
+.popup-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  animation: drop .5s ease forwards;
+}
+
+.popup-container h2{
+  margin-top: -5px;
+}
+
+.popup-container input{
+  margin-bottom: 1vw;
+  height: 25px;
+  border-radius: 5px;
+  border: rgb(151, 151, 151) 1px solid;
+  background-color: rgb(235, 235, 235);
+  width: 40%;
+  opacity: 70%;
+}
 
 @media only screen and (max-width: 1000px){
 /**************************/
@@ -284,4 +338,14 @@ export default {
     }
 }
 /**************************/
+/*****Sign in popup */
+.popup-container input{
+  margin-bottom: 1vw;
+  height: 25px;
+  border-radius: 5px;
+  border: rgb(151, 151, 151) 1px solid;
+  background-color: rgb(235, 235, 235);
+  width: 70%;
+  opacity: 70%;
+}
 </style>
