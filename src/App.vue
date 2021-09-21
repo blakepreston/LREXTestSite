@@ -261,7 +261,7 @@ export default {
   justify-content: center;
   align-items: center;
   animation: drop .5s ease forwards;
-  margin-bottom: -50px;
+  margin-bottom: -30px;
 }
 
 .popup-container h2{
@@ -275,7 +275,7 @@ export default {
   border: rgb(151, 151, 151) 1px solid;
   background-color: rgb(235, 235, 235);
   width: 40%;
-  opacity: 70%;
+  opacity: .9;
 }
 
 @media only screen and (max-width: 1000px){
