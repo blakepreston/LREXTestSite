@@ -5,16 +5,16 @@
             <a href="#" @click="scrollTo('#')"><img class="logo" src="./assets/LREXHeaderLogo.jpg" alt="LREX"></a>
         </div>
         <div class="create_account">
-          <button class="button_signin" @click="()=> SignInTogglePopup('SignInButtonTrigger')">Sign in</button>
+          <a href="https://stage.njls.com/clients/MarketingHeader.aspx" target="_blank"><button class="button_signin" @click="()=> SignInTogglePopup('SignInButtonTrigger')">Sign in</button></a>
           <img src="./assets/Hamburger_icon.png" alt="" @click.prevent="moveNav" class="menu_icon">
         </div>
     </header>
-        <nav id="mobileLinks">
+        <nav id="mobileLinks" class="mobileLinks">
             <ul class="nav_links">
                 <li><a href="#oursolutions" @click="scrollTo('oursolutions')">Our solutions</a></li>
                 <li><a href="#aboutus" @click="scrollTo('aboutus')">About us</a></li>
-                <li><a href="#">Get in touch</a></li>
-                <li><a href="#">Create an account</a></li>
+                <li><a  @click="()=> GetInTouchTogglePopup('GetInTouchButtonTrigger')">Get in touch</a></li>
+                <li><a href="https://www.stage.njls.com/clients/RegisterNewCustomer.aspx" target="_blank">Create an account</a></li>
             </ul>
         </nav>
   </div>
@@ -27,30 +27,65 @@
             <ul class="nav_links">
                 <li><a href="#oursolutions" @click="scrollTo('oursolutions')">Our solutions</a></li>
                 <li><a href="#aboutus" @click="scrollTo('aboutus')">About us</a></li>
-                <li><a href="#">Get in touch</a></li>
+                <li><a  @click="()=> GetInTouchTogglePopup('GetInTouchButtonTrigger')">Get in touch</a></li>
                 
             </ul>
         </nav>
         </div>
 
         <div class="create_account">
-            <li><a href="#">Create an account</a></li>
-            <button class="button_signin" @click="()=> SignInTogglePopup('SignInButtonTrigger')">Sign in</button>
+          <!-- @click="()=> CreateAccountTogglePopup('CreateAccountButtonTrigger')" -->
+            <li><a href="https://www.stage.njls.com/clients/RegisterNewCustomer.aspx" target="_blank">Create an account</a></li>
+            <a href="https://stage.njls.com/clients/MarketingHeader.aspx" target="_blank"><button class="button_signin" @click="()=> SignInTogglePopup('SignInButtonTrigger')">Sign in</button></a>
         </div>
     </header>
   </div>
 
   <div class="popup-container">
-      <!-- <h1>Vue Sign In Popup</h1>
-      <button @click="()=> SignInTogglePopup('SignInButtonTrigger')">Open Popup</button> -->
     <SignInPopup 
       v-if="SignInPopupTriggers.SignInButtonTrigger" 
       :SignInTogglePopup="()=> SignInTogglePopup('SignInButtonTrigger')"
       class="signin-popup">
-        <h2>Sign In</h2>
+        <!-- <h2>Sign In</h2>
         <input type="text" placeholder="UserName">
-        <input type="text" placeholder="Password">
+        <input type="text" placeholder="Password"> -->
     </SignInPopup>
+
+    <CreateAccountPopup 
+      v-if="CreateAccountPopupTriggers.CreateAccountButtonTrigger" 
+      :CreateAccountTogglePopup="()=> CreateAccountTogglePopup('CreateAccountButtonTrigger')"
+      class="signin-popup">
+        <!-- <h2>Create an account</h2> -->
+        <!-- <input type="text" placeholder="Enter userName">
+        <input type="text" placeholder="Enter password">
+        <input type="text" placeholder="Re-enter password"> -->
+        
+        
+    </CreateAccountPopup>
+
+    <GetInTouchPopup 
+      v-if="GetInTouchPopupTriggers.GetInTouchButtonTrigger" 
+      :GetInTouchTogglePopup="()=> GetInTouchTogglePopup('GetInTouchButtonTrigger')"
+      class="signin-popup">
+      <div class="get-in-touch">
+        <h2>Get in touch</h2>
+        <h3>Telephone Numbers:</h3>
+        <p>Union: (908) 686-7300</p>
+        <p>Cherry Hill: (856) 428-6190</p>
+        <h3>Email:</h3>
+        <p>customerservice@lrex.com</p>
+        <h3>Address:</h3>
+        <p>
+          LRex <br>
+          2333 Route 22 West <br>
+          Union, NJ 07083 <br> <br>
+
+          LRex<br>
+          2 Keystone Avenue<br>
+          Cherry Hill, NJ 08003<br>
+        </p>
+      </div>
+    </GetInTouchPopup>
   </div>
 
   <div ref="homepage">
@@ -72,6 +107,8 @@ import HomePage from './components/HomePage.vue'
 import OurSolutions from './components/OurSolutions.vue'
 import AboutUs from './components/AboutUs.vue'
 import SignInPopup from './components/Popups/SignInPopup.vue'
+import CreateAccountPopup from './components/Popups/CreateAccountPopup.vue'
+import GetInTouchPopup from './components/Popups/GetInTouchPopup.vue'
 import {ref} from 'vue';
 
 export default {
@@ -94,7 +131,9 @@ export default {
     HomePage,
     OurSolutions,
     AboutUs,
-    SignInPopup
+    SignInPopup,
+    CreateAccountPopup,
+    GetInTouchPopup
   },
   methods: {
     onScroll() {
@@ -126,6 +165,7 @@ export default {
   },
   setup(){
 
+    //Sign In Popup
     const SignInPopupTriggers = ref({
       SignInButtonTrigger: false
     });
@@ -134,9 +174,31 @@ export default {
       SignInPopupTriggers.value[trigger] = !SignInPopupTriggers.value[trigger]
     }
 
+    //Create Account Popup
+    const CreateAccountPopupTriggers = ref({
+      CreateAccountButtonTrigger: false
+    });
+
+    const CreateAccountTogglePopup = (trigger) =>{
+      CreateAccountPopupTriggers.value[trigger] = !CreateAccountPopupTriggers.value[trigger]
+    }
+
+    //Get in touch Popup
+    const GetInTouchPopupTriggers = ref({
+      GetInTouchButtonTrigger: false
+    });
+
+    const GetInTouchTogglePopup = (trigger) =>{
+      GetInTouchPopupTriggers.value[trigger] = !GetInTouchPopupTriggers.value[trigger]
+    }
+
     return{
       SignInTogglePopup,
-      SignInPopupTriggers
+      SignInPopupTriggers,
+      CreateAccountTogglePopup,
+      CreateAccountPopupTriggers,
+      GetInTouchTogglePopup,
+      GetInTouchPopupTriggers
     }
   }
 }
@@ -144,12 +206,15 @@ export default {
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Work Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
   margin-top: 40px;
+}
+
+a{
+  cursor: pointer;
 }
 
 /* || Header Syles */
@@ -254,7 +319,7 @@ export default {
         transition: all .5s ease;
     }
 /**************************************/
-/****Sign in Popup */
+/****Popup */
 .popup-container{
   display: flex;
   flex-direction: column;
@@ -275,6 +340,11 @@ export default {
   border: rgb(151, 151, 151) 1px solid;
   background-color: rgb(235, 235, 235);
   width: 40%;
+}
+
+/*Get in touch*/
+.get-in-touch h3{
+  border-bottom: 1px solid #33f18a;
 }
 
 @media only screen and (max-width: 1000px){
@@ -326,9 +396,19 @@ export default {
       font-size: 3vw;
     }
 
+    
+
     .nav_links li{
       margin-bottom: 5vw;
       font-size: 4vw;
+      font-weight: 900;
+      position: relative;
+      right: 15px;
+
+      border-bottom: 1px solid #33f18a;
+      width: 70%;
+
+      text-align: left;
     }
 
     .menu_icon{
@@ -338,7 +418,7 @@ export default {
     }
 }
 /**************************/
-/*****Sign in popup */
+/*****Popup */
 .popup-container input{
   margin-bottom: 1vw;
   height: 25px;

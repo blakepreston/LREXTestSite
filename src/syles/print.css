@@ -1,0 +1,13 @@
+.shipment-table{
+    width: 70%;
+    margin-bottom: 15px;
+  }
+  
+  .shipment-table th{
+    background-color: #33f18a;
+  }
+  
+  .shipment-table td, th{
+    padding: 5px;
+    border: 1px solid #ddd;
+  }

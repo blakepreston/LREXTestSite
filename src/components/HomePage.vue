@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans&display=swap" rel="stylesheet">
+  
 </head>
 <body>
   <div class="track_package">
@@ -15,9 +16,13 @@
         <div class="form_shiptrack">
             <h1>Big Headline.</h1>
             <p>Track a package</p>
-                <form>
-                    <input type="text" name="shipment"> <br>
-                </form>
+            <form id="shipmentForm" class="shipmentForm" @submit.prevent="ShipmentTrackingTogglePopup('ShipmentTrackingButtonTrigger');  GetShipmentByID(); GetShipmentHistoryByID();">
+                    <input type="text" name="shipment" v-model="posts.shipmentId">
+                    <!-- <input  placeholder="Shipment ID" type="text" name="shipment" v-model="posts.shipmentId" class="shipmentInput">
+                    <input  placeholder="Username" type="text" class="userInput" v-model="username">
+                    <input placeholder="API Key" type="text" class="apiInput" v-model="userapikey">
+                    <button type="submit">Get Data</button> -->
+            </form>
         </div>
     </div>
 
@@ -93,19 +98,147 @@
       <p>Learn about working for Lrex</p>
       <img src="../assets/delivery-woman.jpg" alt="">
       <!-- <img src="../assets/woman-in-car.jpg" alt=""> -->
-      <div class="drive_with_us"><a href="">Drive with us</a></div>
+      <div class="drive_with_us"><a @click="()=> DriveWithUsTogglePopup('DriveWithUsButtonTrigger')">Drive with us</a></div>
     </div>
 
+    <div class="popup-container">
+      <DriveWithUsPopup 
+        v-if="DriveWithUsPopupTriggers.DriveWithUsButtonTrigger" 
+        :DriveWithUsTogglePopup="()=> DriveWithUsTogglePopup('DriveWithUsButtonTrigger')"
+        class="DriveWithUs-popup">
+          <h2>Drive with us</h2>
+          <input type="text" placeholder="Name">
+          <input type="text" placeholder="Email">
+          <input type="text" placeholder="Message">
+      </DriveWithUsPopup>
+
+      <ShipmentTrackingPopup 
+        v-if="ShipmentTrackingPopupTriggers.ShipmentTrackingButtonTrigger" 
+        :ShipmentTrackingTogglePopup="()=> ShipmentTrackingTogglePopup('ShipmentTrackingButtonTrigger')"
+        class="signin-popup"
+        id="shipmentTrackingContents">
+          <!-- <div v-html="trackingData" class="trackingData"></div> -->
+          <div class="shipment_data" v-for="ship in shipments" v-bind:key="ship"> 
+            <img class="logo" src="../assets/LREXHeaderLogo.jpg" alt="LREX" style="width: 80px;">
+            <h3>Tracking #: {{shipments[0].shipmentId}}</h3>
+            <div v-if="!shipments[0].priorityService">
+              <p>Next Day Standard</p>
+            </div>
+            <div v-if="shipments[0].sameDay !== 0">
+              <p>Same Day</p>
+            </div>
+            <div v-if="shipments[0].signatureRequired">
+              <p>Signature Required</p>
+            </div>
+            <h3>Ship By</h3>
+            <p>{{shipments[0].pickupAttention}}</p>
+            <p>{{shipments[0].pickupAddress1}}</p>
+            <p>{{shipments[0].pickupAddress2}}</p>
+            <p>{{shipments[0].pickupCity}}, {{shipments[0].pickupState}}, {{shipments[0].pickupZipCode}} </p>
+            <h3>Ship To</h3>
+            <p>{{shipments[0].deliveryCompanyName}}</p>
+            <p>{{shipments[0].deliveryAddress1}}</p>
+            <p>{{shipments[0].deliveryCity}}, {{shipments[0].deliveryState}}, {{shipments[0].deliveryZipCode}} </p>
+            <h3>Package History</h3>
+
+            <table class="shipment-table">
+              <tr>
+                <th>Description</th>
+                <th>Date</th>
+                <th>Notes</th>
+              </tr>
+              <tr>
+                <td>{{shipmentHistoryData[0].description}}</td>
+                <td>{{shipmentHistoryData[0].processedDate}}</td>
+                <td>{{shipmentHistoryData[0].notes}}</td>
+              </tr>
+              <tr>
+                <td>{{shipmentHistoryData[1].description}}</td>
+                <td>{{shipmentHistoryData[1].processedDate}}</td>
+                <td>{{shipmentHistoryData[1].notes}}</td>
+              </tr>
+              <tr>
+                <td>{{shipmentHistoryData[2].description}}</td>
+                <td>{{shipmentHistoryData[2].processedDate}}</td>
+                <td>{{shipmentHistoryData[2].notes}}</td>
+              </tr>
+              <tr>
+                <td>{{shipmentHistoryData[3].description}}</td>
+                <td>{{shipmentHistoryData[3].processedDate}}</td>
+                <td>{{shipmentHistoryData[3].notes}}</td>
+              </tr>
+            </table>
+
+            <button class="print-page" @click.prevent="PrintDiv()">Print this page</button>
+            <button class="show-url" @click.prevent="ShowURL()">Get Image URLs</button>
+            <div class="images-tracking" id="images-tracking">
+              
+              <!-- <div class="proofDelivery">
+                <div v-if="shipmentHistoryData[0].signatureId == 0"  class="notAvailable">
+                  <p>Image not available</p>
+                </div>
+
+                <p>Proof of Delivery: <a href="" id="proof-of-delivery" target="_blank">Link</a></p> 
+              </div> -->
+              
+              <div class="proofDelivery">
+                
+                <div class="proofDeliveryLink">
+                  <p>Proof of Delivery: </p> 
+                  <div class="linkStyling">
+                    <a href="" id="proof-of-delivery" target="_blank">
+                      Link
+                      <a class="notAvailable" v-if="shipmentHistoryData[0].signatureId == 0">not available</a>
+                    </a>
+                  </div>
+                    
+                  
+                </div>
+              
+              </div>
+              
+              
+              <div class="locationDelivery">
+                
+                <div class="locationDeliveryLink">
+                  <p>Delivery Location: </p> 
+                  <div class="linkStyling">
+                    <a href="" id="location-of-delivery" target="_blank">
+                      Link
+                      <a class="notAvailable" v-if="shipmentHistoryData[1].signatureId == 0">not available</a>
+                    </a>
+                  </div>
+                    
+                  
+                </div>
+              
+              </div>
+              
+            </div>
+          </div>
+
+            <div v-if="shipments == null" style="text-align: center;">
+              <p>{{error[0].errMsg}}</p>
+              <br>
+              <p>Invalid Credentials or Incorrect Shipment ID</p>
+            </div>
+          
+      </ShipmentTrackingPopup>
+    </div>
 </body>
 </html>
 
 </template>
 
 <script>
+  import axios from 'axios'
   import Carousel from './Carousel/Carousel.vue'
   import CarouselSlide from './Carousel/CarouselSlide.vue'
   import ImageCarousel from './ImageCarousel/ImageCarousel.vue'
   import ImageCarouselSlide from './ImageCarousel/ImageCarouselSlide.vue'
+  import DriveWithUsPopup from './Popups/DriveWithUsPopup.vue'
+  import ShipmentTrackingPopup from './Popups/ShipmentTrackingPopup.vue'
+  import {ref} from 'vue';
   import image1 from "../assets/fakecompany1.png"
   import image2 from "../assets/fakecompany2.jpg"
   import image3 from "../assets/fakecompany3.jpg"
@@ -131,10 +264,84 @@
         ],
           visibleSlide: 0,
           visibleSlideImg: 1,
-          direction: 'left'
+          direction: 'left',
+          trackingData: {},
+          track:{
+            trackingNumber: null
+          },
+          posts:{
+            shipmentId: null,
+            IncludeImageURL: true
+          },
+          shipments: {data: []},
+          shipmentHistoryData: {data: []},
+          error: {data: []},
+          username: null,
+          userapikey: null,
         }
     },
     methods:{
+      PrintDiv(){
+      var divContents = document.getElementById("shipmentTrackingContents").innerHTML;
+      var a = window.open('', '', 'height=1000, width=1000');
+      a.document.write('<html>');
+      a.document.write('<head><style> body{font-family: sans-serif; font-size: 16px;} h3{border-bottom:2px solid black} button,.proofDelivery,.locationDelivery{display: none;} th,td{border: 1px solid black;} th{background-color: #33f18a} table{width: 70%;}</style></head>');
+      a.document.write('<body>');
+      a.document.write(divContents);
+      a.document.write('</body></html>');
+      a.document.close();
+      a.print();
+    },
+      ShowURL(){
+        var trackingelement = document.getElementById("images-tracking");
+        var proofDelivery = document.getElementById("proof-of-delivery");
+        var locationDelivery = document.getElementById("location-of-delivery");
+
+        proofDelivery.setAttribute('href', this.shipmentHistoryData[0].imageURL);
+        locationDelivery.setAttribute('href', this.shipmentHistoryData[1].imageURL);
+
+        if(trackingelement.style.display === "none"){
+          trackingelement.style.display = "flex";
+        }else{
+          trackingelement.style.display = "none";
+        }
+      },
+      GetShipmentHistoryByID() {
+          const headers ={
+            // 'User': '16132A',              
+            // 'ApiKey': '123456'
+            //'User': 'kanwarv',              
+            //'ApiKey': '64bf43886d11456f'
+            // 'User': this.username,
+            // 'ApiKey': this.userapikey
+            }
+
+            //axios.post('https://localhost:44368/api/Rest/GetShipmentHistoryByShipmentId', this.posts, {headers: headers})
+            axios.post('https://api.stage.njls.com/api/rest/GetShipmentHistoryByShipmentIdNoAuth', this.posts, {headers: headers})
+            //.then(response => console.log(response.data))
+            .then((response) => {
+              this.shipmentHistoryData = response.data.shipmentHistory
+              this.error = response.data.error
+              })
+            .catch(error => console.log(error))
+        },
+      GetShipmentByID() {
+          const headers ={
+            // 'User': '16132A',              
+            // 'ApiKey': '123456'
+            //'User': 'kanwarv',              
+            //'ApiKey': '64bf43886d11456f'
+            }
+
+            //axios.post('https://localhost:44368/api/Rest/GetShipmentByShipmentId', this.posts, {headers: headers})
+            axios.post('https://api.stage.njls.com/api/rest/GetShipmentByShipmentIdNoAuth', this.posts, {headers: headers})
+            //.then(response => console.log(response.data))
+            .then((response) => {
+              this.shipments = response.data.shipment
+              this.error = response.data.error
+              })
+            .catch((error) => {console.log(error)})
+        },
       next(){
       if(this.visibleSlide >= this.textsLength - 1){
           this.visibleSlide = 0;
@@ -181,8 +388,35 @@
       Carousel,
       CarouselSlide,
       ImageCarousel,
-      ImageCarouselSlide
+      ImageCarouselSlide,
+      DriveWithUsPopup,
+      ShipmentTrackingPopup
+    },
+    setup(){
+    //Get in touch Popup
+    const DriveWithUsPopupTriggers = ref({
+      DriveWithUsButtonTrigger: false
+    });
+
+    const DriveWithUsTogglePopup = (trigger) =>{
+      DriveWithUsPopupTriggers.value[trigger] = !DriveWithUsPopupTriggers.value[trigger]
     }
+    //ShipmentTracking Popup
+    const ShipmentTrackingPopupTriggers = ref({
+      ShipmentTrackingButtonTrigger: false
+    });
+
+    const ShipmentTrackingTogglePopup = (trigger) =>{
+      ShipmentTrackingPopupTriggers.value[trigger] = !ShipmentTrackingPopupTriggers.value[trigger]
+    }
+
+    return{
+      DriveWithUsTogglePopup,
+      DriveWithUsPopupTriggers,
+      ShipmentTrackingTogglePopup,
+      ShipmentTrackingPopupTriggers,
+    }
+  }
   }
 </script>
 
@@ -192,101 +426,114 @@ html, body{
   margin: 0;
   width: 100%;
 }
-/* || Header Syles */
-    .mobileNavigation{
-      display: none;
-    }
 
-    .homepage{
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      background-color: white;
-      z-index: 10;
-      box-shadow: 0 6px 6px -6px rgb(218, 218, 218);
-    }
+/****Popup */
+.popup-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  animation: drop .5s ease forwards;
+  margin-bottom: -30px;
+}
 
-    header{
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        padding: 30px 10%;
-        font-family: 'Work Sans', sans-serif;
-        font-size: 1.2vw;
-        
-    }
+.popup-container h2{
+  margin-top: -5px;
+}
 
-    .logo_nav{
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        margin-right: auto;
-    }
+.popup-container input{
+  margin-bottom: 1vw;
+  height: 25px;
+  border-radius: 5px;
+  border: rgb(151, 151, 151) 1px solid;
+  background-color: rgb(235, 235, 235);
+  width: 40%;
+}
 
-    .logo_nav img{
-      width: 15vw;
-    }
+.shipment_data{
+  width: 100%;
+}
 
-    .nav_links{
-        list-style: none;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        
-    }
+.shipment_data h3{
+  padding: 5px;
+  border-bottom: 1px solid #33f18a;
+  width: 65%;
+}
 
-    .nav_links li{
-        padding: 0px 20px;
-        margin-right: auto;
-    }
+.images-tracking{
+  /* display: flex; */
+  display: none;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
 
-    .nav_links li a:hover{
-      border-bottom: 2px solid #33f18a;
-    }
 
-    .nav_links li a{
-      text-decoration: none;
-      color: black;
-      transition: all .5s ease;
-    }
+.show-url{
+  padding: 15px 20px;
+  background-color: #33f18a;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
 
-    .create_account{
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-    }
+.print-page{
+  padding: 15px 20px;
+  background-color: #33f18a;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  margin-right: 10px;
+}
 
-    .create_account li{
-        list-style: none;
-        padding-right: 20px;
-    }
+.locationDelivery, .proofDelivery{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
 
-    .create_account li a:hover{
-      border-bottom: 2px solid #33f18a;
-    }
+.locationDeliveryLink, .proofDeliveryLink{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
 
-    .create_account li a{
-      text-decoration: none;
-      color: black;
-      transition: all .5s ease;
-    }
+.linkStyling a{
+  text-decoration: none;
+}
 
-    .button_signin:hover{
-      background-color: #2ee480;
-    }
+.linkStyling{
+  background-color: #308ef8;
+  color: black;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-right: 5px;
+  padding-left: 5px;
+  border-radius: 50px;
+}
 
-    .button_signin{
-        padding: 15px 25px;
-        background-color: #33f18a;
-        border: none;
-        border-radius: 50px;
-        cursor: pointer;
-        transition: all 0.3s ease 0s;
-        font-family: 'Work Sans', sans-serif;
-        font-size: 1.2vw;
-        transition: all .5s ease;
-    }
+.shipment-table{
+  width: 70%;
+  margin-bottom: 15px;
+}
+
+.shipment-table th{
+  background-color: #33f18a;
+}
+
+.shipment-table td, th{
+  padding: 5px;
+  border: 1px solid #ddd;
+}
+
+.logo{
+  width: 80px;
+  margin-bottom: -10px;
+  margin-left: 5px;
+}
+
+
 /**************************************/
 /* || Shipment Tracking Syles */
 
@@ -322,6 +569,7 @@ html, body{
         border-radius: 50px;
         cursor: pointer;
         transition: all 0.3s ease 0s;
+        margin-top: 2px;
     }
 
     .form_shiptrack button{
@@ -359,6 +607,41 @@ html, body{
         z-index:5;
         color:white;
     }
+
+    /**Testing Input */
+    /* .userInput{
+      border: #ddd 1px solid;
+      border-radius: 0px 0px 0px 0px;
+      padding: 1.5vw;
+    }
+
+    .apiInput{
+      border: #ddd 1px solid;
+      border-radius: 0px 50px 50px 0px;
+      padding: 1.5vw;
+    }
+
+    .shipmentInput{
+      border: #ddd 1px solid;
+      border-radius: 50px 0px 0px 50px;
+      padding: 1.5vw;
+    }
+
+    .shipmentForm{
+        display: flex;
+        transition: all 0.3s ease 0s;
+        margin-top: 2px;
+    }
+
+    .shipmentForm button{
+      margin-left: 10px;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      font-family: 'Work Sans', sans-serif;
+    } */
+
+    
 /**************************************/
 /* || LREX Paragraph Syles */
     .lrex_paragraph{
@@ -623,140 +906,28 @@ html, body{
   width: 190px;
 }
 
-/**************************/
-/* || Footer Syles */
-.footer{
-  margin-top: 15vw;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  border-top: solid black 1px;
-  padding-top: 75px;
-}
 
-.site_map{
-  column-count: 3;
-  display: flex;
-  flex-direction: row;
-  margin-left: 15%;
-}
-
-.site_map div{
-  padding-left: 3em;
-  font-family: 'Work Sans', sans-serif;
-  font-size: 2vw;
-  color: black;
-}
-
-.site_map div p{
-  margin-top: 0;
-  margin-bottom: 10px;
-}
-
-.footer img{
-  position: relative;
-  bottom: 2em;
-  width: 15vw;
-}
-
-.footer_two{
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  padding-bottom: 5%;
-  padding-top: 3%;
-}
-
-.footer_track{
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.footer_track input{
-  padding: 30px;
-  padding-right: 30vw;
-  border: 1px solid black;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: all 0.3s ease 0s;
-}
-
-.footer_track p{
-  font-family: 'Work Sans', sans-serif;
-  font-size: 2vw;
-  color: black;
-}
-
-.footer_dino{
-  margin-left: 35vw;
-}
-
-.footer_dino img{
-  width: 5vw;
-  position: relative;
-  top: 4em;
-}
 
 
 
 @media only screen and (max-width: 1000px){
-/**************************/
-/* || Header Syles */
-  .nav_links{
-        display: flex;
-        flex-direction: column;
-    }
+  /*****Popup */
+.popup-container input{
+  margin-bottom: 1vw;
+  height: 25px;
+  border-radius: 5px;
+  border: rgb(151, 151, 151) 1px solid;
+  background-color: rgb(235, 235, 235);
+  width: 70%;
+}
 
-    .mobileNavigation header{
-      position: relative;
-      background-color: white;
-      z-index: 11;
-      
-    }
+/* .images-tracking{
+  font-size: 4vw;
+} */
 
-    .homepage{
-      display: none;
-    }
-
-    .mobileNavigation{
-      display: block;
-      margin-bottom: 0;
-      position: fixed;
-      width: 100vw;
-      z-index: 10;
-      background-color: white;
-      top: 0;
-      left: 0;
-      box-shadow: 0 6px 6px -6px rgb(218, 218, 218);
-      
-    }
-
-    .mobileNavigation nav{
-      /* display: none; */
-      margin-top: -100%;
-    }
-
-    .logo_nav img{
-      width: 30vw;
-    }
-
-    .create_account button{
-      font-size: 3vw;
-    }
-
-    .nav_links li{
-      margin-bottom: 5vw;
-      font-size: 4vw;
-    }
-
-    .menu_icon{
-      width: 8vw;
-      margin-left: 10px;
-      cursor: pointer;
-    }
+.shipment_data h3{
+  margin: 0;
+}
 
 /**************************/
 /* || Shipment Tracking Syles */
@@ -788,6 +959,23 @@ html, body{
     padding-right: 15vw;
     padding: 1vw;
   }
+
+  .locationDeliveryLink, .proofDeliveryLink{
+    flex-direction: column;
+  }
+
+   /**Testing Input */
+    /* .userInput{
+      padding: 1vw;
+    }
+
+    .apiInput{
+      padding: 1vw;
+    }
+
+    .shipmentInput{
+      padding: 1vw;
+    } */
 
 /**************************************/
 /* || LREX Paragraph Syles */
@@ -966,25 +1154,6 @@ html, body{
   font-size: 4vw;
   width: 10vw;
 }
-
-/**************************/
-/* || Footer Syles */
-  .footer_track input{
-    padding-right: 5vw;
-    padding: 15px;
-  }
-
-  .footer_dino{
-    margin-left: 30vw;
-  }
-
-  .footer_dino img{
-  top: 1.5em;
-  }
-
-  .footer{
-    padding-top: 50px;
-  }
   
 }
 
@@ -995,4 +1164,5 @@ html, body{
         right: 15vw;
     }
 }
+
 </style>

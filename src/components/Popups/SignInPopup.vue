@@ -3,8 +3,21 @@
       <div class="popup-inner">
           <div class="signIn-container">
                 <div class="closeSignIn" @click="SignInTogglePopup()"></div>
-                <slot/>
-                <div class="loginButton">Log In</div>
+
+                    <iframe src="https://stage.njls.com/clients/MarketingHeader.aspx" frameborder="0" class="login-iframe"></iframe>
+
+                <!-- <slot/> -->
+                <!-- <h2>Sign In</h2>
+                <input type="text" placeholder="UserName">
+                <input type="text" placeholder="Password">
+                <div class="forgot-password-container">
+                    <input type="checkbox">
+                       
+                    <p class="remember-me">Remember me</p> 
+                   
+                    <p class="forgot-password">Forgot Password</p>
+                </div> -->
+                <!-- <div class="loginButton">Log In</div> -->
           </div>
           
       </div>
@@ -19,6 +32,11 @@ export default {
 </script>
 
 <style scoped>
+.login-iframe{
+    width: 100%;
+    height: 100%;
+}
+
 .popup{
     display: flex;
     flex-direction: column;
@@ -38,10 +56,13 @@ export default {
 }
 
 .popup-inner{
-    width: 25vw;
+    width: 99vw;
+    height: 20vh;
     border-radius: 15px;
     border: #33f18a 2px solid;
     background-color: white;
+
+    overflow-y: hidden;
 
     display: flex;
     justify-content: center;
@@ -60,25 +81,26 @@ export default {
 .signIn-container{
     display: flex;
     justify-content: center;
-    flex-direction: column;
     align-items: center;
-    margin-left: 5%;
-    margin-right: 5%;
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-top: 2vw;
 }
+
 
 @keyframes drop {
   0%{}
-  70%{transform: translateY(100px);}
-  100%{transform: translateY(85px);}
+  70%{transform: translateY(20px);}
+  100%{transform: translateY(1px);}
 }
 
 .closeSignIn {
       background: rgb(196, 196, 196);
       height: 25px;
-      position: relative;
+      position: fixed;
       width: 5px;
-      margin-left: 75%;
-      margin-top: 10px;
+      margin-left: 90%;
+      top: 10px;
       transform: rotate(45deg);
       cursor: pointer;
       border-radius: 5px;
@@ -112,15 +134,43 @@ export default {
     cursor: pointer;
 }
 
-@media only screen and (max-width: 1000px){
-.popup-inner{
-    width: 70vw;
+.forgot-password-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
 }
 
-.loginButton{
-    margin-bottom: 5vw;
-    margin-top: 1vw;
-    width: 70%;
+.forgot-password-container input{
+    margin: 0;
+    margin-right: 5px;
+    width: 15px;
+    cursor: pointer;
 }
+
+.forgot-password-container p{
+    font-size: 12px;
 }
+
+.forgot-password{
+    margin-left: 5%;
+    cursor: pointer;
+}
+
+.remember-me{
+    margin-right: 5%;
+}
+
+
+@media only screen and (max-width: 1000px){
+    .popup-inner{
+        height: 40vh;
+    }
+
+    .login-iframe{
+        padding-bottom: 20px;
+    }
+}
+
 </style>

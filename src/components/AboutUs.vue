@@ -10,27 +10,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans&display=swap" rel="stylesheet">
 </head>
 <body>
-  <!-- <div class="homepage">
-    <header>
-        <div class="logo_nav">
-            <a href="#"><img class="logo" src="../assets/lrexLogo.png" alt="LREX"></a>
-        <nav>
-            <ul class="nav_links">
-                <li><a href="#">Our solutions</a></li>
-                <li><a href="#">About us</a></li>
-                <li><a href="#">Get in touch</a></li>
-                
-            </ul>
-        </nav>
-        </div>
-
-        <div class="create_account">
-            <li><a href="#">Create an account</a></li>
-            <button class="button_signin">Sign in</button>
-        </div>
-    </header>
-  </div> -->
-
 
   <div class="our_story">
     <div class="text_our_story">
@@ -120,7 +99,19 @@
     <div class="headline_recruiting">
       <!-- <img src="../assets/delivery-man2.jpg" alt=""> -->
       <img src="../assets/green-uniform-man.jpg" alt="">
-      <div class="sign_up"><a href="">Join our team</a></div>
+      <div class="sign_up"><a @click="()=> JoinTeamTogglePopup('JoinTeamButtonTrigger')">Join our team</a></div>
+    </div>
+
+    <div class="popup-container">
+        <JoinTeamPopup 
+            v-if="JoinTeamPopupTriggers.JoinTeamButtonTrigger" 
+            :JoinTeamTogglePopup="()=> JoinTeamTogglePopup('JoinTeamButtonTrigger')"
+            class="signin-popup">
+                <h2>Join our team</h2>
+                <input type="text" placeholder="Enter userName">
+                <input type="text" placeholder="Enter password">
+                <input type="text" placeholder="Re-enter password">
+        </JoinTeamPopup>
     </div>
 
     <div class="footer">
@@ -153,7 +144,7 @@
     <div class="footer_two">
       <div class="footer_track">
             <p>Track a package.</p>
-                <form>
+                <form @submit.prevent="ShipmentTrackingTogglePopup('ShipmentTrackingButtonTrigger');  GetShipmentByID(); GetShipmentHistoryByID();">
                     <input type="text"> <br>
                 </form>
       </div>
@@ -161,13 +152,78 @@
         <img src="../assets/LREXDinoFooter.jpg" alt="">
       </div>
     </div>
+
 </body>
 </html>
 
 </template>
 
 <script>
+import JoinTeamPopup from './Popups/JoinTeamPopup.vue'
+import {ref} from 'vue';
+import axios from 'axios'
+//import ShipmentTrackingPopup from './Popups/ShipmentTrackingPopup.vue'
 
+export default{
+    methods:{
+      GetShipmentHistoryByID() {
+          const headers ={
+            // 'User': '16132A',              
+            // 'ApiKey': '123456'
+            'User': 'kanwarv',              
+            'ApiKey': '64bf43886d11456f'
+            // 'User': this.username,
+            // 'ApiKey': this.userapikey
+            }
+
+            //axios.post('https://localhost:44368/api/Rest/GetShipmentHistoryByShipmentId', this.posts, {headers: headers})
+            axios.post('https://api.njls.com/api/rest/GetShipmentHistoryByShipmentId', this.posts, {headers: headers})
+            //.then(response => console.log(response.data))
+            .then((response) => {
+              this.shipmentHistoryData = response.data.shipmentHistory
+              this.error = response.data.error
+              })
+            .catch(error => console.log(error))
+        },
+      GetShipmentByID() {
+          const headers ={
+            // 'User': '16132A',              
+            // 'ApiKey': '123456'
+            'User': 'kanwarv',              
+            'ApiKey': '64bf43886d11456f'
+            }
+
+            //axios.post('https://localhost:44368/api/Rest/GetShipmentByShipmentId', this.posts, {headers: headers})
+            axios.post('https://api.njls.com/api/rest/GetShipmentByShipmentId', this.posts, {headers: headers})
+            //.then(response => console.log(response.data))
+            .then((response) => {
+              this.shipments = response.data.shipment
+              this.error = response.data.error
+              })
+            .catch((error) => {console.log(error)})
+        }
+    },
+    components:{
+        JoinTeamPopup,
+        //ShipmentTrackingPopup
+    },
+    setup(){
+
+    //Get in touch Popup
+    const JoinTeamPopupTriggers = ref({
+      JoinTeamButtonTrigger: false
+    });
+
+    const JoinTeamTogglePopup = (trigger) =>{
+      JoinTeamPopupTriggers.value[trigger] = !JoinTeamPopupTriggers.value[trigger]
+    }
+
+    return{
+      JoinTeamTogglePopup,
+      JoinTeamPopupTriggers
+    }
+  }
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -176,90 +232,36 @@ html, body{
   margin: 0;
   width: 100%;
 }
-/* || Header Syles */
-    /* .homepage{
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      background-color: white;
-      z-index: 10;
-      box-shadow: 0 6px 6px -6px rgb(218, 218, 218);
-    }
 
-    header{
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        padding: 30px 10%;
-        font-family: 'Work Sans', sans-serif;
-        font-size: 1.2vw;
-        
-    }
+/****Popup */
+.popup-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  animation: drop .5s ease forwards;
+  margin-bottom: -30px;
+}
 
-    .logo_nav{
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        margin-right: auto;
-    }
+.popup-container h2{
+  margin-top: -5px;
+}
 
-    .logo_nav img{
-      width: 15vw;
-    }
+.popup-container input{
+  margin-bottom: 1vw;
+  height: 25px;
+  border-radius: 5px;
+  border: rgb(151, 151, 151) 1px solid;
+  background-color: rgb(235, 235, 235);
+  width: 40%;
+}
 
-    .nav_links{
-        list-style: none;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        
-    }
-
-    .nav_links li{
-        padding: 0px 20px;
-        margin-right: auto;
-    }
-
-    .nav_links li a{
-      text-decoration: none;
-      color: black;
-    }
-
-    .create_account{
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-    }
-
-    .create_account li{
-        list-style: none;
-        padding-right: 20px;
-    }
-
-    .create_account li a{
-      text-decoration: none;
-      color: black;
-    }
-
-    .button_signin{
-        padding: 15px 25px;
-        background-color: #33f18a;
-        border: none;
-        border-radius: 50px;
-        cursor: pointer;
-        transition: all 0.3s ease 0s;
-        font-family: 'Work Sans', sans-serif;
-        font-size: 1.2vw;
-    } */
-
-    .ship_with_us img{
-        position: absolute;
-        z-index: 1;
-        width: 90vw;
-        height: auto;
-    }
+.ship_with_us img{
+    position: absolute;
+    z-index: 1;
+    width: 90vw;
+    height: auto;
+  }
 
 /**************************/    
 /* || Our Story Syles */
@@ -428,7 +430,7 @@ html, body{
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  border-top: solid black 1px;
+  border-top: solid black 2px;
   padding-top: 75px;
 }
 
@@ -504,6 +506,16 @@ html, body{
         padding: 0px 10px;
         margin-right: auto;
     }
+
+  /*****Popup */
+.popup-container input{
+  margin-bottom: 1vw;
+  height: 25px;
+  border-radius: 5px;
+  border: rgb(151, 151, 151) 1px solid;
+  background-color: rgb(235, 235, 235);
+  width: 70%;
+}
 
 /**************************/
 /* || Shipment Tracking Syles */
@@ -633,6 +645,7 @@ html, body{
 
   .footer{
     padding-top: 50px;
+    margin-top: 20vw;
   }
   
 }

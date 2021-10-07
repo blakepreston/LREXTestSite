@@ -10,26 +10,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans&display=swap" rel="stylesheet">
 </head>
 <body>
-  <!-- <div class="homepage">
-    <header>
-        <div class="logo_nav">
-            <a href="#"><img class="logo" src="../assets/lrexLogo.png" alt="LREX"></a>
-        <nav>
-            <ul class="nav_links">
-                <li><a href="#">Our solutions</a></li>
-                <li><a href="#">About us</a></li>
-                <li><a href="#">Get in touch</a></li>
-                
-            </ul>
-        </nav>
-        </div>
-
-        <div class="create_account">
-            <li><a href="#">Create an account</a></li>
-            <button class="button_signin">Sign in</button>
-        </div>
-    </header>
-  </div> -->
 
   <div class="ship_with_us">
         <!-- <img src="../assets/Delivery-Truck-Dropoff.png" alt="Truck"> -->
@@ -38,7 +18,7 @@
         <div class="ship_with_us_layout">
             <h1>Ship with us.</h1>
             <p>Subcopy.</p>
-                <button>Create an account</button>
+             <a href="https://www.stage.njls.com/clients/RegisterNewCustomer.aspx" target="_blank" style="text-decoration: none;"><button>Create an account</button></a> 
         </div>
     </div>
 
@@ -73,53 +53,75 @@
       <img src="../assets/woman-in-car.jpg" alt="">
       <!-- <img src="../assets/woman-with-package.jpg" alt=""> -->
       <!-- <img src="../assets/box-by-door.jpg" alt=""> -->
-      <div class="sign_up"><a href="">Sign Up</a></div>
+      <div class="sign_up"><a href="https://www.stage.njls.com/clients/RegisterNewCustomer.aspx" target="_blank">Sign Up</a></div>
+       <!-- @click="()=> SignUpTogglePopup('SignUpButtonTrigger')" -->
     </div>
 
-    <!-- <div class="footer">
-      <img src="../assets/lrexLogo.png" alt="">
-      <div class="site_map">
-        <div>
-          <p>Site map</p>
-          <p>Site map</p>
-          <p>Site map</p>
-          <p>Site map</p>
-        </div>
-        
-        <div>
-          <p>Site map</p>
-          <p>Site map</p>
-          <p>Site map</p>
-          <p>Site map</p>
-        </div>
+    <div class="popup-container">
+        <CreateAccountPopup 
+            v-if="CreateAccountPopupTriggers.CreateAccountButtonTrigger" 
+            :CreateAccountTogglePopup="()=> CreateAccountTogglePopup('CreateAccountButtonTrigger')"
+            class="signin-popup">
+                <h2>Create an account</h2>
+                <input type="text" placeholder="Enter userName">
+                <input type="text" placeholder="Enter password">
+                <input type="text" placeholder="Re-enter password">
+        </CreateAccountPopup>
 
-        <div>
-          <p>Download</p>
-          <p>Download</p>
-          <p>Download</p>
-          <p>Download</p>
-        </div>
-        
-      </div>
+        <SignUpPopup 
+            v-if="SignUpPopupTriggers.SignUpButtonTrigger" 
+            :SignUpTogglePopup="()=> SignUpTogglePopup('SignUpButtonTrigger')"
+            class="signin-popup">
+                <h2>Sign up</h2>
+                <input type="text" placeholder="Enter userName">
+                <input type="text" placeholder="Enter password">
+                <input type="text" placeholder="Re-enter password">
+        </SignUpPopup>
     </div>
 
-    <div class="footer_two">
-      <div class="footer_track">
-            <p>Track a package.</p>
-                <form>
-                    <input type="text"> <br>
-                </form>
-      </div>
-      <div class="footer_dino">
-        <img src="../assets/lrexDino.png" alt="">
-      </div>
-    </div> -->
 </body>
 </html>
 
 </template>
 
 <script>
+import CreateAccountPopup from './Popups/CreateAccountPopup.vue'
+import SignUpPopup from './Popups/SignUpPopup.vue'
+import {ref} from 'vue';
+
+export default{
+    components:{
+        CreateAccountPopup,
+        SignUpPopup
+    },
+    setup(){
+
+    //Get in touch Popup
+    const CreateAccountPopupTriggers = ref({
+      CreateAccountButtonTrigger: false
+    });
+
+    const CreateAccountTogglePopup = (trigger) =>{
+      CreateAccountPopupTriggers.value[trigger] = !CreateAccountPopupTriggers.value[trigger]
+    }
+
+    //Sign up Popup
+    const SignUpPopupTriggers = ref({
+      SignUpButtonTrigger: false
+    });
+
+    const SignUpTogglePopup = (trigger) =>{
+      SignUpPopupTriggers.value[trigger] = !SignUpPopupTriggers.value[trigger]
+    }
+
+    return{
+      CreateAccountTogglePopup,
+      CreateAccountPopupTriggers,
+      SignUpTogglePopup,
+      SignUpPopupTriggers
+    }
+  }
+}
 
 </script>
 
@@ -129,83 +131,29 @@ html, body{
   margin: 0;
   width: 100%;
 }
-/* || Header Syles */
-    /* .homepage{
-        display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      background-color: white;
-      z-index: 10;
-      box-shadow: 0 6px 6px -6px rgb(218, 218, 218);
-    }
+/****Popup */
+.popup-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  animation: drop .5s ease forwards;
+  margin-bottom: -30px;
+}
 
-    header{
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        padding: 30px 10%;
-        font-family: 'Work Sans', sans-serif;
-        font-size: 1.2vw;
-        
-    }
+.popup-container h2{
+  margin-top: -5px;
+}
 
-    .logo_nav{
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        margin-right: auto;
-    }
+.popup-container input{
+  margin-bottom: 1vw;
+  height: 25px;
+  border-radius: 5px;
+  border: rgb(151, 151, 151) 1px solid;
+  background-color: rgb(235, 235, 235);
+  width: 40%;
+}
 
-    .logo_nav img{
-      width: 15vw;
-    }
-
-    .nav_links{
-        list-style: none;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        
-    }
-
-    .nav_links li{
-        padding: 0px 20px;
-        margin-right: auto;
-    }
-
-    .nav_links li a{
-      text-decoration: none;
-      color: black;
-    }
-
-    .create_account{
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-    }
-
-    .create_account li{
-        list-style: none;
-        padding-right: 20px;
-    }
-
-    .create_account li a{
-      text-decoration: none;
-      color: black;
-    }
-
-    .button_signin{
-        padding: 15px 25px;
-        background-color: #33f18a;
-        border: none;
-        border-radius: 50px;
-        cursor: pointer;
-        transition: all 0.3s ease 0s;
-        font-family: 'Work Sans', sans-serif;
-        font-size: 1.2vw;
-    } */
 /**************************************/
 /* || Shipment Tracking Syles */
 
@@ -388,7 +336,8 @@ html, body{
         width: 50vw;
         /* border-radius: 200px; */
         font-size: 4vw;
-        clip-path: polygon(0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%);
+        /* clip-path: polygon(0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%); */
+        clip-path: polygon(15% 5%, 85% 5%, 100% 50%, 85% 95%, 15% 95%, 0% 50%);
     }
 
     .general_solution p{
@@ -404,7 +353,7 @@ html, body{
   align-items: center;
   margin-top: 5%;
   position: relative;
-  margin-bottom: 10vw;
+  margin-bottom: 15vw;
 }
 
 .headline_recruiting img{
@@ -435,85 +384,19 @@ html, body{
   width: 190px;
 }
 
-/**************************/
-/* || Footer Syles */
-.footer{
-  margin-top: 15vw;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  border-top: solid black 1px;
-  padding-top: 75px;
-}
 
-.site_map{
-  column-count: 3;
-  display: flex;
-  flex-direction: row;
-  margin-left: 15%;
-}
-
-.site_map div{
-  padding-left: 3em;
-  font-family: 'Work Sans', sans-serif;
-  font-size: 2vw;
-  color: black;
-}
-
-.site_map div p{
-  margin-top: 0;
-  margin-bottom: 10px;
-}
-
-.footer img{
-  position: relative;
-  bottom: 2em;
-  width: 15vw;
-}
-
-.footer_two{
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  padding-bottom: 5%;
-  padding-top: 3%;
-}
-
-.footer_track{
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.footer_track input{
-  padding: 30px;
-  padding-right: 30vw;
-  border: 1px solid black;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: all 0.3s ease 0s;
-}
-
-.footer_track p{
-  font-family: 'Work Sans', sans-serif;
-  font-size: 2vw;
-  color: black;
-}
-
-.footer_dino{
-  margin-left: 35vw;
-}
-
-.footer_dino img{
-  width: 5vw;
-  position: relative;
-  top: 4em;
-}
 
 
 @media only screen and (max-width: 1000px){
+    /*****Popup */
+.popup-container input{
+  margin-bottom: 1vw;
+  height: 25px;
+  border-radius: 5px;
+  border: rgb(151, 151, 151) 1px solid;
+  background-color: rgb(235, 235, 235);
+  width: 70%;
+}
 /**************************/
 /* || Header Syles */
   .nav_links li{
@@ -597,6 +480,9 @@ html, body{
 }
 /**************************/
 /* || Recruiting Syles */
+.headline_recruiting{
+    margin-bottom: 8vw;
+}
 
 
 .sign_up{
@@ -609,25 +495,6 @@ html, body{
   font-size: 4vw;
   width: 10vw;
 }
-
-/**************************/
-/* || Footer Syles */
-  .footer_track input{
-    padding-right: 5vw;
-    padding: 15px;
-  }
-
-  .footer_dino{
-    margin-left: 30vw;
-  }
-
-  .footer_dino img{
-  top: 1.5em;
-  }
-
-  .footer{
-    padding-top: 50px;
-  }
   
 }
 
