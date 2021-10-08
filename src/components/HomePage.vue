@@ -121,6 +121,9 @@
           <div class="shipment_data" v-for="ship in shipments" v-bind:key="ship"> 
             <img class="logo" src="../assets/LREXHeaderLogo.jpg" alt="LREX" style="width: 80px;">
             <h3>Tracking #: {{shipments[0].shipmentId}}</h3>
+            <div v-if="shipments[0].priorityService">
+              <p>Priority Service</p>
+            </div>
             <div v-if="!shipments[0].priorityService">
               <p>Next Day Standard</p>
             </div>
@@ -147,30 +150,30 @@
                 <th>Date</th>
                 <th>Notes</th>
               </tr>
-              <tr>
-                <td>{{shipmentHistoryData[0].description}}</td>
-                <td>{{shipmentHistoryData[0].processedDate}}</td>
-                <td>{{shipmentHistoryData[0].notes}}</td>
+              <tr v-if="shipmentHistoryData[0]">
+                <td v-if="shipmentHistoryData[0].description">{{shipmentHistoryData[0].description}}</td>
+                <td v-if="shipmentHistoryData[0].processedDate">{{shipmentHistoryData[0].processedDate}}</td>
+                <td v-if="shipmentHistoryData[0].notes">{{shipmentHistoryData[0].notes}}</td>
               </tr>
-              <tr>
-                <td>{{shipmentHistoryData[1].description}}</td>
-                <td>{{shipmentHistoryData[1].processedDate}}</td>
-                <td>{{shipmentHistoryData[1].notes}}</td>
+              <tr v-if="shipmentHistoryData[1]">
+                <td v-if="shipmentHistoryData[1].description">{{shipmentHistoryData[1].description}}</td>
+                <td v-if="shipmentHistoryData[1].processedDate">{{shipmentHistoryData[1].processedDate}}</td>
+                <td v-if="shipmentHistoryData[1].notes">{{shipmentHistoryData[1].notes}}</td>
               </tr>
-              <tr>
-                <td>{{shipmentHistoryData[2].description}}</td>
-                <td>{{shipmentHistoryData[2].processedDate}}</td>
-                <td>{{shipmentHistoryData[2].notes}}</td>
+              <tr v-if="shipmentHistoryData[2]">
+                <td v-if="shipmentHistoryData[2].description">{{shipmentHistoryData[2].description}}</td>
+                <td v-if="shipmentHistoryData[2].processedDate">{{shipmentHistoryData[2].processedDate}}</td>
+                <td v-if="shipmentHistoryData[2].notes">{{shipmentHistoryData[2].notes}}</td>
               </tr>
-              <tr>
-                <td>{{shipmentHistoryData[3].description}}</td>
-                <td>{{shipmentHistoryData[3].processedDate}}</td>
-                <td>{{shipmentHistoryData[3].notes}}</td>
+              <tr v-if="shipmentHistoryData[3]">
+                <td v-if="shipmentHistoryData[3].description">{{shipmentHistoryData[3].description}}</td>
+                <td v-if="shipmentHistoryData[3].processedDate">{{shipmentHistoryData[3].processedDate}}</td>
+                <td v-if="shipmentHistoryData[3].notes">{{shipmentHistoryData[3].notes}}</td>
               </tr>
             </table>
 
             <button class="print-page" @click.prevent="PrintDiv()">Print this page</button>
-            <button class="show-url" @click.prevent="ShowURL()">Get Image URLs</button>
+            <button class="show-url" @click.prevent="ShowURL()" v-if="shipmentHistoryData[0].signatureId">Get Image URLs</button>
             <div class="images-tracking" id="images-tracking">
               
               <!-- <div class="proofDelivery">
@@ -183,7 +186,7 @@
               
               <div class="proofDelivery">
                 
-                <div class="proofDeliveryLink">
+                <div class="proofDeliveryLink" v-if="shipmentHistoryData[0]">
                   <p>Proof of Delivery: </p> 
                   <div class="linkStyling">
                     <a href="" id="proof-of-delivery" target="_blank">
@@ -200,7 +203,7 @@
               
               <div class="locationDelivery">
                 
-                <div class="locationDeliveryLink">
+                <div class="locationDeliveryLink" v-if="shipmentHistoryData[1]">
                   <p>Delivery Location: </p> 
                   <div class="linkStyling">
                     <a href="" id="location-of-delivery" target="_blank">
