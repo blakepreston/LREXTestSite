@@ -112,6 +112,10 @@
           <input type="text" placeholder="Message">
       </DriveWithUsPopup>
 
+      <div v-if="loading" class="loading-container">
+        <div class="loading-dropdown"><p>Getting Shipment Data</p></div>
+      </div>
+
       <ShipmentTrackingPopup 
         v-if="ShipmentTrackingPopupTriggers.ShipmentTrackingButtonTrigger" 
         :ShipmentTrackingTogglePopup="()=> ShipmentTrackingTogglePopup('ShipmentTrackingButtonTrigger')"
@@ -281,6 +285,7 @@
           error: {data: []},
           username: null,
           userapikey: null,
+          loading: false
         }
     },
     methods:{
@@ -329,6 +334,7 @@
             .catch(error => console.log(error))
         },
       GetShipmentByID() {
+          this.loading = true;
           const headers ={
             // 'User': '16132A',              
             // 'ApiKey': '123456'
@@ -344,6 +350,7 @@
               this.error = response.data.error
               })
             .catch((error) => {console.log(error)})
+            .finally(()=> this.loading = false)
         },
       next(){
       if(this.visibleSlide >= this.textsLength - 1){
@@ -431,6 +438,37 @@ html, body{
 }
 
 /****Popup */
+.loading-dropdown{
+  width: 20vw;
+  padding: 10px;
+  border: 2px solid #33f18a;
+  background-color: white;
+  border-radius: 5px;
+  color: black;
+  text-align: center;
+}
+
+.loading-container{
+  width: 100vw;
+  height: 50px;
+
+  position: absolute;
+  top: 10px;
+  z-index: 99;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  animation: loadingdrop .5s ease forwards;
+}
+
+@keyframes loadingdrop {
+  0%{opacity: 0;}
+  70%{transform: translateY(10px);}
+  100%{transform: translateY(30px); opacity: 1;}
+}
+
 .popup-container{
   display: flex;
   flex-direction: column;
