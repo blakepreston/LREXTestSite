@@ -25,7 +25,6 @@ export default {
     align-items: center;
     animation: drop .5s ease forwards;
     
-
     position: fixed;
     top: 0;
     left: 0;

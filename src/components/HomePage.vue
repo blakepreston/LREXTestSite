@@ -14,7 +14,7 @@
   <div class="track_package">
         <img src="../assets/Delivery-Truck.jpg" alt="Truck">
         <div class="form_shiptrack">
-            <h1>Big Headline.</h1>
+            <h1>LRex is beyond NJLS.</h1>
             <p>Track a package</p>
             <form id="shipmentForm" class="shipmentForm" @submit.prevent="ShipmentTrackingTogglePopup('ShipmentTrackingButtonTrigger');  GetShipmentByID(); GetShipmentHistoryByID();">
                     <input type="text" name="shipment" v-model="posts.shipmentId">
@@ -28,9 +28,12 @@
 
     <div class="lrex_paragraph">
       <p>
-        A short paragraph that summarizes
-        the value of working with a partner like LRex and talks
-        briefly about our history and ambitions.
+        LRex – When your shipping is not just moving your package from Point A to Point B. <br/>
+        Don’t let your ambitions be boxed in. “Beyond the box” is a philosophy that reflects our 
+        view on the future of shipping: regional, sustainable, and backed by adaptive technologies 
+        and shipping expertise. That’s why we look at every shipment as part of a bigger journey, 
+        from before the start to the next destination. We ask: how can we help you get closer to 
+        what’s next, for your business and for all of us?
       </p>
     </div>
 
@@ -980,10 +983,12 @@ html, body{
 
   .track_package h1{
     font-size: 8vw;
+    text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.534);
   }
 
   .track_package p{
     font-size: 4vw;
+    text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.534);
   }
 
   .track_package img{
@@ -992,7 +997,7 @@ html, body{
   }
 
   .form_shiptrack{
-        right: 15vw;
+        left: 1vw;
         margin-bottom: 15vw;
     }
 

@@ -5,7 +5,7 @@
             <a href="#" @click="scrollTo('#')"><img class="logo" src="./assets/LREXHeaderLogo.jpg" alt="LREX"></a>
         </div>
         <div class="create_account">
-          <a href="https://stage.njls.com/clients/MarketingHeader.aspx" target="_blank"><button class="button_signin" @click="()=> SignInTogglePopup('SignInButtonTrigger')">Sign in</button></a>
+          <a><button class="button_signin" @click="()=> SignInTogglePopup('SignInButtonTrigger')">Sign in</button></a>
           <img src="./assets/Hamburger_icon.png" alt="" @click.prevent="moveNav" class="menu_icon">
         </div>
     </header>
@@ -13,6 +13,7 @@
             <ul class="nav_links">
                 <li><a href="#oursolutions" @click="scrollTo('oursolutions')">Our solutions</a></li>
                 <li><a href="#aboutus" @click="scrollTo('aboutus')">About us</a></li>
+                <li><a  @click="()=> CreateAccountTogglePopup('CreateAccountButtonTrigger')">Box Locations</a></li>
                 <li><a  @click="()=> GetInTouchTogglePopup('GetInTouchButtonTrigger')">Get in touch</a></li>
                 <li><a href="https://www.stage.njls.com/clients/RegisterNewCustomer.aspx" target="_blank">Create an account</a></li>
             </ul>
@@ -28,6 +29,7 @@
                 <li><a href="#oursolutions" @click="scrollTo('oursolutions')">Our solutions</a></li>
                 <li><a href="#aboutus" @click="scrollTo('aboutus')">About us</a></li>
                 <li><a  @click="()=> GetInTouchTogglePopup('GetInTouchButtonTrigger')">Get in touch</a></li>
+                <li><a  @click="()=> CreateAccountTogglePopup('CreateAccountButtonTrigger')">Box Locations</a></li>
                 
             </ul>
         </nav>
@@ -36,7 +38,7 @@
         <div class="create_account">
           <!-- @click="()=> CreateAccountTogglePopup('CreateAccountButtonTrigger')" -->
             <li><a href="https://www.stage.njls.com/clients/RegisterNewCustomer.aspx" target="_blank">Create an account</a></li>
-            <a href="https://stage.njls.com/clients/MarketingHeader.aspx" target="_blank"><button class="button_signin" @click="()=> SignInTogglePopup('SignInButtonTrigger')">Sign in</button></a>
+            <a><button class="button_signin" @click="()=> SignInTogglePopup('SignInButtonTrigger')">Sign in</button></a>
         </div>
     </header>
   </div>

@@ -1,121 +1,387 @@
 <template>
   <div class="popup">
       <div class="popup-inner">
-          <div class="CreateAccount-container">
+            <div class="CreateAccount-container">
                 <div class="closeCreateAccount" @click="CreateAccountTogglePopup()"></div>
-                <!-- <slot/> -->
-                    <!-- <h2>LRex - Register New Customer</h2> -->
-                    <h3 class="registration-header">Registration Process</h3>
-                    <p class="registration-process">
-                        To open a monthly billing account, we require a signed subscription agreement. 
-                        Check "I agree to the terms and conditions" and click on Register. This will 
-                        create a subscription agreement that you can print, sign and fax to (908) 842-9173. 
-                        Upon receipt, we will contact you by phone to get your service started and answer any 
-                        additional questions you have. You can then login and start creating shipments for 
-                        delivery.
-                    </p>
-                    <h3>Billing Information</h3>
-
-
-                    <div class="billing-info-container">
-                        <div class="billing-info-col1">
-                        <input type="text" placeholder="Company Name" required>
-                        <input type="text" placeholder="Address1" required>
-                        <input type="text" placeholder="Address2">
-                        <input type="text" placeholder="City" required>
-                        <div>
-                            <select class="state-dropdown" name="state" required>
-                            <option value="AL">AL</option>
-                            <option value="AK">AK</option>
-                            <option value="AZ">AZ</option>
-                            <option value="AR">AR</option>
-                            <option value="CA">CA</option>
-                            <option value="CO">CO</option>
-                            <option value="CT">CT</option>
-                            <option value="DE">DE</option>
-                            <option value="DC">DC</option>
-                            <option value="FL">FL</option>
-                            <option value="GA">GA</option>
-                            <option value="HI">HI</option>
-                            <option value="ID">ID</option>
-                            <option value="IL">IL</option>
-                            <option value="IN">IN</option>
-                            <option value="IA">IA</option>
-                            <option value="KS">KS</option>
-                            <option value="KY">KY</option>
-                            <option value="LA">LA</option>
-                            <option value="ME">ME</option>
-                            <option value="MD">MD</option>
-                            <option value="MA">MA</option>
-                            <option value="MI">MI</option>
-                            <option value="MN">MN</option>
-                            <option value="MS">MS</option>
-                            <option value="MO">MO</option>
-                            <option value="MT">MT</option>
-                            <option value="NE">NE</option>
-                            <option value="NV">NV</option>
-                            <option value="NH">NH</option>
-                            <option value="NJ">NJ</option>
-                            <option value="NM">NM</option>
-                            <option value="NY">NY</option>
-                            <option value="NC">NC</option>
-                            <option value="ND">ND</option>
-                            <option value="OH">OH</option>
-                            <option value="OK">OK</option>
-                            <option value="OR">OR</option>
-                            <option value="PA">PA</option>
-                            <option value="RI">RI</option>
-                            <option value="SC">SC</option>
-                            <option value="SD">SD</option>
-                            <option value="TN">TN</option>
-                            <option value="TX">TX</option>
-                            <option value="UT">UT</option>
-                            <option value="VT">VT</option>
-                            <option value="VA">VA</option>
-                            <option value="WA">WA</option>
-                            <option value="WV">WV</option>
-                            <option value="WI">WI</option>
-                            <option value="WY">WY</option>
-                        </select>
-                        </div>
-                        
-                        <input type="text" placeholder="Zip Code" required>
-                        <input type="tel" placeholder="Phone No." required>
-                    </div>
-
-                    <div class="billing-info-col2">
-                        <input type="text" placeholder="Accounts Payable Contact" required>
-                        <input type="text" placeholder="Mail Operations Contact">
-                        <input type="text" placeholder="Litigation Support Contact">
-                        <input type="text" placeholder="Tax Id No.">
-                        <input type="tel" placeholder="Fax No.">
-                        <input type="url" placeholder="Web Site">
-                    </div>
+                
+                <div class="box-schedule-table">
+                    <h2>Drop Box Pickup Schedule</h2>
+                        <table>
+                            <tr>
+                                <th>Placed in Box by 6pm</th>
+                                <th>Delivered</th>
+                            </tr>
+                            <tr>
+                                <td>Monday - Thursday</td>
+                                <td>Next Day, excluding Legal Holidays</td>
+                            </tr>
+                            <tr>
+                                <td>Sunday (Picked up by noon)</td>
+                                <td>Monday, excluding Legal Holidays</td>
+                            </tr>
+                        </table>
+                    <p>** unless indicated on the chart below, all drop box pick-up times are 6pm</p>
                 </div>
-            
-                    
 
-                    
+                <div class="locationsHeader">
+                    <h2>Box Locations</h2>
+                </div>
+                
+                <table class="dropbox-table">
+                    <!-- BERGEN -->
+                    <tr class="tabStructure">
+                    <h2 v-on:click="showBergen = true" id="countyName">Bergen <i class="down-arrow" id="down-arrow"></i></h2>
+                    <p v-if="showBergen == true" v-on:click="showBergen = !showBergen"  class="closeTab">Close Tab</p>
+                    </tr>
+                    <table class="inner-table" v-if="showBergen==true">
+                        <thead>
+                            <tr>
+                            <th>City</th>
+                            <th>Address</th>
+                            <th>Map</th>
+                            </tr>
+                        </thead>
+                        <tbody v-for="dropbox in dropboxData" :key="dropbox.id">
+                            <tr>
+                            <td v-if="dropbox.county == 'Bergen'">{{dropbox.city}}</td>
+                            <td v-if="dropbox.county == 'Bergen'">{{dropbox.address}}</td>
+                            <td v-if="dropbox.county == 'Bergen'"><a v-bind:href="dropbox.map" target="_blank" id="map-location">Map</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- BURLINGTON -->
+                    <tr class="tabStructure">
+                    <h2 v-on:click="showBurlington = true" >Burlington <i class="down-arrow" id="down-arrow"></i></h2>
+                    <p v-if="showBurlington == true" v-on:click="showBurlington = !showBurlington" class="closeTab">Close Tab</p>
+                    </tr>
+                    <table class="inner-table" v-if="showBurlington==true">
+                        <thead>
+                            <tr>
+                            <th>City</th>
+                            <th>Address</th>
+                            <th>Map</th>
+                            </tr>
+                        </thead>
+                        <tbody v-for="dropbox in dropboxData" :key="dropbox.id">
+                            <tr>
+                            <td v-if="dropbox.county == 'Burlington'">{{dropbox.city}}</td>
+                            <td v-if="dropbox.county == 'Burlington'">{{dropbox.address}}</td>
+                            <td v-if="dropbox.county == 'Burlington'"><a v-bind:href="dropbox.map" target="_blank" id="map-location">Map</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- CAMDEN -->
+                    <tr class="tabStructure">
+                    <h2 v-on:click="showCamden = true" >Camden <i class="down-arrow" id="down-arrow"></i></h2>
+                    <p v-if="showCamden == true" v-on:click="showCamden = !showCamden" class="closeTab">Close Tab</p>
+                    </tr>
+                    <table class="inner-table" v-if="showCamden==true">
+                        <thead>
+                            <tr>
+                            <th>City</th>
+                            <th>Address</th>
+                            <th>Map</th>
+                            </tr>
+                        </thead>
+                        <tbody v-for="dropbox in dropboxData" :key="dropbox.id">
+                            <tr>
+                            <td v-if="dropbox.county == 'Camden'">{{dropbox.city}}</td>
+                            <td v-if="dropbox.county == 'Camden'">{{dropbox.address}}</td>
+                            <td v-if="dropbox.county == 'Camden'"><a v-bind:href="dropbox.map" target="_blank" id="map-location">Map</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- CUMBERLAND -->
+                    <tr class="tabStructure">
+                    <h2 v-on:click="showCumberland = true" >Cumberland <i class="down-arrow" id="down-arrow"></i></h2>
+                    <p v-if="showCumberland == true" v-on:click="showCumberland = !showCumberland" class="closeTab">Close Tab</p>
+                    </tr>
+                    <table class="inner-table" v-if="showCumberland==true">
+                        <thead>
+                            <tr>
+                            <th>City</th>
+                            <th>Address</th>
+                            <th>Map</th>
+                            </tr>
+                        </thead>
+                        <tbody v-for="dropbox in dropboxData" :key="dropbox.id">
+                            <tr>
+                            <td v-if="dropbox.county == 'Cumberland'">{{dropbox.city}}</td>
+                            <td v-if="dropbox.county == 'Cumberland'">{{dropbox.address}}</td>
+                            <td v-if="dropbox.county == 'Cumberland'"><a v-bind:href="dropbox.map" target="_blank" id="map-location">Map</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- ESSEX -->
+                    <tr class="tabStructure">
+                    <h2 v-on:click="showEssex = true" >Essex <i class="down-arrow" id="down-arrow"></i></h2>
+                    <p v-if="showEssex == true" v-on:click="showEssex = !showEssex"  class="closeTab">Close Tab</p>
+                    </tr>
+                    <table class="inner-table" v-if="showEssex==true">
+                        <thead>
+                            <tr>
+                            <th>City</th>
+                            <th>Address</th>
+                            <th>Map</th>
+                            </tr>
+                        </thead>
+                        <tbody v-for="dropbox in dropboxData" :key="dropbox.id">
+                            <tr>
+                            <td v-if="dropbox.county == 'Essex'">{{dropbox.city}}</td>
+                            <td v-if="dropbox.county == 'Essex'">{{dropbox.address}}</td>
+                            <td v-if="dropbox.county == 'Essex'"><a v-bind:href="dropbox.map" target="_blank" id="map-location">Map</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- HUDSON -->
+                    <tr class="tabStructure">
+                    <h2 v-on:click="showHudson = true" >Hudson <i class="down-arrow" id="down-arrow"></i></h2>
+                    <p v-if="showHudson == true" v-on:click="showHudson = !showHudson"  class="closeTab">Close Tab</p>
+                    </tr>
+                    <table class="inner-table" v-if="showHudson==true">
+                        <thead>
+                            <tr>
+                            <th>City</th>
+                            <th>Address</th>
+                            <th>Map</th>
+                            </tr>
+                        </thead>
+                        <tbody v-for="dropbox in dropboxData" :key="dropbox.id">
+                            <tr>
+                            <td v-if="dropbox.county == 'Hudson'">{{dropbox.city}}</td>
+                            <td v-if="dropbox.county == 'Hudson'">{{dropbox.address}}</td>
+                            <td v-if="dropbox.county == 'Hudson'"><a v-bind:href="dropbox.map" target="_blank" id="map-location">Map</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- HUNTERDON -->
+                    <tr class="tabStructure">
+                    <h2 v-on:click="showHunterdon = true" >Hunterdon <i class="down-arrow" id="down-arrow"></i></h2>
+                    <p v-if="showHunterdon == true" v-on:click="showHunterdon = !showHunterdon"  class="closeTab">Close Tab</p>
+                    </tr>
+                    <table class="inner-table" v-if="showHunterdon==true">
+                        <thead>
+                            <tr>
+                            <th>City</th>
+                            <th>Address</th>
+                            <th>Map</th>
+                            </tr>
+                        </thead>
+                        <tbody v-for="dropbox in dropboxData" :key="dropbox.id">
+                            <tr>
+                            <td v-if="dropbox.county == 'Hunterdon'">{{dropbox.city}}</td>
+                            <td v-if="dropbox.county == 'Hunterdon'">{{dropbox.address}}</td>
+                            <td v-if="dropbox.county == 'Hunterdon'"><a v-bind:href="dropbox.map" target="_blank" id="map-location">Map</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- MERCER -->
+                    <tr class="tabStructure">
+                    <h2 v-on:click="showMercer = true" >Mercer <i class="down-arrow" id="down-arrow"></i></h2>
+                    <p v-if="showMercer == true" v-on:click="showMercer = !showMercer" class="closeTab">Close Tab</p>
+                    </tr>
+                    <table class="inner-table" v-if="showMercer==true">
+                        <thead>
+                            <tr>
+                            <th>City</th>
+                            <th>Address</th>
+                            <th>Map</th>
+                            </tr>
+                        </thead>
+                        <tbody v-for="dropbox in dropboxData" :key="dropbox.id">
+                            <tr>
+                            <td v-if="dropbox.county == 'Mercer'">{{dropbox.city}}</td>
+                            <td v-if="dropbox.county == 'Mercer'">{{dropbox.address}}</td>
+                            <td v-if="dropbox.county == 'Mercer'"><a v-bind:href="dropbox.map" target="_blank" id="map-location">Map</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- MIDDLESEX -->
+                    <tr class="tabStructure">
+                    <h2 v-on:click="showMiddlesex = true" >Middlesex <i class="down-arrow" id="down-arrow"></i></h2>
+                    <p v-if="showMiddlesex == true" v-on:click="showMiddlesex = !showMiddlesex" class="closeTab">Close Tab</p>
+                    </tr>
+                    <table class="inner-table" v-if="showMiddlesex==true">
+                        <thead>
+                            <tr>
+                            <th>City</th>
+                            <th>Address</th>
+                            <th>Map</th>
+                            </tr>
+                        </thead>
+                        <tbody v-for="dropbox in dropboxData" :key="dropbox.id">
+                            <tr>
+                            <td v-if="dropbox.county == 'Middlesex'">{{dropbox.city}}</td>
+                            <td v-if="dropbox.county == 'Middlesex'">{{dropbox.address}}</td>
+                            <td v-if="dropbox.county == 'Middlesex'"><a v-bind:href="dropbox.map" target="_blank" id="map-location">Map</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- MONMOUTH -->
+                    <tr class="tabStructure">
+                    <h2 v-on:click="showMonmouth = true" >Monmouth <i class="down-arrow" id="down-arrow"></i></h2>
+                    <p v-if="showMonmouth == true" v-on:click="showMonmouth = !showMonmouth" class="closeTab">Close Tab</p>
+                    </tr>
+                    <table class="inner-table" v-if="showMonmouth==true">
+                        <thead>
+                            <tr>
+                            <th>City</th>
+                            <th>Address</th>
+                            <th>Map</th>
+                            </tr>
+                        </thead>
+                        <tbody v-for="dropbox in dropboxData" :key="dropbox.id">
+                            <tr>
+                            <td v-if="dropbox.county == 'Monmouth'">{{dropbox.city}}</td>
+                            <td v-if="dropbox.county == 'Monmouth'">{{dropbox.address}}</td>
+                            <td v-if="dropbox.county == 'Monmouth'"><a v-bind:href="dropbox.map" target="_blank" id="map-location">Map</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- MORRIS -->
+                    <tr class="tabStructure">
+                    <h2 v-on:click="showMorris = true">Morris <i class="down-arrow" id="down-arrow"></i></h2>
+                    <p v-if="showMorris == true" v-on:click="showMorris = !showMorris" class="closeTab">Close Tab</p>
+                    </tr>
+                    <table class="inner-table" v-if="showMorris==true">
+                        <thead>
+                            <tr>
+                            <th>City</th>
+                            <th>Address</th>
+                            <th>Map</th>
+                            </tr>
+                        </thead>
+                        <tbody v-for="dropbox in dropboxData" :key="dropbox.id">
+                            <tr>
+                            <td v-if="dropbox.county == 'Morris'">{{dropbox.city}}</td>
+                            <td v-if="dropbox.county == 'Morris'">{{dropbox.address}}</td>
+                            <td v-if="dropbox.county == 'Morris'"><a v-bind:href="dropbox.map" target="_blank" id="map-location">Map</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- OCEAN -->
+                    <tr class="tabStructure">
+                    <h2 v-on:click="showOcean = true" >Ocean <i class="down-arrow" id="down-arrow"></i></h2>
+                    <p v-if="showOcean == true" v-on:click="showOcean = !showOcean"  class="closeTab">Close Tab</p>
+                    </tr>
+                    <table class="inner-table" v-if="showOcean==true">
+                        <thead>
+                            <tr>
+                            <th>City</th>
+                            <th>Address</th>
+                            <th>Map</th>
+                            </tr>
+                        </thead>
+                        <tbody v-for="dropbox in dropboxData" :key="dropbox.id">
+                            <tr>
+                            <td v-if="dropbox.county == 'Ocean'">{{dropbox.city}}</td>
+                            <td v-if="dropbox.county == 'Ocean'">{{dropbox.address}}</td>
+                            <td v-if="dropbox.county == 'Ocean'"><a v-bind:href="dropbox.map" target="_blank" id="map-location">Map</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- PASSAIC -->
+                    <tr class="tabStructure">
+                    <h2 v-on:click="showPassaic = true" >Passaic <i class="down-arrow" id="down-arrow"></i></h2>
+                    <p v-if="showPassaic == true" v-on:click="showPassaic = !showPassaic" class="closeTab">Close Tab</p>
+                    </tr>
+                    <table class="inner-table" v-if="showPassaic==true">
+                        <thead>
+                            <tr>
+                            <th>City</th>
+                            <th>Address</th>
+                            <th>Map</th>
+                            </tr>
+                        </thead>
+                        <tbody v-for="dropbox in dropboxData" :key="dropbox.id">
+                            <tr>
+                            <td v-if="dropbox.county == 'Passaic'">{{dropbox.city}}</td>
+                            <td v-if="dropbox.county == 'Passaic'">{{dropbox.address}}</td>
+                            <td v-if="dropbox.county == 'Passaic'"><a v-bind:href="dropbox.map" target="_blank" id="map-location">Map</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- SOMERSET -->
+                    <tr class="tabStructure">
+                    <h2 v-on:click="showSomerset = true" >Somerset <i class="down-arrow" id="down-arrow"></i></h2>
+                    <p v-if="showSomerset == true" v-on:click="showSomerset = !showSomerset" class="closeTab">Close Tab</p>
+                    </tr>
+                    <table class="inner-table" v-if="showSomerset==true">
+                        <thead>
+                            <tr>
+                            <th>City</th>
+                            <th>Address</th>
+                            <th>Map</th>
+                            </tr>
+                        </thead>
+                        <tbody v-for="dropbox in dropboxData" :key="dropbox.id">
+                            <tr>
+                            <td v-if="dropbox.county == 'Somerset'">{{dropbox.city}}</td>
+                            <td v-if="dropbox.county == 'Somerset'">{{dropbox.address}}</td>
+                            <td v-if="dropbox.county == 'Somerset'"><a v-bind:href="dropbox.map" target="_blank" id="map-location">Map</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-                    <h3>Login Information</h3>
-                    <div class="login-info">
-                        <input type="text" placeholder="User Name" required>
-                        <input type="text" placeholder="Full Name" required>
-                        <input type="text" placeholder="Password" required>
-                        <input type="text" placeholder="Confirm Password" required>
-                        <input type="text" placeholder="E-mail Address" required>
-                    </div>
-                   
-                <div class="createAcountButton">Create Account</div>
-          </div>
-          
-      </div>
-  </div>
+                    <!-- UNION -->
+                    <tr class="tabStructure">
+                    <h2 v-on:click="showUnion = true">Union <i class="down-arrow" id="down-arrow"></i></h2>
+                    <p v-if="showUnion == true" v-on:click="showUnion = !showUnion" class="closeTab">Close Tab</p>
+                    </tr>
+                    <table class="inner-table" v-if="showUnion==true">
+                        <thead>
+                            <tr>
+                            <th>City</th>
+                            <th>Address</th>
+                            <th>Map</th>
+                            </tr>
+                        </thead>
+                        <tbody v-for="dropbox in dropboxData" :key="dropbox.id">
+                            <tr>
+                            <td v-if="dropbox.county == 'Union'">{{dropbox.city}}</td>
+                            <td v-if="dropbox.county == 'Union'">{{dropbox.address}}</td>
+                            <td v-if="dropbox.county == 'Union'"><a v-bind:href="dropbox.map" target="_blank" id="map-location">Map</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </table>
+            </div>
+        </div>
+    </div>
+
 </template>
 
 <script>
+import dropboxData from '/dropboxData.json'
+
 export default {
-    props: ['CreateAccountTogglePopup']
+    props: ['CreateAccountTogglePopup'],
+
+    data(){
+        return{
+            showEssex: false,
+            showBergen: false,
+            showUnion: false,
+            showBurlington: false,
+            showCamden: false,
+            showCumberland: false,
+            showHudson: false,
+            showHunterdon: false,
+            showMercer: false,
+            showMiddlesex: false,
+            showMonmouth: false,
+            showMorris: false,
+            showOcean: false,
+            showPassaic: false,
+            showSomerset: false,
+            dropboxData
+        }
+    },
+
+    methods:{
+    }
+
+    
 
 }
 </script>
@@ -141,19 +407,22 @@ export default {
 
 
 .popup-inner{
-    width: 75vw;
-    height: 99vh;
+    width: 60vw;
+    height: 95vh;
     border-radius: 5px;
     border: #33f18a 2px solid;
     background-color: white;
-    
-    overflow-y: auto;
 
     display: flex;
-    justify-content: center;
     flex-direction: column;
+    text-align: left;
 
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    overflow-y: auto;
+
+    scrollbar-color: #33f18a;
+    scrollbar-base-color: white;
+    scrollbar-width: thin;
 }
 
 .popup-close{
@@ -163,12 +432,6 @@ export default {
     margin-left: 2.5vw;
 }
 
-.registration-process{
-    text-align: left;
-    width: 60vw;
-    font-size: 1vw;
-}
-
 .CreateAccount-container{
     display: flex;
     justify-content: center;
@@ -176,16 +439,6 @@ export default {
     align-items: center;
     margin-left: 5%;
     margin-right: 5%;
-}
-
-.CreateAccount-container h3{
-    border-bottom: 1px solid #33f18a;
-    padding-bottom: 5px;
-    width: 70%;
-}
-
-.registration-header{
-    margin-top: 40px;
 }
 
 @keyframes drop {
@@ -199,7 +452,7 @@ export default {
       height: 25px;
       position: fixed;
       top: 10px;
-      margin-left: 68%;
+      margin-left: 50%;
       width: 5px;
       transform: rotate(45deg);
       cursor: pointer;
@@ -217,23 +470,6 @@ export default {
     }
 
 
-.createAcountButton{
-    background-color: #33f18a;
-    color: rgb(255, 255, 255);
-    width: 42%;
-    height: 30px;
-    margin-top: 0vw;
-    margin-bottom: 1vw;
-    text-shadow: 1px 1px 4px #696969;
-    font-weight: 600;
-    border-radius: 50px;
-    
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-}
-
 .popup-inner::-webkit-scrollbar {
     background-color: white;
     border-radius: 10px;
@@ -246,29 +482,87 @@ export default {
     border-radius: 10px;
 }
 
-/* Billing Info */
-
-.billing-info-container{
-    display: flex;
-    flex-direction: row;
+/*Table Structure*/
+table {
+  width: 50vw;
+  border-collapse: collapse;
 }
 
+th{
+  background-color: #33f18a;
+}
 
-.login-info{
+.closeTab{
+  margin-left: 5vw;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.tabStructure h2{
+  cursor: pointer;
+}
+
+.tabStructure{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-top: 15px;
+  padding-bottom: 15px;
+
+  border-bottom: 1px solid #33f18a;
+}
+
+.tabStructure h2{
+    margin-bottom: 0;
+}
+
+.down-arrow {
+  border: solid #33f189e5;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+  transform: rotate(45deg);
+  margin-bottom: 3px;
+}
+
+.dropbox-table{
+    margin-bottom: 5vw;
+}
+
+.inner-table{
+    border: 1px solid #ddd;
+}
+
+.inner-table td, th{
+    padding: 5px;
+    border: 1px solid #ddd;
+}
+
+.box-schedule-table table{
+    border-collapse: separate;
+    width: 100%;
+}
+
+.box-schedule-table td, th{
+    padding: 5px;
+    border: 1px solid #ddd;
+}
+
+.box-schedule-table th{
+    background-color: #308ef8;
+}
+
+.box-schedule-table{
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 30%;
+    margin-top: 3vw;
 }
 
-.state-dropdown{
-    width: 50px;
-    margin-bottom: 10px;
-}
-
-.state-dropdown option{
-    height: 100px;
+.locationsHeader{
+    width: 50vw;
+    text-align: left;
+    margin-bottom: 0;
 }
 
 @media only screen and (max-width: 1000px){
@@ -279,29 +573,17 @@ export default {
     overflow-y: auto;
 }
 
-.CreateAccount-container{
-    margin-top: 65vw;
+table {
+  width: 60vw;
 }
 
-.createAcountButton{
-    margin-bottom: 5vw;
-    margin-top: 1vw;
-    width: 70%;
+.locationsHeader{
+    width: 60vw;
 }
 
-.login-info input{
-    width: 50vw;
+.box-schedule-table{
+    margin-top: 10vw;
 }
-
-.billing-info-container{
-    flex-direction: column;
-}
-
-.registration-process{
-    font-size: 3vw;
-    width: 99%;
-}
-
 
 }
 
