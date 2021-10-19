@@ -20,5 +20,10 @@ npm run build
 npm run lint
 ```
 
+### Vue-Router and IIS
+```
+When deploying, be sure to include web.config in dist.
+```
+
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
