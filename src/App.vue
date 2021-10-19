@@ -11,8 +11,8 @@
     </header>
         <nav id="mobileLinks" class="mobileLinks">
             <ul class="nav_links">
-                <li><a href="#oursolutions" @click="scrollTo('oursolutions')">Our solutions</a></li>
-                <li><a href="#aboutus" @click="scrollTo('aboutus')">About us</a></li>
+                <li v-if="!isTrack"><a href="#oursolutions" @click="scrollTo('oursolutions')">Our solutions</a></li>
+                <li v-if="!isTrack"><a href="#aboutus" @click="scrollTo('aboutus')">About us</a></li>
                 <li><a  @click="()=> CreateAccountTogglePopup('CreateAccountButtonTrigger')">Box Locations</a></li>
                 <li><a  @click="()=> GetInTouchTogglePopup('GetInTouchButtonTrigger')">Get in touch</a></li>
                 <li><a href="https://www.stage.njls.com/clients/RegisterNewCustomer.aspx" target="_blank">Create an account</a></li>
@@ -26,8 +26,8 @@
             <a href="#" @click="scrollTo('#')"><img class="logo" src="./assets/LREXHeaderLogo.jpg" alt="LREX"></a>
         <nav>
             <ul class="nav_links">
-                <li><a href="#oursolutions" @click="scrollTo('oursolutions')">Our solutions</a></li>
-                <li><a href="#aboutus" @click="scrollTo('aboutus')">About us</a></li>
+                <li v-if="!isTrack"><a href="#oursolutions" @click="scrollTo('oursolutions')">Our solutions</a></li>
+                <li v-if="!isTrack"><a href="#aboutus" @click="scrollTo('aboutus')">About us</a></li>
                 <li><a  @click="()=> GetInTouchTogglePopup('GetInTouchButtonTrigger')">Get in touch</a></li>
                 <li><a  @click="()=> CreateAccountTogglePopup('CreateAccountButtonTrigger')">Box Locations</a></li>
                 
@@ -90,18 +90,20 @@
     </GetInTouchPopup>
   </div>
 
-  <div ref="homepage">
+  <div v-if="!isTrack" ref="homepage">
     <HomePage/>
   </div>
   
-  <div ref="oursolutions">
+  <div v-if="!isTrack" ref="oursolutions">
     <OurSolutions/>
   </div>
   
-  <div ref="aboutus">
+  <div v-if="!isTrack" ref="aboutus">
     <AboutUs/>
   </div>
   
+  <router-view></router-view>
+
 </template>
 
 <script>
@@ -201,6 +203,11 @@ export default {
       CreateAccountPopupTriggers,
       GetInTouchTogglePopup,
       GetInTouchPopupTriggers
+    }
+  },
+  computed:{
+    isTrack(){
+      return this.$route.name == 'Track'
     }
   }
 }
