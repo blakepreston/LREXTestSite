@@ -3,8 +3,17 @@
       <div class="popup-inner">
           <div class="DriveWithUs-container">
                 <div class="closeDriveWithUs" @click="DriveWithUsTogglePopup()"></div>
-                <slot/>
-                <div class="DriveWithUsButton">Drive with us</div>
+                <h2>Drive with us</h2>
+                <h3>Telephone Numbers:</h3>
+                <p>Union: (908) 686-7300</p>
+                <h3>Email:</h3>
+                <p>customerservice@lrex.com</p>
+                <h3>Address:</h3>
+                <p>
+                    LRex <br>
+                    2333 Route 22 West <br>
+                    Union, NJ 07083 <br>
+                </p>
           </div>
           
       </div>
@@ -64,6 +73,10 @@ export default {
     align-items: center;
     margin-left: 5%;
     margin-right: 5%;
+}
+
+.DriveWithUs-container h3{
+    margin: 0;
 }
 
 @keyframes drop {

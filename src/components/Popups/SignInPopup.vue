@@ -37,6 +37,7 @@ export default {
 .login-iframe{
     width: 100%;
     height: 100%;
+    margin-bottom: 10px;
 }
 
 .popup{
@@ -58,8 +59,8 @@ export default {
 }
 
 .popup-inner{
-    width: 99vw;
-    height: 20vh;
+    width: 30vw;
+    height: 40vh;
     border-radius: 15px;
     border: #33f18a 2px solid;
     background-color: white;
@@ -84,8 +85,8 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: 15%;
-    margin-right: 15%;
+    margin-left: 1%;
+    margin-right: 1%;
     margin-top: 2vw;
 }
 
@@ -101,7 +102,7 @@ export default {
       height: 25px;
       position: fixed;
       width: 5px;
-      margin-left: 90%;
+      margin-left: 20%;
       top: 10px;
       transform: rotate(45deg);
       cursor: pointer;
@@ -172,6 +173,14 @@ export default {
 
     .login-iframe{
         padding-bottom: 20px;
+    }
+
+    .popup-inner{
+        width: 80vw;
+    }
+
+    .closeSignIn{
+        margin-left: 60%;
     }
 }
 

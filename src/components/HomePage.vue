@@ -14,7 +14,7 @@
   <div class="track_package">
         <img src="../assets/Delivery-Truck.jpg" alt="Truck">
         <div class="form_shiptrack">
-            <h1>LRex is beyond NJLS.</h1>
+            <h1>Your shipping partner.</h1>
             <p>Track a package</p>
             <form id="shipmentForm" class="shipmentForm" @submit.prevent="ShipmentTrackingTogglePopup('ShipmentTrackingButtonTrigger');  GetShipmentByID(); GetShipmentHistoryByID();">
                     <input type="text" name="shipment" v-model="posts.shipmentId">
@@ -28,7 +28,7 @@
 
     <div class="lrex_paragraph">
       <p>
-        LRex – When your shipping is not just moving your package from Point A to Point B. <br/>
+        <strong>When your shipping needs are more than moving your package from Point A to Point B.</strong> <br/><br>
         Don’t let your ambitions be boxed in. “Beyond the box” is a philosophy that reflects our 
         view on the future of shipping: regional, sustainable, and backed by adaptive technologies 
         and shipping expertise. That’s why we look at every shipment as part of a bigger journey, 
@@ -52,29 +52,85 @@
     <div class="arrow_right" @click.prevent="next"></div>
   </div>
     
+    
 
     <div class="container_offerings">
-      <div class="offering_headers">
-        <h1>Same Day</h1>
-        <h1>Next day</h1>
-        <h1>Find a dropbox</h1>
-      </div>
-      <div class="offering_description">
-        <p>A brief description of the same day offering.</p>
-        <p>A brief description of the next day offering</p>
-        <p>A brief description of the dropbox offering.</p>
-      </div>
+      
+      <table>
+        <tr>
+          <td>
+            <div>
+              <img class="trucklogo" src="../assets/deliveryTruckLogo.png" alt="">
+              <h1>Next Day</h1>
+            </div>
+          </td>
+          <td><p>Guaranteed next business day delivery for small packages and 
+          documents. Ship via web or integration with your system, pickup 
+          from your location or drop off in one of our many drop box locations 
+          across the state. Tracking, alerts, and photo delivery available in our primary service area.</p></td>
+        </tr>
+
+        <tr>
+          <td>
+            <div>
+              <img class="trucklogo" src="../assets/deliveryTruckLogo.png" alt="">
+              <h1>Shipping Options</h1>
+            </div>
+          </td>
+          <td><p> <strong>Cold Store</strong>  – For packages that can’t stay overnight without it. <br>
+            <strong>Signature Required</strong>  – To be sure your package is delivered to a human. <br>
+            <strong>Priority Delivery</strong>  – Guaranteed delivery before 1pm. <br> 
+            <strong>Court Priority</strong>  – Automatically added for deliveries to courthouses. Our legal customers have relied on us for over 90 years to deliver their most important documents and packages.</p></td>
+        </tr>
+
+        <tr>
+          <td>
+            <div>
+              <img class="trucklogo" src="../assets/fastdeliverytruck.png" alt="">
+              <h1>Same Day</h1>
+            </div>
+          </td>
+          <td><p>A premium courier service for your most important packages. 
+          Your package is our only package, we come and pickup when you 
+          tell us and deliver as quickly as we can get there. 
+          Available in our primary service area.</p></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div>
+              <img class="trucklogo" src="../assets/clocktruck.png" alt="">
+              <h1>Priority Today</h1>
+            </div>
+          </td>
+          <td><p>Volume Deliveries, pickup from your location and deliver in your local region all the features of 
+          Next Day but delivered Today. Available in limited areas, contact your account manager or our 
+          sales team to find out more.</p></td>
+        </tr>
+        
+        <tr>
+          <td>
+            <div>
+              <img class="trucklogo" src="../assets/zipshiptruck.png" alt="">
+              <h1>ZipShip</h1>
+            </div>
+          </td>
+          <td><p>No Printer, No Paper, No Problem. Create a shipping label and email us the label and 
+            your documents and leave the rest to us. We print, pack and deliver Next Day.</p></td>
+        </tr>
+      </table>
     </div>
     
     <div class="headline_container">
       <div class="headline_article">
-        <p>Leste ne ne et am lanihit iaeperuntibernam seque alicil ipsant.</p>
-        <p>Natecta turesti que nihit velest asperit, cus dolest, ne etur autatio
-            omnissi maiore conse mod quam,eic tem
+        <p>We customize a shipping solution for you, the right process, the right technology, and the right people.</p>
+        <p>Our cloud-based shipping platform is designed to evolve, twenty years of technology and a century of shipping 
+          experience. Built for complex legal requirements for court and process service, a shipping partner for your 
+          last mile and a lot more.
         </p>
       </div>
       <div class="headline_bubble">
-        <div>A headline about custom solutions</div>
+        <div>Going the extra mile for your last mile. Technology makes a difference.</div>
       </div>
     </div>
 
@@ -97,7 +153,7 @@
     </div>
 
     <div class="headline_recruiting">
-      <h1>Headline about recruiting</h1>
+      <h1>Recruiting</h1>
       <p>Learn about working for Lrex</p>
       <img src="../assets/delivery-woman.jpg" alt="">
       <!-- <img src="../assets/woman-in-car.jpg" alt=""> -->
@@ -109,10 +165,7 @@
         v-if="DriveWithUsPopupTriggers.DriveWithUsButtonTrigger" 
         :DriveWithUsTogglePopup="()=> DriveWithUsTogglePopup('DriveWithUsButtonTrigger')"
         class="DriveWithUs-popup">
-          <h2>Drive with us</h2>
-          <input type="text" placeholder="Name">
-          <input type="text" placeholder="Email">
-          <input type="text" placeholder="Message">
+          
       </DriveWithUsPopup>
 
       <div v-if="loading" class="loading-container">
@@ -587,7 +640,7 @@ html, body{
         justify-content: flex-end;
         position: relative;
         top: 5vw;
-        right: 20vw;
+        right: 18vw;
     }
 
     .form_shiptrack h1{
@@ -697,9 +750,10 @@ html, body{
 
     .lrex_paragraph p{
       font-family: 'Work Sans', sans-serif;
-      font-size: 2vw;
+      font-size: 1.5vw;
       width: 55vw;
       color: black;
+      text-align: left;
     }
 
 /**************************************/
@@ -824,37 +878,33 @@ html, body{
 /**************************/
 /* || Shipment Offerings Syles */
 .container_offerings{
+  margin-top: 3vw;
   display: flex;
-  flex-direction: row;
   justify-content: center;
   align-items: center;
-  color: black;
 }
 
-.offering_headers{
-  margin-right: 5%;
+.container_offerings table{
+  width: 70vw;
 }
 
-.offering_description{
-  margin-left: 5%;
+.container_offerings h1{
+  margin-top: 0;
+  font-size: 3.2vw;
 }
 
-.offering_headers h1{
-  display: flex;
-  justify-content: flex-start;
-  font-family: 'Work Sans', sans-serif;
-  font-size: 4.5vw;
-  font-weight: bold;
+.container_offerings p{
+  font-size: 1.2vw;
+  text-align: left;
+  margin-left: 2vw;
+  width: 40vw;
 }
 
-.offering_description p{
-  display: flex;
-  justify-content: flex-start;
-  margin-top: 12%;
-  margin-bottom: 12%;
-  font-family: 'Work Sans', sans-serif;
-  font-size: 2vw;
+.trucklogo{
+  width: 8vw;
+  margin: 0;
 }
+
 
 /**************************/
 /* || Custom Solutions Syles */
@@ -890,10 +940,10 @@ html, body{
 .headline_bubble div{
   background-color: #308ef8;
   font-family: 'Work Sans', sans-serif;
-  font-size: 4vw;
+  font-size: 3vw;
   padding-top: 10%;
   padding-bottom: 10%;
-  border-radius: 150px;
+  border-radius: 200px;
 }
 
 /**************************/
@@ -997,13 +1047,17 @@ html, body{
   }
 
   .form_shiptrack{
-        left: 1vw;
-        margin-bottom: 15vw;
+    left: 1vw;
+      margin-bottom: 15vw;
     }
 
   .form_shiptrack input{
     padding-right: 15vw;
     padding: 1vw;
+  }
+
+  .form_shiptrack h1{
+    font-size: 7vw;
   }
 
   .locationDeliveryLink, .proofDeliveryLink{
@@ -1137,18 +1191,20 @@ html, body{
 }
 /**************************/
 /* || Shipment Offerings Syles */
-  .container_offerings{
-    width: 90vw;
-    margin-left: 3vw;
-  }
 
-  .offering_headers h1{
-    font-size: 6.5vw;
-  }
+.container_offerings table{
+  width: 90vw;
+}
 
-  .offering_description p{
-    font-size: 4vw;
-  }
+.container_offerings h1{
+  font-size: 4.5vw;
+}
+
+.container_offerings p{
+  font-size: 3vw;
+  width: 60vw;
+}
+
 
 /**************************/
 /* || Custom Solutions Syles */
@@ -1173,7 +1229,7 @@ html, body{
   }
 
   .headline_bubble div{
-    font-size: 8vw;
+    font-size: 6vw;
   }
 
 /**************************/
@@ -1191,7 +1247,7 @@ html, body{
 }
 
 .drive_with_us{
-  top: 60vw;
+  top: 50vw;
   width: 18vw;
   height: 18vw;
 }

@@ -16,13 +16,14 @@
         <!-- <img src="../assets/man-opening-truck.jpg" alt="Truck"> -->
         <img src="../assets/box-by-door.jpg" alt="Truck">
         <div class="ship_with_us_layout">
-            <h1>Ship with us.</h1>
-            <p>Subcopy.</p>
-             <a href="https://www.stage.njls.com/clients/RegisterNewCustomer.aspx" target="_blank" style="text-decoration: none;"><button>Create an account</button></a> 
+            <h1>If your business is driving <br> we have a route for you.</h1>
+            <p>Putting women behind the wheel.</p>
+             <!-- <a href="https://www.stage.njls.com/clients/RegisterNewCustomer.aspx" target="_blank" style="text-decoration: none;"><button>Create an account</button></a>  -->
+             <a @click="()=> DriveWithUsTogglePopup('DriveWithUsButtonTrigger')" style="text-decoration: none;"><button>Drive with us</button></a> 
         </div>
     </div>
 
-    <div class="industry_solutions">
+    <!-- <div class="industry_solutions">
         <h1>Industry Solutions</h1>
         <div class="legal_solution">
             <div>Legal</div>
@@ -46,6 +47,49 @@
             <div>General</div>
             <p>A longer description of general
                 industry solutions.</p>
+        </div>
+    </div> -->
+
+        <div class="industry_solutions">
+        <h1>Shipping Options</h1>
+        <div class="legal_solution">
+            <div>Next Day</div>
+            <p>Guaranteed next business day delivery for small packages and 
+                documents. Ship via web or integration with your system, pickup 
+                from your location or drop off in one of our many drop box locations 
+                across the state. Tracking, alerts, and photo delivery available in our 
+                primary service area.</p>
+        </div>
+
+        <div class="realestate_solution">
+            <div>Shipping Options</div>
+            <p><strong>Cold Store</strong>  – For packages that can’t stay overnight without it. <br>
+            <strong>Signature Required</strong>  – To be sure your package is delivered to a human. <br>
+            <strong>Priority Delivery</strong>  – Guaranteed delivery before 1pm. <br> 
+            <strong>Court Priority</strong>  – Automatically added for deliveries to courthouses. Our 
+            legal customers have relied on us for over 90 years to deliver their most important documents 
+            and packages.</p>
+        </div>
+
+        <div class="pharma_solution">
+            <div>Same Day</div>
+            <p>A premium courier service for your most important packages. 
+                Your package is our only package, we come and pickup when you 
+                tell us and deliver as quickly as we can get there. 
+                Available in our primary service area.</p>
+        </div>
+
+        <div class="general_solution">
+            <div>Priority Today</div>
+            <p>Volume Deliveries, pickup from your location and deliver in your local region all the features of 
+                Next Day but delivered Today. Available in limited areas, contact your account manager or our 
+                sales team to find out more.</p>
+        </div>
+
+        <div class="pharma_solution">
+            <div>ZipShip</div>
+            <p>No Printer, No Paper, No Problem. Create a shipping label and email us the label and 
+            your documents and leave the rest to us. We print, pack and deliver Next Day.</p>
         </div>
     </div>
 
@@ -77,6 +121,13 @@
                 <input type="text" placeholder="Enter password">
                 <input type="text" placeholder="Re-enter password">
         </SignUpPopup>
+
+        <DriveWithUsPopup 
+        v-if="DriveWithUsPopupTriggers.DriveWithUsButtonTrigger" 
+        :DriveWithUsTogglePopup="()=> DriveWithUsTogglePopup('DriveWithUsButtonTrigger')"
+        class="DriveWithUs-popup">
+          
+      </DriveWithUsPopup>
     </div>
 
 </body>
@@ -87,14 +138,23 @@
 <script>
 import CreateAccountPopup from './Popups/CreateAccountPopup.vue'
 import SignUpPopup from './Popups/SignUpPopup.vue'
+import DriveWithUsPopup from './Popups/DriveWithUsPopup.vue'
 import {ref} from 'vue';
 
 export default{
     components:{
         CreateAccountPopup,
-        SignUpPopup
+        SignUpPopup,
+        DriveWithUsPopup
     },
     setup(){
+    const DriveWithUsPopupTriggers = ref({
+      DriveWithUsButtonTrigger: false
+    });
+
+    const DriveWithUsTogglePopup = (trigger) =>{
+      DriveWithUsPopupTriggers.value[trigger] = !DriveWithUsPopupTriggers.value[trigger]
+    }
 
     //Get in touch Popup
     const CreateAccountPopupTriggers = ref({
@@ -118,7 +178,9 @@ export default{
       CreateAccountTogglePopup,
       CreateAccountPopupTriggers,
       SignUpTogglePopup,
-      SignUpPopupTriggers
+      SignUpPopupTriggers,
+      DriveWithUsTogglePopup,
+      DriveWithUsPopupTriggers
     }
   }
 }
@@ -162,13 +224,13 @@ html, body{
         flex-direction: column;
         justify-content: flex-end;
         position: relative;
-        top: 5vw;
-        right: 20vw;
+        top: 8vw;
+        right: 15vw;
     }
 
     .ship_with_us_layout h1{
         display: flex;
-        font-size: 4.5vw;
+        font-size: 3.2vw;
         margin-bottom: 0;
     }
 
@@ -176,7 +238,7 @@ html, body{
         display: flex;
         color: white;
         z-index: 5;
-        font-size: 2vw;
+        font-size: 1.8vw;
         margin-top: 20px;
     }
 
@@ -260,7 +322,8 @@ html, body{
 
     .legal_solution p{
         font-size: 2vw;
-        width: 40vw;
+        width: 60vw;
+        text-align: left;
     }
 /*Real Estate*/
     .realestate_solution{
@@ -287,7 +350,8 @@ html, body{
 
     .realestate_solution p{
         font-size: 2vw;
-        width: 40vw;
+        width: 60vw;
+        text-align: left;
     }
 
 /*Pharma*/
@@ -313,7 +377,8 @@ html, body{
 
     .pharma_solution p{
         font-size: 2vw;
-        width: 40vw;
+        width: 60vw;
+        text-align: left;
     }
 /*General*/
         .general_solution{
@@ -342,7 +407,8 @@ html, body{
 
     .general_solution p{
         font-size: 2vw;
-        width: 40vw;
+        width: 60vw;
+        text-align: left;
     }
 /**************************/
 /* || Recruiting Syles */
@@ -414,11 +480,13 @@ html, body{
   }
 
   .ship_with_us h1{
-    font-size: 8vw;
+    font-size: 5vw;
+    text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.534);
   }
 
   .ship_with_us p{
-    font-size: 4vw;
+    font-size: 3vw;
+    text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.534);
   }
 
   .ship_with_us img{
@@ -428,8 +496,9 @@ html, body{
   }
 
   .ship_with_us_layout{
-        right: 15vw;
+        right: 1vw;
         margin-bottom: 15vw;
+        margin-right: 3vw;
     }
 
     .ship_with_us_layout button{
@@ -453,6 +522,7 @@ html, body{
 
 .legal_solution p{
     font-size: 4vw;
+    width: 80vw;
 }
 
 .realestate_solution div{
@@ -461,6 +531,7 @@ html, body{
 
 .realestate_solution p{
     font-size: 4vw;
+    width: 80vw;
 }
 
 .pharma_solution div{
@@ -469,6 +540,7 @@ html, body{
 
 .pharma_solution p{
     font-size: 4vw;
+    width: 80vw;
 }
 
 .general_solution div{
@@ -477,6 +549,7 @@ html, body{
 
 .general_solution p{
     font-size: 4vw;
+    width: 80vw;
 }
 /**************************/
 /* || Recruiting Syles */

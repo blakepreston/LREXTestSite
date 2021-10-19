@@ -13,20 +13,20 @@
 
   <div class="our_story">
     <div class="text_our_story">
-        <h1>Our story</h1>
-        <p>Is dioremperum harum re sam assequas moluptatibus esci autatur sitaqui
-            quatiusto erepudia eos sa volorae ptatur, sinim everit ulparum fugia iminihic tore
-            consecum eturibus nat plita corumen imetur, si utaeptur sit et recae quatem. Porehent
-            millorrum adi aliquidel ilitatur?
+        <h1>Woman Driven Again</h1>
+        <p>Back in 1929, fresh out of NYU Law School, our founder, Frieda Pickman, was bold and undeterred,
+           when she perceived the need of New Jersey’s legal community for a reliable courier service: she 
+           founded New Jersey Lawyers Service, NJLS for short. For nearly a century till today NJLS serves 
+           the legal community with quick secure local shipping. Along the way the company Frieda started
+            grew into a starting and acquiring a number of technology enabled businesses serving the legal
+             community. The influx of technology built NJLS ‘s reputation for quick and secure local shipping 
+             beyond the Legal Community.
             <br>
             <br>
-            Feratas qui opta volore voluptiam volor sit, si dia ditia ex estis dolupta velitatis expel
-            mo quaeruptur senihillati cus si od utetur, sinume conessimus molest quia cum la qui
-            doluptur, simaios abor aborehendi atectum voluptatia nimenis niscipsum, oditasp
-            elenduciam rehenis doloriae rempore nis dolorep udigenim ipsaperiore, quis ex et es sit
-            etum que volor sinciistium ipsa pa delistem voluptate voluptas eos dolorero quatur, sam
-            ipsus est quam eatur alis doluptibus eost doluptatur site nullo et explaborum et lacea
-            culparcium re, aut pore quidusa percit untibus ate il moluptur.</p>
+            In 2018 Mary Beth Dixon revived Frieda’s tenacious spirit bringing passion for our client’s business 
+            and obsession for every delivery. LRex, Local and Regional Express was born in 2021, a partnership of
+             a century worth of shipping experience and two decades of shipping technology. Our name NJLS was our
+              only box, beyond New Jersey beyond Lawyers Service LRex goes the extra mile for your last-mile.</p>
     </div>
   </div>
 
