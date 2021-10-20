@@ -555,7 +555,7 @@ html, body{
   padding: 5px;
   border-bottom: 1px solid #33f18a;
   background-color: #33f18a;
-  width: 65%;
+  width: 100%;
 }
 
 .images-tracking{
@@ -632,7 +632,7 @@ html, body{
 
 .logo{
   width: 80px;
-  margin-bottom: -10px;
+  
   margin-left: 5px;
 }
 
