@@ -233,7 +233,7 @@
             </table>
 
             <button class="print-page" @click.prevent="PrintDiv()">Print this page</button>
-            <button class="show-url" @click.prevent="ShowURL()" v-if="shipmentHistoryData[0].signatureId">Get Image URLs</button>
+            <button class="show-url" @click.prevent="ShowURL()" v-if="shipmentHistoryData[0].signatureId">Delivery Images</button>
             <div class="images-tracking" id="images-tracking">
               
               <!-- <div class="proofDelivery">
@@ -250,7 +250,7 @@
                   <p>Proof of Delivery: </p> 
                   <div class="linkStyling">
                     <a href="" id="proof-of-delivery" target="_blank">
-                      Link
+                      GO
                       <a class="notAvailable" v-if="shipmentHistoryData[0].signatureId == 0">not available</a>
                     </a>
                   </div>
@@ -267,7 +267,7 @@
                   <p>Delivery Location: </p> 
                   <div class="linkStyling">
                     <a href="" id="location-of-delivery" target="_blank">
-                      Link
+                      GO
                       <a class="notAvailable" v-if="shipmentHistoryData[1].signatureId == 0">not available</a>
                     </a>
                   </div>
@@ -554,6 +554,7 @@ html, body{
 .shipment_data h3{
   padding: 5px;
   border-bottom: 1px solid #33f18a;
+  background-color: #33f18a;
   width: 65%;
 }
 
@@ -601,17 +602,22 @@ html, body{
 }
 
 .linkStyling{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   background-color: #308ef8;
   color: black;
-  padding-top: 2px;
-  padding-bottom: 2px;
-  padding-right: 5px;
-  padding-left: 5px;
-  border-radius: 50px;
+  border-radius: 50%;
+
+  width: 40px;
+  height: 40px;
+
+  margin-left: 10px;
 }
 
 .shipment-table{
-  width: 70%;
+  width: 65%;
   margin-bottom: 15px;
 }
 

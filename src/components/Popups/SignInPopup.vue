@@ -59,8 +59,8 @@ export default {
 }
 
 .popup-inner{
-    width: 30vw;
-    height: 40vh;
+    width: 25vw;
+    height: 200px;
     border-radius: 15px;
     border: #33f18a 2px solid;
     background-color: white;
@@ -94,7 +94,7 @@ export default {
 @keyframes drop {
   0%{}
   70%{transform: translateY(20px);}
-  100%{transform: translateY(1px);}
+  100%{transform: translateY(15px);}
 }
 
 .closeSignIn {
@@ -102,7 +102,7 @@ export default {
       height: 25px;
       position: fixed;
       width: 5px;
-      margin-left: 20%;
+      margin-left: 20vw;
       top: 10px;
       transform: rotate(45deg);
       cursor: pointer;
@@ -167,20 +167,59 @@ export default {
 
 
 @media only screen and (max-width: 1000px){
-    .popup-inner{
-        height: 40vh;
-    }
+    /* .popup-inner{
+        height: 30vh;
+        width: 70vw;
+    } */
 
     .login-iframe{
         padding-bottom: 20px;
     }
 
+    .closeSignIn{
+        margin-left: 25vw;
+    }
+}
+
+@media only screen and (max-width: 1020px){
+    .popup-inner{
+        width: 30vw;
+    }
+}
+
+@media only screen and (max-width: 850px){
+    .popup-inner{
+        width: 35vw;
+    }
+}
+
+@media only screen and (max-width: 740px){
+    .popup-inner{
+        width: 40vw;
+    }
+
+    .closeSignIn{
+        margin-left: 30vw;
+    }
+}
+
+@media only screen and (max-width: 640px){
+    .popup-inner{
+        width: 45vw;
+    }
+
+    .closeSignIn{
+        margin-left: 35vw;
+    }
+}
+
+@media only screen and (max-width: 560px){
     .popup-inner{
         width: 80vw;
     }
 
     .closeSignIn{
-        margin-left: 60%;
+        margin-left: 60vw;
     }
 }
 
