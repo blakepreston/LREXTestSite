@@ -232,6 +232,7 @@ html, body{
         display: flex;
         font-size: 3.2vw;
         margin-bottom: 0;
+        text-align: left;
     }
 
     .ship_with_us_layout p{

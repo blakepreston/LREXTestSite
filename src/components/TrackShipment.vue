@@ -100,6 +100,7 @@
                 </div>
                 
                 </div>
+                
             </div>
 
             <div v-if="shipments == null" style="text-align: center;" class="shipmentError">

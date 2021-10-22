@@ -91,10 +91,10 @@ export default {
 .closeShipmentTracking {
       background: rgb(196, 196, 196);
       height: 25px;
-      position: relative;
+      position: fixed;
       width: 5px;
-      margin-left: 75%;
-      margin-top: 10px;
+      top: 3%;
+      right: 25%;
       transform: rotate(45deg);
       cursor: pointer;
       border-radius: 5px;
@@ -139,6 +139,11 @@ export default {
     margin-bottom: 5vw;
     margin-top: 1vw;
     width: 70%;
+}
+
+.closeShipmentTracking{
+    top: 1.5%;
+    right: 20%;
 }
 }
 </style>

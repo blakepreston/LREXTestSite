@@ -121,7 +121,8 @@ export default {
     return{
       showHeader: true,
       lastScrollPosition: 0,
-      scrollOffset: 40
+      scrollOffset: 40,
+      url: window.location.origin
     }
   },
   mounted() {

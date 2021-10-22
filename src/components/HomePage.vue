@@ -632,7 +632,7 @@ html, body{
 
 .logo{
   width: 80px;
-  
+  margin-top: 3%;
   margin-left: 5px;
 }
 

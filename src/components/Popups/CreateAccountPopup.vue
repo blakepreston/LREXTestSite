@@ -556,8 +556,14 @@ th{
     margin-bottom: 5vw;
 }
 
+@keyframes tabledrop {
+  70%{transform: translateY(15px);}
+  100%{transform: translateY(0px);}
+}
+
 .inner-table{
     border: 1px solid #ddd;
+    animation: tabledrop .5s ease forwards;
 }
 
 .inner-table td, th{
