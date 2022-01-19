@@ -5,17 +5,28 @@
             <a href="#" @click="scrollTo('#')"><img class="logo" src="./assets/LREXHeaderLogo.jpg" alt="LREX"></a>
         </div>
         <div class="create_account">
-          <a><button class="button_signin" @click="()=> SignInTogglePopup('SignInButtonTrigger')">Sign in</button></a>
+          <a v-if="!createShipmentToggleSignIn"><button class="button_signin" @click="()=> SignInTogglePopup('SignInButtonTrigger')">Sign in</button></a>
           <img src="./assets/Hamburger_icon.png" alt="" @click.prevent="moveNav" class="menu_icon">
         </div>
     </header>
         <nav id="mobileLinks" class="mobileLinks">
             <ul class="nav_links">
-                <li v-if="!isTrack"><a href="#oursolutions" @click="scrollTo('oursolutions')">Our solutions</a></li>
-                <li v-if="!isTrack"><a href="#aboutus" @click="scrollTo('aboutus')">About us</a></li>
+                <li v-if="!shipmentPages"><a href="#oursolutions" @click="scrollTo('oursolutions')">Our solutions</a></li>
+                <li v-if="!shipmentPages"><a href="#aboutus" @click="scrollTo('aboutus')">About us</a></li>
                 <li><a  @click="()=> CreateAccountTogglePopup('CreateAccountButtonTrigger')">Box Locations</a></li>
                 <li><a  @click="()=> GetInTouchTogglePopup('GetInTouchButtonTrigger')">Get in touch</a></li>
                 <li><a href="https://www.stage.njls.com/clients/RegisterNewCustomer.aspx" target="_blank">Create an account</a></li>
+                <li style="border-bottom: none;">
+                <amplify-authenticator v-if="authState === 'signedin'">
+                  <div class="sign-out-container">
+                      <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
+                      <amplify-sign-out slot="sign-out"
+                          id="signout-button"
+                          >
+                      </amplify-sign-out>
+                  </div>
+                </amplify-authenticator>
+                </li>
             </ul>
         </nav>
   </div>
@@ -26,11 +37,10 @@
             <a href="#" @click="scrollTo('#')"><img class="logo" src="./assets/LREXHeaderLogo.jpg" alt="LREX"></a>
         <nav>
             <ul class="nav_links">
-                <li v-if="!isTrack"><a href="#oursolutions" @click="scrollTo('oursolutions')">Our solutions</a></li>
-                <li v-if="!isTrack"><a href="#aboutus" @click="scrollTo('aboutus')">About us</a></li>
+                <li v-if="!shipmentPages"><a href="#oursolutions" @click="scrollTo('oursolutions')">Our solutions</a></li>
+                <li v-if="!shipmentPages"><a href="#aboutus" @click="scrollTo('aboutus')">About us</a></li>
                 <li><a  @click="()=> GetInTouchTogglePopup('GetInTouchButtonTrigger')">Get in touch</a></li>
                 <li><a  @click="()=> CreateAccountTogglePopup('CreateAccountButtonTrigger')">Box Locations</a></li>
-                
             </ul>
         </nav>
         </div>
@@ -38,8 +48,19 @@
         <div class="create_account">
           <!-- @click="()=> CreateAccountTogglePopup('CreateAccountButtonTrigger')" -->
             <li><a href="https://www.stage.njls.com/clients/RegisterNewCustomer.aspx" target="_blank">Create an account</a></li>
-            <a><button class="button_signin" @click="()=> SignInTogglePopup('SignInButtonTrigger')">Sign in</button></a>
+            <a v-if="!createShipmentToggleSignIn"><button class="button_signin" @click="()=> SignInTogglePopup('SignInButtonTrigger')">Sign in</button></a>
         </div>
+
+        <amplify-authenticator v-if="authState === 'signedin'">
+        <div class="sign-out-container">
+            <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
+            <amplify-sign-out slot="sign-out"
+                id="signout-button"
+                >
+            </amplify-sign-out>
+        </div>
+        </amplify-authenticator>
+
     </header>
   </div>
 
@@ -90,15 +111,15 @@
     </GetInTouchPopup>
   </div>
 
-  <div v-if="!isTrack" ref="homepage">
+  <div v-if="!shipmentPages" ref="homepage">
     <HomePage/>
   </div>
   
-  <div v-if="!isTrack" ref="oursolutions">
+  <div v-if="!shipmentPages" ref="oursolutions">
     <OurSolutions/>
   </div>
   
-  <div v-if="!isTrack" ref="aboutus">
+  <div v-if="!shipmentPages" ref="aboutus">
     <AboutUs/>
   </div>
   
@@ -114,6 +135,7 @@ import SignInPopup from './components/Popups/SignInPopup.vue'
 import CreateAccountPopup from './components/Popups/CreateAccountPopup.vue'
 import GetInTouchPopup from './components/Popups/GetInTouchPopup.vue'
 import {ref} from 'vue';
+import {AuthState, onAuthUIStateChange} from "@aws-amplify/ui-components";
 
 export default {
   name: 'App',
@@ -122,7 +144,8 @@ export default {
       showHeader: true,
       lastScrollPosition: 0,
       scrollOffset: 40,
-      url: window.location.origin
+      url: window.location.origin,
+      authState: undefined
     }
   },
   mounted() {
@@ -207,9 +230,40 @@ export default {
     }
   },
   computed:{
-    isTrack(){
-      return this.$route.name == 'Track'
+    shipmentPages(){
+      return this.$route.name == 'Track' || this.$route.name == 'Ship';
+    },
+    createShipmentToggleSignIn(){
+      return this.$route.name == 'Ship';
     }
+  },
+  created(){
+        //Cognito-Amplify Login setup
+        onAuthUIStateChange((nextAuthState, authData) => {
+            this.authState = nextAuthState;
+            console.log(nextAuthState);
+            if (nextAuthState === AuthState.SignedIn) {
+            this.signedIn = true;
+            console.log("user successfully signed in!");
+            console.log("user data: ", authData);
+            console.log(authData.signInUserSession.accessToken.jwtToken)
+            this.user = authData;
+            this.token = authData.signInUserSession.accessToken.jwtToken;
+            this.njlsUser = authData.attributes;
+            }
+            if (!authData) {
+                console.log("user is not signed in...");
+                this.signedIn = false;
+            }
+
+            if(nextAuthState === AuthState.SignUp){
+                this.signUp = true;
+            }else if(nextAuthState === AuthState.ForgotPassword){
+                this.forgotPassword = true;
+            }else if(nextAuthState === AuthState.SignIn){
+                this.backSignIn = true;
+            }
+        });
   }
 }
 </script>
@@ -355,6 +409,21 @@ a{
 /*Get in touch*/
 .get-in-touch h3{
   border-bottom: 1px solid #33f18a;
+}
+
+/* Sign-Out Container */
+amplify-sign-out{
+  --amplify-primary-color: #308ef8;
+  --amplify-secondary-tint: #308ef8;
+  --amplify-primary-shade: #2c82e4;
+  --amplify-primary-tint: #308ef8;
+}
+
+.sign-out-container{
+  background-color: #308ef8;
+  padding: 5px;
+  border-radius: 10px;
+  margin-left: 10px;
 }
 
 @media only screen and (max-width: 1000px){

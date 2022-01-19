@@ -154,7 +154,7 @@
 
     <div class="headline_recruiting">
       <h1>Recruiting</h1>
-      <p>Learn about working for Lrex</p>
+      <p>Learn about working for LRex</p>
       <img src="../assets/delivery-woman.jpg" alt="">
       <!-- <img src="../assets/woman-in-car.jpg" alt=""> -->
       <div class="drive_with_us"><a @click="()=> DriveWithUsTogglePopup('DriveWithUsButtonTrigger')">Drive with us</a></div>
@@ -194,7 +194,7 @@
               <p>Signature Required</p>
             </div>
             <h3>Ship By</h3>
-            <p>{{shipments[0].pickupAttention}}</p>
+            <!-- <p>{{shipments[0].pickupAttention}}</p> -->
             <p>{{shipments[0].pickupAddress1}}</p>
             <p>{{shipments[0].pickupAddress2}}</p>
             <p>{{shipments[0].pickupCity}}, {{shipments[0].pickupState}}, {{shipments[0].pickupZipCode}} </p>

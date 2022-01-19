@@ -8,9 +8,12 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@aws-amplify/ui-components": "^1.9.6",
     "@progress/kendo-scrollview-vue-wrapper": "^2021.2.908",
     "@progress/kendo-theme-default": "^4.41.1",
     "@progress/kendo-ui": "^2021.2.616",
+    "aws-amplify": "^4.3.11",
+    "aws-amplify-vue": "^2.1.5",
     "axios": "^0.21.4",
     "core-js": "^3.6.5",
     "vue": "^3.0.0",

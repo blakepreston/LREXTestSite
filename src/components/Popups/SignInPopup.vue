@@ -6,7 +6,7 @@
 
                     <!-- <iframe src="https://stage.njls.com/clients/MarketingHeader.aspx" frameborder="0" class="login-iframe"></iframe> -->
 
-                    <iframe src="https://www.lrex.com/clients/MarketingHeader.aspx" frameborder="0" class="login-iframe"></iframe>
+                    <iframe src="https://www.lrex.com/clients/MarketingHeader.aspx" frameborder="0" scrolling="no" class="login-iframe"></iframe>
 
                 <!-- <slot/> -->
                 <!-- <h2>Sign In</h2>
@@ -35,9 +35,11 @@ export default {
 
 <style scoped>
 .login-iframe{
-    width: 100%;
-    height: 100%;
-    margin-bottom: 10px;
+    width: 1px;
+    min-width: 100%;
+    *width: 100%;
+    height: 125%;
+    padding-bottom: 10px;
 }
 
 .popup{
@@ -59,8 +61,8 @@ export default {
 }
 
 .popup-inner{
-    /* width: 25vw;*/
-    height: 200px;
+    width: 275px;
+    height: 220px;
     border-radius: 15px;
     border: #33f18a 2px solid;
     background-color: white;
@@ -73,6 +75,23 @@ export default {
 
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
+/* 
+@media not all and (min-resolution:.001dpcm) { 
+     @supports (-webkit-appearance:none) {
+        .popup-inner{
+            height: 450px;
+            width: 90vw
+        }
+
+        .login-iframe{
+            height: 100%;
+        }
+
+        .closeSignIn {
+            height: 25px;
+        }
+     }
+} */
 
 .popup-close{
     position: absolute;
@@ -84,10 +103,12 @@ export default {
 .signIn-container{
     display: flex;
     justify-content: center;
+    flex-direction: column;
     align-items: center;
     margin-left: 1%;
     margin-right: 1%;
-    margin-top: 2vw;
+    /* margin-top: 2vw; */
+    padding-bottom: 10px;
 }
 
 
@@ -99,10 +120,10 @@ export default {
 
 .closeSignIn {
       background: rgb(196, 196, 196);
-      height: 25px;
-      position: absolute;
+      height: 37px;
+      position: relative;
       width: 5px;
-      margin-left: 200px;
+      margin-left: 75%;
       top: 10px;
       transform: rotate(45deg);
       cursor: pointer;
@@ -119,7 +140,7 @@ export default {
       border-radius: 5px;
     }
 
-
+/* 
 .loginButton{
     background-color: #33f18a;
     color: rgb(255, 255, 255);
@@ -163,7 +184,7 @@ export default {
 
 .remember-me{
     margin-right: 5%;
-}
+} */
 
 
 @media only screen and (max-width: 1000px){

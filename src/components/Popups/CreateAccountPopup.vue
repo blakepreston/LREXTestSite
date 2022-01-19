@@ -466,9 +466,9 @@ export default {
 .closeCreateAccount {
       background: rgb(196, 196, 196);
       height: 25px;
-      position: fixed;
+      position: relative;
       top: 10px;
-      margin-left: 50%;
+      margin-left: 75%;
       width: 5px;
       transform: rotate(45deg);
       cursor: pointer;
