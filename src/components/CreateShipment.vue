@@ -5,14 +5,14 @@
           <amplify-sign-in slot="sign-in"
                 v-if="authState !== 'signedin'"
                 v-show="authState !== 'signup' && authState !== 'forgotpassword'  && authState !== 'confirmSignUp'"
-                header-text="My Custom Sign In Text"
+                header-text="Sign in to create a shipment."
           ></amplify-sign-in>
 
 
           <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
           <amplify-sign-up slot="sign-up"
                   v-if="authState === 'signup'"
-                  headerText="My Custom Sign Up Text!"
+                  headerText="Sign up to create a shipment."
                   :formFields="formFields"
           ></amplify-sign-up>
 
@@ -259,15 +259,19 @@
                     
         
                     <div class="weightMainContainer">
-                        <div v-for="items in count" :key="items" class="weightInputContainer">
+                        <div v-for="items in count" :key="items" class="weightInputContainer" id="weightInputContainer">
                             <div class="weightInput">
                                 <p>Package {{items}}</p>
                                 <div class="weightInputBox">
                                     <label for="weightCheckBox">Less than 16 lbs</label>
-                                    <input type="checkbox" id="weightCheckBox">
+                                    <input type="radio" id="weightCheckBox" value="1" v-model="weight[items - 1]">
                                 </div>
+                                <!-- <div class="weightInputBox">
+                                    <label for="weightRadio">Weight (lbs)</label>
+                                    <input name="weightRadio" type="radio" id="weightRadio">
+                                </div> -->
                                 <label for="weight">Weight (lbs)</label>
-                                <input name="weight" type="number" id="shipmentWeight" v-model="weight[items - 1]" v-on:blur="createWeightArray(items)">
+                                <input name="weight" type="number" id="shipmentWeight" onkeydown="return event.keyCode !== 69" v-model="weight[items - 1]">
                             </div>
                             <button v-if="items > 1" @click="count--, removeShipment()" class="removePackageButton">Remove Package</button>
 
@@ -345,49 +349,49 @@
 
                 <div class="notificationsContainer2">
                     <h2 class="referenceHeader">References</h2>
-                            <!-- <div class="referenceInputLabel">
-                                <label for="ref1">Reference 1</label>
+                        <div v-if="lawyerService">
+                            <div class="referenceInputLabel">
+                                <label for="ref1">Reference No.</label>
                                 <div class="inputButtonContainer">
                                     <input id="ref1" type="text" v-model="shipmentData.Ref1">
-                                    <button v-if="showRefCount >= 0" @click="showRefCount++">+</button>
-                                    <button v-if="showRefCount >= 1" @click="showRefCount--">-</button>
                                 </div>
-                                
                             </div>
-                            <div class="referenceInputLabel" v-if="showRefCount >= 1">
-                                <label for="casename">Reference 2</label>
+
+                            <div class="referenceInputLabel">
+                                <label for="casename">Case Name</label>
                                 <div class="inputButtonContainer">
                                     <input id="casename" type="text" v-model="shipmentData.Ref2">
                                 </div>
-                                
                             </div>
-                            <div class="referenceInputLabel" v-if="showRefCount >= 2">
-                                <label for="court">Reference 3</label>
+
+                            <div class="referenceInputLabel">
+                                <label for="court">Court</label>
                                 <div class="inputButtonContainer">
                                     <input id="court" type="text" v-model="shipmentData.Ref3">
                                 </div>
-                                
                             </div>
-                            <div class="referenceInputLabel" v-if="showRefCount >= 3">
-                                <label for="docketno">Reference 4</label>
+
+                            <div class="referenceInputLabel">
+                                <label for="docketno">Docket No.</label>
                                 <div class="inputButtonContainer">
                                     <input id="docketno" type="text" v-model="shipmentData.Ref4">
                                 </div>
-                                
                             </div>
-                            <div class="referenceInputLabel" v-if="showRefCount == 4">
-                                <label for="attorney">Reference 5</label>
+
+                            <div class="referenceInputLabel">
+                                <label for="attorney">Attorney</label>
                                 <div class="inputButtonContainer">
                                     <input id="attorney" type="text" v-model="shipmentData.Ref5">
                                 </div>
-                            </div> -->
+                            </div>
+                        </div>
 
                             <div class="referenceInputLabel">
                                 <label for="addReference">Add Reference:</label>
                                 <div class="inputButtonContainer">
                                     <input id="addReference" type="text" placeholder="Add a Reference" @input="referenceValue = $event.target.value">
                                     <!-- <button v-if="showRefCount == 4" @click="showRefCount--">-</button> -->
-                                    <button type="submit" @click="addReference" onclick="document.getElementById('addReference').value = '';">Add</button>
+                                    <button v-show="showRefCount <= 4" type="submit" @click="addReference" onclick="document.getElementById('addReference').value = '';">Add</button>
                                 </div>
                             </div>
 
@@ -528,235 +532,276 @@
                 
             </div>
                 <div class="buttonContainer">
-                    <button @click="createShipment" type="submit">Ship</button> 
+                    <button class="saveButton" @click="shipmentData.secretKey = 'secretKey', createShipment()">Save</button>
+                    <button class="shipButton" @click="createShipment" type="submit">Ship</button>
                 </div>
         </div>
 
-      <button class="btn" id="prev" disabled @click="stepPrev()">Prev</button>
-      <button class="btn" id="next" @click="stepNext()">Next</button>
-    </div>
+        <div class="finalContainer" v-show="currentActive === 5">
+            <!-- {{shipmentLabel}}
+            {{shipmentDataArray}} -->
+            <h1>Thank you for choosing LRex!</h1>
+            
+            <div v-if="creatingLabels">
+                <h2>Creating Shipment Labels</h2>
+                <div class="loader"></div>
+            </div>
 
+            <embed class="pdfViewer" id="pdfViewer" src="" width="100%" height="500">
+            <div>
+                <button class="refreshButton" @click="refreshPage()">Create Another Shipment</button>
+                <!-- <button class="getLabelButton" @click="GetShipmentLabels">Get Label as PDF</button> -->
+                <button class="getLabelButton" @click="GetShipmentLabelsTiff">Get Label as Tiff</button>
+            </div>
+            
+        </div>
+
+      <button v-show="currentActive <= 4" class="btn" id="prev" disabled @click="stepPrev()">Prev</button>
+      <button v-show="currentActive <= 4" class="btn" id="next" @click="checkInputAdded()">Next</button>
+    </div>
   
 </template>
 
 
 <script>
 import {AuthState, onAuthUIStateChange} from "@aws-amplify/ui-components";
+import {Auth} from 'aws-amplify';
 import axios from 'axios';
 
 export default {
     data(){
         return{
-        referenceValue: '',
-        showRefCount: 0,
-        showNextDayStandard: false,
-        showServiceDetails: false,
-        inputNotify: '',
-        inputNotifyNonDelivery: '',
-        currentActive: 1,
-        circles: [],
-        progress: [],
-        count: 1,
-        weight: [],
-        addEmail: '',
-        addPhone: '',
-        addNonDelivEmail: '',
-        addNonDelivPhone: '',
-        activeEmailBox: false,
-        activePhoneBox: false,
-        activeNonDelivEmailBox: false,
-        activeNonDelivPhoneBox: false,
-        authState: undefined,
-        active: false,
-        user: {},
-        dataReturn: {},
-        formFields: [
-        {
-          type: "username",
-          label: "Username",
-          placeholder: "Username",
-          required: true,
-        },
-        {
-          type: "password",
-          label: "Password",
-          placeholder: "Password",
-          required: true,
-        },
-        {
-          type: "email",
-          label: "Email",
-          placeholder: "Email",
-          required: true,
-        },
-        {
-          type: "custom:NJLSUsername",
-          label: "NJLS Username",
-          placeholder: "NJLS Username",
-          name: "custom:NJLSUsername",
-          fieldId: "custom:NJLSUsername",
-        },
-      ],
-      shipmentDataArray:[
-          {
-            Service: '',
-            serviceAddress: {
-                type: 'Address',
-                location: '',
-                address: {
-                CompanyName: '',
-                Attention: '',
-                Address1: '',
-                Address2: '',
-                City: '',
-                State: '',
-                ZipCode: '',
-                Phone: '',
-                PhoneExt: '',
-                AddressbookAdd: true
-                }
-            },
-            deliveryPickup: {
-                //Must be address-location not supported
-                type: 'Address',
-                location: '',
-                address: {
-                CompanyName: '',
-                Attention: '',
-                Address1: '',
-                Address2: '',
-                City: '',
-                State: '',
-                ZipCode: '',
-                Phone: '',
-                PhoneExt: '',
-                AddressbookAdd: true
-                }
-            },
-            shipmentID: 0,
-            Ref1: '',
-            Ref2: '',
-            Ref3: '',
-            Ref4: '',
-            Ref5: '',
-            AddRefs: true,
-            Description: '',
-            DeliveryInstructions: '',
-            weight: 1.0,
-            packageCount: 1,
-            ValidateAddress: false,
-            IgnoreMinorError: true,
-            additionalServices: [
-                ''
-            ],
-            timeWindow: '',
-            notify: [
+            creatingLabels: false,
+            lawyerService: false,
+            referenceValue: '',
+            showRefCount: 0,
+            showNextDayStandard: false,
+            showServiceDetails: false,
+            inputNotify: '',
+            inputNotifyNonDelivery: '',
+            currentActive: 1,
+            circles: [],
+            progress: [],
+            count: 1,
+            weight: [],
+            addEmail: '',
+            addPhone: '',
+            addNonDelivEmail: '',
+            addNonDelivPhone: '',
+            activeEmailBox: false,
+            activePhoneBox: false,
+            activeNonDelivEmailBox: false,
+            activeNonDelivPhoneBox: false,
+            authState: undefined,
+            active: false,
+            user: {},
+            dataReturn: {},
+            pdfDataReturn: '',
+            tiffDataReturn: '',
+            formFields: [
                 {
-                delivery: 
-                [
-                    {
-                        email: [
-                            ''
-                        ],
-                        phone: [
-                            ''
-                        ]
-                    }
-                ],
-                nonDelivery: [
-                    {
-                    email: [
+                type: "username",
+                label: "Username",
+                placeholder: "Username",
+                required: true,
+                },
+                {
+                type: "password",
+                label: "Password",
+                placeholder: "Password",
+                required: true,
+                },
+                {
+                type: "email",
+                label: "Email",
+                placeholder: "Email",
+                required: true,
+                },
+                {
+                type: "custom:NJLSUsername",
+                label: "NJLS Username",
+                placeholder: "NJLS Username",
+                name: "custom:NJLSUsername",
+                fieldId: "custom:NJLSUsername",
+                },
+            ],
+            shipmentDataArray:[
+                {
+                    secretKey: '',
+                    Service: '',
+                    serviceAddress: {
+                        type: 'Address',
+                        location: '',
+                        address: {
+                        CompanyName: '',
+                        Attention: '',
+                        Address1: '',
+                        Address2: '',
+                        City: '',
+                        State: '',
+                        ZipCode: '',
+                        Phone: '',
+                        PhoneExt: '',
+                        AddressbookAdd: true
+                        }
+                    },
+                    deliveryPickup: {
+                        //Must be address-location not supported
+                        type: 'Address',
+                        location: '',
+                        address: {
+                        CompanyName: '',
+                        Attention: '',
+                        Address1: '',
+                        Address2: '',
+                        City: '',
+                        State: '',
+                        ZipCode: '',
+                        Phone: '',
+                        PhoneExt: '',
+                        AddressbookAdd: true
+                        }
+                    },
+                    shipmentID: 0,
+                    Ref1: '',
+                    Ref2: '',
+                    Ref3: '',
+                    Ref4: '',
+                    Ref5: '',
+                    AddRefs: true,
+                    Description: '',
+                    DeliveryInstructions: '',
+                    weight: 1.0,
+                    packageCount: 1,
+                    ValidateAddress: false,
+                    IgnoreMinorError: true,
+                    additionalServices: [
                         ''
                     ],
-                    phone: [
-                        ''
-                    ]
+                    timeWindow: '',
+                    notify: [
+                        {
+                        delivery: 
+                        [
+                            {
+                                email: [
+                                    ''
+                                ],
+                                phone: [
+                                    ''
+                                ]
+                            }
+                        ],
+                        nonDelivery: [
+                            {
+                            email: [
+                                ''
+                            ],
+                            phone: [
+                                ''
+                            ]
+                            }
+                        ]
+                        }
+                    ],
+                    AppCode: ''
                     }
-                ]
-                }
             ],
-            AppCode: ''
-            }
-      ],
-        shipmentData:{
-            Service: '',
-            serviceAddress: {
-                type: 'Address',
-                location: '',
-                address: {
-                CompanyName: '',
-                Attention: '',
-                Address1: '',
-                Address2: '',
-                City: '',
-                State: '',
-                ZipCode: '',
-                Phone: '',
-                PhoneExt: '',
-                AddressbookAdd: true
-                }
-            },
-            deliveryPickup: {
-                //Must be address-location not supported
-                type: 'Address',
-                location: '',
-                address: {
-                CompanyName: '',
-                Attention: '',
-                Address1: '',
-                Address2: '',
-                City: '',
-                State: '',
-                ZipCode: '',
-                Phone: '',
-                PhoneExt: '',
-                AddressbookAdd: true
-                }
-            },
-            shipmentID: 0,
-            Ref1: '',
-            Ref2: '',
-            Ref3: '',
-            Ref4: '',
-            Ref5: '',
-            AddRefs: true,
-            Description: '',
-            DeliveryInstructions: '',
-            weight: 1.0,
-            packageCount: 1,
-            ValidateAddress: false,
-            IgnoreMinorError: true,
-            additionalServices: [
-                ''
-            ],
-            timeWindow: '',
-            notify: [
-                {
-                delivery: 
-                [
+            shipmentData:{
+                secretKey: '',
+                Service: '',
+                serviceAddress: {
+                    type: 'Address',
+                    location: '',
+                    address: {
+                    CompanyName: '',
+                    Attention: '',
+                    Address1: '',
+                    Address2: '',
+                    City: '',
+                    State: '',
+                    ZipCode: '',
+                    Phone: '',
+                    PhoneExt: '',
+                    AddressbookAdd: true
+                    }
+                },
+                deliveryPickup: {
+                    //Must be address-location not supported
+                    type: 'Address',
+                    location: '',
+                    address: {
+                    CompanyName: '',
+                    Attention: '',
+                    Address1: '',
+                    Address2: '',
+                    City: '',
+                    State: '',
+                    ZipCode: '',
+                    Phone: '',
+                    PhoneExt: '',
+                    AddressbookAdd: true
+                    }
+                },
+                shipmentID: 0,
+                Ref1: '',
+                Ref2: '',
+                Ref3: '',
+                Ref4: '',
+                Ref5: '',
+                AddRefs: true,
+                Description: '',
+                DeliveryInstructions: '',
+                weight: 1.0,
+                packageCount: 1,
+                ValidateAddress: false,
+                IgnoreMinorError: true,
+                additionalServices: [
+                    ''
+                ],
+                timeWindow: '',
+                notify: [
                     {
+                    delivery: 
+                    [
+                        {
+                            email: [
+                                
+                            ],
+                            phone: [
+                                
+                            ]
+                        }
+                    ],
+                    nonDelivery: [
+                        {
                         email: [
                             
                         ],
                         phone: [
                             
                         ]
-                    }
-                ],
-                nonDelivery: [
-                    {
-                    email: [
-                        
-                    ],
-                    phone: [
-                        
+                        }
                     ]
                     }
-                ]
-                }
-            ],
-            AppCode: ''
-            }
+                ],
+                AppCode: ''
+            },
+            shipmentLabel:{
+                shipmentID: [],
+                labelFormat: "PDF",
+                multipleLabelPerSheet: true
+            },
+            shipmentLabelTiff:{
+                shipmentID: [],
+                labelFormat: "TIFF",
+                multipleLabelPerSheet: true
+            },
+            userPreferences:{
+                userID: 1932,
+                preferenceGroup: 'SP'
+            },
+            userPreferencesDataReturn:{}
         }
     },
     mounted(){
@@ -820,20 +865,104 @@ export default {
         });
     },
     methods:{
+        refreshPage(){
+            window.location.reload();
+        },
+        checkInputAdded(){
+            let deliveryNotifInput = document.getElementById("deliveryInput").value;
+            let nonDeliveryNotifInput = document.getElementById("nonDeliveryInput").value;
+            let referenceAddInput = document.getElementById("addReference").value;
+            //let weightInputValue = document.getElementById('shipmentWeight').value;
+
+            //If user does not click "Add" this will check and add the input
+            if(this.currentActive === 3){
+                console.log("Count Length: " + this.count)
+                console.log(this.weight)
+                if(deliveryNotifInput != ""){
+                    this.inputIsValid();
+                    document.getElementById('deliveryInput').value = '';
+                    // if(this.activeEmailBox == true || this.activePhoneBox == true){
+                    //     this.stepNext();
+                    // }
+                }else if(this.shipmentData.notify[0].delivery[0].email.length > 0 || this.shipmentData.notify[0].delivery[0].phone.length > 0){
+                    //this.stepNext();
+                }else{
+                    alert("Please Add Delivery Notification Email/Phone")
+                    //this.stepNext();
+                }
+
+                if(nonDeliveryNotifInput != ""){
+                        this.inputIsValidNonDelivery();
+                        document.getElementById('nonDeliveryInput').value = '';
+                        // if(this.activeNonDelivEmailBox == true || this.activeNonDelivPhoneBox == true){
+                        //     this.stepNext();
+                        // }
+                    }else if(this.shipmentData.notify[0].nonDelivery[0].email.length > 0 || this.shipmentData.notify[0].nonDelivery[0].phone.length > 0){
+                        //this.stepNext();
+                    }else{
+                        alert("Please Add Non-Delivery Notification Email/Phone")
+                        //this.stepNext();
+                    }
+
+                    if(referenceAddInput != ""){
+                        this.addReference();
+                        document.getElementById('addReference').value = '';
+                        //this.stepNext();
+                    }
+
+                    //for(let i=0; i < this.count; i++){
+                        if(this.weight.length < this.count){
+                            alert("Please enter a valid weight.")
+                        }else{
+                            this.stepNext();
+                        }
+                    //}
+            }
+            else if(this.currentActive === 1){
+                let addressInput = document.getElementById("address").value;
+                let cityInput = document.getElementById("locality").value;
+                let stateInput = document.getElementById("state").value;
+                let zipCodeInput = document.getElementById("postcode").value;
+                if(addressInput == ""){
+                    alert("Please enter an address")
+                }else if(cityInput == ""){
+                    alert("Please enter a city")
+                }else if(stateInput == ""){
+                    alert("Please enter a state")
+                }else if(zipCodeInput == ""){
+                    alert("Please enter a zip code")
+                }else{
+                   this.stepNext(); 
+                }
+                
+            }else if(this.currentActive === 2){
+                if(this.shipmentData.Service === ''){
+                    alert("Please select a shipment service")
+                }else{
+                    this.stepNext(); 
+                }
+            }
+            
+        },
         //Add Reference
         addReference(){
             this.showRefCount++
 
             if(this.showRefCount === 1){
                 document.getElementById("reference1").value = this.referenceValue;
+                this.shipmentData.Ref1 = this.referenceValue;
             }else if(this.showRefCount === 2){
                 document.getElementById("reference2").value = this.referenceValue;
+                this.shipmentData.Ref2 = this.referenceValue;
             }else if(this.showRefCount === 3){
                 document.getElementById("reference3").value = this.referenceValue;
+                this.shipmentData.Ref3 = this.referenceValue;
             }else if(this.showRefCount === 4){
                 document.getElementById("reference4").value = this.referenceValue;
+                this.shipmentData.Ref4 = this.referenceValue;
             }else if(this.showRefCount === 5){
                 document.getElementById("reference5").value = this.referenceValue;
+                this.shipmentData.Ref5 = this.referenceValue;
             }
         },
         //Show Details
@@ -928,6 +1057,7 @@ export default {
         },
         updateShipmentArray(){
             this.shipmentDataArray = [{
+                secretKey: '',
                 Service: '',
             serviceAddress: {
                 type: 'Address',
@@ -1008,6 +1138,7 @@ export default {
             }]
             for(let i = 1; i < this.count; i++){
             let shipData = {
+              secretKey: '',
               Service: '',
             serviceAddress: {
                 type: 'Address',
@@ -1090,12 +1221,22 @@ export default {
         }
         console.log(this.shipmentDataArray)
         },
-        createWeightArray(items){
-            this.shipmentDataArray[items-1].weight = this.weight[items-1];
-        },
+        // createWeightArray(){
+        //         if(document.getElementById('weightCheckBox').checked){
+        //             document.getElementById('weightRadio').checked = false;
+        //             document.getElementById('shipmentWeight').disabled = true;
+        //             document.getElementById('shipmentWeight').style.backgroundColor = '#d3d3d3';
+        //         }
+        //         if(document.getElementById('weightRadio').checked){
+        //             document.getElementById('weightCheckBox').checked = false;
+        //             document.getElementById('shipmentWeight').disabled = false;
+        //             document.getElementById('shipmentWeight').style.backgroundColor = '#fff';
+        //         }
+        // },
         createFinalArray(){
             for(let i = 0; i < this.count; i++){
             this.shipmentDataArray[i].weight = this.weight[i];
+            this.shipmentDataArray[i].secretKey = this.shipmentData.secretKey;
             this.shipmentDataArray[i].Service = this.shipmentData.Service;
             this.shipmentDataArray[i].serviceAddress.address.CompanyName = this.shipmentData.serviceAddress.address.CompanyName;
             this.shipmentDataArray[i].serviceAddress.address.Attention = this.shipmentData.serviceAddress.address.Attention;
@@ -1148,6 +1289,7 @@ export default {
         //Call to API and create shipment
         createShipment(){
             this.createFinalArray();
+            this.creatingLabels = true;
             for(let i = 0; i < this.shipmentDataArray.length; i++){
             axios.post('https://localhost:44368/api/Rest/CreateShipmentCognito', this.shipmentDataArray[i], {
                 headers: {
@@ -1157,12 +1299,116 @@ export default {
             }
             }).then((response)=>{
                 this.dataReturn = response.data
-                alert( "Shipment " + (this.shipmentDataArray.indexOf(this.shipmentDataArray[i]) + 1) + " has been added succesfully!")
-                //this.dataReturn.shipmentInfo.error[0].errMsg
-                //window.location.reload();
+                let errorMessage = this.dataReturn.shipmentInfo.error[0].errMsg;
+                this.shipmentLabel.shipmentID.push(this.dataReturn.shipmentInfo.shipment[0].shipmentID);
+                this.shipmentLabelTiff.shipmentID.push(this.dataReturn.shipmentInfo.shipment[0].shipmentID);
+                console.log(this.dataReturn)
+                console.log("Shipment ID" + this.dataReturn.shipmentInfo.shipment[0].shipmentID)
+                console.log(this.dataReturn.shipmentInfo.error[0].errMsg)
+                alert( "Shipment " + (this.shipmentDataArray.indexOf(this.shipmentDataArray[i]) + 1) + ": " + errorMessage.slice(12))
+                this.GetShipmentLabels();
             })
-            .catch(error => alert(error))
+            //.catch(error => alert(error.response.data.title))
+            .catch(function(error){
+                    if(error.response.data.title){
+                        alert(error.response.data.title)
+                    }else{
+                        alert("Error with creating shipment.")
+                    }
+                }).finally(()=> this.creatingLabels = false)
             }
+            this.currentActive = 5;
+        },
+        GetShipmentLabels(){
+            axios.post('https://localhost:44368/api/Rest/GetShipmentLabelsCognito', this.shipmentLabel,{
+                headers: {
+                    'User': this.user.username,
+                    // get the user's JWT token given by AWS cognito 
+                    'Authorization': `Bearer ${this.user.signInUserSession.accessToken.jwtToken}`
+                },
+                responseType: 'blob'
+            }).then((response)=>{
+                this.pdfDataReturn = response.data;
+                //console.log(typeof this.pdfDataReturn)
+                var newBlob = new Blob([this.pdfDataReturn], {type: "application/pdf"})
+                //var href = URL.createObjectURL(newBlob)
+
+                console.log(newBlob)
+                //window.open(href)
+
+                var reader = new FileReader();
+                reader.readAsDataURL(newBlob);
+                reader.onloadend = function (){
+                   var base64Data = reader.result; 
+                   console.log(base64Data);
+                   document.getElementById('pdfViewer').src = base64Data;
+                }
+                
+                console.log(this.pdfDataReturn);
+            })
+            //.catch(error => alert(error.response.data.title))
+            .catch(error => console.log(error))
+        },
+        GetShipmentLabelsTiff(){
+            axios.post('https://localhost:44368/api/Rest/GetShipmentLabelsCognito', this.shipmentLabelTiff,{
+                headers: {
+                    'User': this.user.username,
+                    // get the user's JWT token given by AWS cognito 
+                    'Authorization': `Bearer ${this.user.signInUserSession.accessToken.jwtToken}`
+                },
+                responseType: 'blob'
+            }).then((response)=>{
+                this.tiffDataReturn = response.data;
+                console.log(typeof this.tiffDataReturn)
+                var newBlob = new Blob([this.tiffDataReturn], {type: "image/tiff"})
+                var href = URL.createObjectURL(newBlob)
+
+                console.log(newBlob)
+                window.open(href)
+
+                var reader = new FileReader();
+                reader.readAsDataURL(newBlob);
+                reader.onloadend = function (){
+                   var base64Data = reader.result; 
+                   console.log(base64Data);
+                }
+                console.log(this.tiffDataReturn);
+            })
+            .catch(error => console.log(error))
+        },
+        GetUserPreferences(){
+            axios.post('https://localhost:44368/api/Rest/GetUserPreference', this.userPreferences,{
+                // headers: {
+                //     'User': this.user.username,
+                //     // get the user's JWT token given to it by AWS cognito 
+                //     'Authorization': `Bearer ${this.user.signInUserSession.accessToken.jwtToken}`
+                // },
+            }).then((response)=>{
+                this.userPreferencesDataReturn = response.data;
+                for(let i=0; i<this.userPreferencesDataReturn.length; i++){
+                    if(this.userPreferencesDataReturn[i].settingName == "Non Delivery e-Mail id"){
+                        this.shipmentData.notify[0].nonDelivery[0].email.push(this.userPreferencesDataReturn[i].settingValue);
+                        this.activeNonDelivEmailBox = true;
+                        this.activeNonDelivPhoneBox = true;
+                    }else if(this.userPreferencesDataReturn[i].settingName == "e-Mail id"){
+                        this.shipmentData.notify[0].delivery[0].email.push(this.userPreferencesDataReturn[i].settingValue);
+                        this.activeEmailBox = true;
+                        this.activePhoneBox = true;
+                    }else if(this.userPreferencesDataReturn[i].settingName == "Delivery Instructions"){
+                        this.shipmentData.DeliveryInstructions = this.userPreferencesDataReturn[i].settingValue;
+                    }else if(this.userPreferencesDataReturn[i].settingName == "Service Type"){
+                        if(this.userPreferencesDataReturn[i].settingValue == "Standard"){
+                            this.NextDayStandard();
+                        }
+                    }else if(this.userPreferencesDataReturn[i].settingName == "Signature Required"){
+                        if(this.userPreferencesDataReturn[i].settingValue == "Yes"){
+                            this.SignatureRequired();
+                        }
+                    }
+                }
+                console.log(this.userPreferencesDataReturn)
+                }
+            ).catch(error => console.log(error))
         },
         SignatureRequired(){
             this.shipmentData.additionalServices[0] = 'SignatureRequired';
@@ -1210,40 +1456,52 @@ export default {
         }
     },
     created(){
+        setTimeout(Auth.signOut, 3600000);
+
+        if(AuthState.SignedIn){
+            this.GetUserPreferences();
+        }
         //Cognito-Amplify Login setup
         onAuthUIStateChange((nextAuthState, authData) => {
-            this.authState = nextAuthState;
-            console.log(nextAuthState);
+            //Change AutState to Signout after 1 hour
+            setTimeout(Auth.signOut, 3600000);
+            
             if (nextAuthState === AuthState.SignedIn) {
-            this.signedIn = true;
-            console.log("user successfully signed in!");
-            console.log("user data: ", authData);
-            console.log(authData.signInUserSession.accessToken.jwtToken)
-            this.user = authData;
-            this.token = authData.signInUserSession.accessToken.jwtToken;
-            this.njlsUser = authData.attributes;
+                
+                this.authState = nextAuthState;
+                console.log("Sign in nextAuthState: " + nextAuthState);
+                this.signedIn = true;
+                
+                // console.log("user successfully signed in!");
+                // console.log("user data: ", authData);
+                // console.log(authData.signInUserSession.accessToken.jwtToken)
+                this.user = authData;
+                this.token = authData.signInUserSession.accessToken.jwtToken;
+                this.njlsUser = authData.attributes;
             }
+           
             if (!authData) {
                 console.log("user is not signed in...");
                 this.signedIn = false;
             }
 
             if(nextAuthState === AuthState.SignUp){
+                this.authState = nextAuthState;
                 this.signUp = true;
             }else if(nextAuthState === AuthState.ForgotPassword){
+                this.authState = nextAuthState;
                 this.forgotPassword = true;
             }else if(nextAuthState === AuthState.SignIn){
+                this.authState = nextAuthState;
                 this.backSignIn = true;
             }
         });
-
-        //Emit AuthState to Parent Component
-        // this.$emit(this.authState)
     }
 }
 </script>
 
 <style scoped>
+
     body{
         overflow-x: hidden;
         margin: 0;
@@ -1871,15 +2129,16 @@ export default {
         text-align: center;
     }
 
-    .buttonContainer button{
+    .saveButton{
         padding-top: 10px;
         padding-bottom: 10px;
         padding-right: 15px;
         padding-left: 15px;
+        margin-right: 5px;
         border: none;
         border-radius: 5px;
         cursor: pointer;
-        font-size: 18px;
+        font-size: 12px;
         transform: scale(.97);
         transition-duration: .4s ease;
 
@@ -1887,9 +2146,101 @@ export default {
         background-color: #308ef8;
     }
 
-    .buttonContainer button:hover{
+    .saveButton:hover{
         background-color: #2c82e4;
         transition-duration: .5s;
+    }
+
+    .shipButton:hover{
+        background-color: #2c82e4;
+        transition-duration: .5s;
+    }
+
+    .shipButton{
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-right: 45px;
+        padding-left: 45px;
+        margin-left: 5px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 20px;
+        transform: scale(.97);
+        transition-duration: .4s ease;
+
+        color: #fff;
+        background-color: #308ef8;
+    }
+
+    /* Final Shipment Creation Slide */
+    .finalContainer{
+        display: flex;
+        flex-direction: column;
+        /* justify-content: space-between;
+        width: 100%;
+        text-align: left; */
+        margin-top: 35px;
+        padding: 15px;
+        box-shadow: rgba(0, 0, 0, 0.164) 0px 1px 10px;
+        background-color: #fff;
+        border-radius: 5px;
+        animation: containerAnimateLeft .4s;
+    }
+
+    .refreshButton{
+        color: #fff;
+        background-color: #308ef8;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+        margin-bottom: 15px;
+        margin-right: 5px;
+        font-size: 10px;
+        transition-duration: .4s ease;
+        cursor: pointer;
+    }
+
+    .refreshButton:hover{
+        background-color: #2c82e4;
+        transition-duration: .5s;
+    }
+
+    .getLabelButton:hover{
+        background-color: #2c82e4;
+        transition-duration: .5s;
+    }
+
+    .getLabelButton{
+        color: #fff;
+        background-color: #308ef8;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 35px;
+        margin-bottom: 15px;
+        margin-left: 5px;
+        transition-duration: .4s ease;
+        cursor: pointer;
+    }
+
+    .loader{
+        margin: auto;
+        border: 20px solid #EAF0F6;
+        border-radius: 50%;
+        border-top: 20px solid #33f18a;
+        width: 100px;
+        height: 100px;
+        animation: spinner 2s linear infinite;
+    }
+
+    @keyframes spinner {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .pdfViewer{
+        border-radius: 15px;
+        margin-bottom: 15px;
     }
 
     /* Amplify Authenticator */
