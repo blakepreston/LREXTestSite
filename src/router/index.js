@@ -1,5 +1,6 @@
 import shipmentTrack from '../components/TrackShipment.vue'
 import createShipment from '../components/CreateShipment.vue'
+import shipmentCenter from '../components/ShipmentCenter/ShipmentCenter.vue'
 import  { createWebHistory, createRouter }  from 'vue-router'
 
 const routes = [
@@ -12,6 +13,11 @@ const routes = [
         path: '/Ship',
         name: 'Ship',
         component: createShipment
+    },
+    {
+        path: '/ShipmentCenter',
+        name: 'ShipmentCenter',
+        component: shipmentCenter
     }
 ]
 

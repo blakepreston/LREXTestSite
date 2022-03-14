@@ -46,7 +46,7 @@
                     </div>
                     
                     <div class="inputLabel">
-                        <label for="compName">Company Name</label>
+                        <label for="compName">Company or Name</label>
                         <input id="compName" type="text" v-model="shipmentData.serviceAddress.address.CompanyName" v-on:blur="createFinalArray()">
                     </div>
 
@@ -157,10 +157,6 @@
                         <label class="deliveryInstructionsLabel" for="deliveryinstructions">Delivery Instructions</label>
                         <input id="deliveryinstructions" type="text" style="height:50px;" v-model="shipmentData.DeliveryInstructions">
                     </div>
-                    <!-- <div class="signatureInputLabel">
-                            <label for="additionalservices">Signature Required</label>
-                            <input id="additionalservices" type="checkbox" value="SignatureRequired" class="checkBox" v-model="shipmentData.additionalServices">
-                    </div> -->
                 </div>
 
                
@@ -237,6 +233,10 @@
                             <label for="additionalservices">Signature Required</label>
                             <input id="additionalservices" type="checkbox" value="SignatureRequired" class="checkBox" v-model="shipmentData.additionalServices">
                         </div>
+                        <div class="signatureInputLabel">
+                            <label for="additionalservices">Extra Insurance</label>
+                            <input id="additionalservices" type="checkbox" value="ExtraInsurance" class="checkBox" v-model="shipmentData.additionalServices">
+                        </div>
                         <!-- <div class="signatureInputLabel">
                             <label for="additionalservices">Cold Storage</label>
                             <input id="additionalservices" type="checkbox" value="SignatureRequired" class="checkBox" v-model="shipmentData.additionalServices">
@@ -250,14 +250,7 @@
         <div class="detailsContainer" v-show="currentActive === 3">
             <div class="notificationsContainer">
                 <div class="notificationsContainer0">
-                    <!-- <div class="packageNumberContainer">
-                        <div class="inputLabel">
-                            <label for="count">Number of Packages</label>
-                            <input min="1" max="99" name="count" type="number" v-model="count" v-on:blur="updateShipmentArray()"> 
-                        </div>
-                    </div> -->
                     
-        
                     <div class="weightMainContainer">
                         <div v-for="items in count" :key="items" class="weightInputContainer" id="weightInputContainer">
                             <div class="weightInput">
@@ -266,10 +259,6 @@
                                     <label for="weightCheckBox">Less than 16 lbs</label>
                                     <input type="radio" id="weightCheckBox" value="1" v-model="weight[items - 1]">
                                 </div>
-                                <!-- <div class="weightInputBox">
-                                    <label for="weightRadio">Weight (lbs)</label>
-                                    <input name="weightRadio" type="radio" id="weightRadio">
-                                </div> -->
                                 <label for="weight">Weight (lbs)</label>
                                 <input name="weight" type="number" id="shipmentWeight" onkeydown="return event.keyCode !== 69" v-model="weight[items - 1]">
                             </div>
@@ -282,24 +271,7 @@
                     <!-- <button @click="count++, updateShipmentArray()">Add Another Package</button> -->
                 </div>
                 <div class="notificationsContainer1">
-                    <!-- <div class="packageNumberContainer">
-                        <div class="inputLabel">
-                            <label for="count">Number of Packages</label>
-                            <input min="1" max="99" name="count" type="number" v-model="count" v-on:blur="updateShipmentArray()"> 
-                        </div>
-                    </div>
-        
-                    <div class="weightMainContainer">
-                        <div v-for="items in count" :key="items" class="weightInputContainer">
-                            <div class="weightInput">
-                                <label for="weight">Package {{items}}: Weight (lbs)</label>
-                                <input name="weight" type="number" id="shipmentWeight" v-model="weight[items - 1]" v-on:blur="createWeightArray(items)">
-                            </div>
-                        </div>
-                    </div> -->
                     
-
-                
                     <!-- Notifications -->
                     <div>
                         <h2 class="notificationHeader">Notifications</h2>
@@ -543,15 +515,17 @@
             <h1>Thank you for choosing LRex!</h1>
             
             <div v-if="creatingLabels">
-                <h2>Creating Shipment Labels</h2>
+                <h2>Creating Shipment</h2>
                 <div class="loader"></div>
             </div>
 
-            <embed class="pdfViewer" id="pdfViewer" src="" width="100%" height="500">
+            <embed v-if="showPDF" class="pdfViewer" id="pdfViewer" src="" width="100%" height="500">
+            <p class="pdfSupportMessage">*Your browser may not support embedded PDF's use buttons below.</p>
             <div>
                 <button class="refreshButton" @click="refreshPage()">Create Another Shipment</button>
                 <!-- <button class="getLabelButton" @click="GetShipmentLabels">Get Label as PDF</button> -->
-                <button class="getLabelButton" @click="GetShipmentLabelsTiff">Get Label as Tiff</button>
+                <button v-if="showPDF" class="getLabelButton" @click="GetShipmentLabelsPDF">Download Label as PDF</button>
+                <button v-if="showPDF" class="getLabelButton" @click="GetShipmentLabelsTiff">Download Label as Tiff</button>
             </div>
             
         </div>
@@ -571,6 +545,7 @@ import axios from 'axios';
 export default {
     data(){
         return{
+            showPDF: false,
             creatingLabels: false,
             lawyerService: false,
             referenceValue: '',
@@ -584,16 +559,11 @@ export default {
             progress: [],
             count: 1,
             weight: [],
-            addEmail: '',
-            addPhone: '',
-            addNonDelivEmail: '',
-            addNonDelivPhone: '',
             activeEmailBox: false,
             activePhoneBox: false,
             activeNonDelivEmailBox: false,
             activeNonDelivPhoneBox: false,
             authState: undefined,
-            active: false,
             user: {},
             dataReturn: {},
             pdfDataReturn: '',
@@ -790,7 +760,7 @@ export default {
             shipmentLabel:{
                 shipmentID: [],
                 labelFormat: "PDF",
-                multipleLabelPerSheet: true
+                multipleLabelPerSheet: false
             },
             shipmentLabelTiff:{
                 shipmentID: [],
@@ -801,12 +771,16 @@ export default {
                 userID: 1932,
                 preferenceGroup: 'SP'
             },
-            userPreferencesDataReturn:{}
+            userPreferencesDataReturn:[]
         }
     },
     mounted(){
+        //Sign user out when JWT expires
+        setTimeout(() => {Auth.signOut({global: true})}, 3600000);
+        //Step Progress Bar
         this.circles = document.querySelectorAll(".circle");
 
+        //Google Places API 
         const googlePlaces = new window.google.maps.places.Autocomplete(
             document.getElementById("placesAPI"),
             {
@@ -876,53 +850,43 @@ export default {
 
             //If user does not click "Add" this will check and add the input
             if(this.currentActive === 3){
-                console.log("Count Length: " + this.count)
-                console.log(this.weight)
+                // console.log("Count Length: " + this.count)
+                // console.log(this.weight)
                 if(deliveryNotifInput != ""){
                     this.inputIsValid();
                     document.getElementById('deliveryInput').value = '';
-                    // if(this.activeEmailBox == true || this.activePhoneBox == true){
-                    //     this.stepNext();
-                    // }
                 }else if(this.shipmentData.notify[0].delivery[0].email.length > 0 || this.shipmentData.notify[0].delivery[0].phone.length > 0){
                     //this.stepNext();
                 }else{
                     alert("Please Add Delivery Notification Email/Phone")
-                    //this.stepNext();
                 }
 
                 if(nonDeliveryNotifInput != ""){
-                        this.inputIsValidNonDelivery();
-                        document.getElementById('nonDeliveryInput').value = '';
-                        // if(this.activeNonDelivEmailBox == true || this.activeNonDelivPhoneBox == true){
-                        //     this.stepNext();
-                        // }
-                    }else if(this.shipmentData.notify[0].nonDelivery[0].email.length > 0 || this.shipmentData.notify[0].nonDelivery[0].phone.length > 0){
-                        //this.stepNext();
-                    }else{
-                        alert("Please Add Non-Delivery Notification Email/Phone")
-                        //this.stepNext();
-                    }
+                    this.inputIsValidNonDelivery();
+                    document.getElementById('nonDeliveryInput').value = '';
+                }else if(this.shipmentData.notify[0].nonDelivery[0].email.length > 0 || this.shipmentData.notify[0].nonDelivery[0].phone.length > 0){
+                    //this.stepNext();
+                }else{
+                    alert("Please Add Non-Delivery Notification Email/Phone")
+                }
 
-                    if(referenceAddInput != ""){
-                        this.addReference();
-                        document.getElementById('addReference').value = '';
-                        //this.stepNext();
-                    }
+                if(referenceAddInput != ""){
+                    this.addReference();
+                    document.getElementById('addReference').value = '';
+                }
 
-                    //for(let i=0; i < this.count; i++){
-                        if(this.weight.length < this.count){
-                            alert("Please enter a valid weight.")
-                        }else{
-                            this.stepNext();
-                        }
-                    //}
+                if(this.weight.length < this.count){
+                    alert("Please enter a valid weight.")
+                }else{
+                    this.stepNext();
+                }
             }
             else if(this.currentActive === 1){
                 let addressInput = document.getElementById("address").value;
                 let cityInput = document.getElementById("locality").value;
                 let stateInput = document.getElementById("state").value;
                 let zipCodeInput = document.getElementById("postcode").value;
+                let companyName = document.getElementById("compName").value;
                 if(addressInput == ""){
                     alert("Please enter an address")
                 }else if(cityInput == ""){
@@ -931,6 +895,8 @@ export default {
                     alert("Please enter a state")
                 }else if(zipCodeInput == ""){
                     alert("Please enter a zip code")
+                }else if(companyName == ""){
+                    alert("Please enter a company name")
                 }else{
                    this.stepNext(); 
                 }
@@ -972,11 +938,9 @@ export default {
         //Validate Notification Input
         inputIsValid(){
             if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.inputNotify) == true){
-                //this.emailArray.push(this.inputNotify);
                 this.shipmentData.notify[0].delivery[0].email.push(this.inputNotify);
                 this.activeEmailBox = true;
             }else if(/^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/.test(this.inputNotify) == true){
-                //this.phoneArray.push(this.inputNotify);
                 let trimPhone = this.inputNotify.replace(/[^0-9]/g, '');
                 let trimPhoneDashes = trimPhone.slice(0,3)+"-"+trimPhone.slice(3,6)+"-"+trimPhone.slice(6);
                 this.shipmentData.notify[0].delivery[0].phone.push(trimPhoneDashes);
@@ -988,11 +952,9 @@ export default {
         },
         inputIsValidNonDelivery(){
             if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.inputNotifyNonDelivery) == true){
-                //this.NonDeliveryemailArray.push(this.inputNotifyNonDelivery);
                 this.shipmentData.notify[0].nonDelivery[0].email.push(this.inputNotifyNonDelivery)
                 this.activeNonDelivEmailBox = true;
             }else if(/^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/.test(this.inputNotifyNonDelivery) == true){
-                //this.NonDeliveryphoneArray.push(this.inputNotifyNonDelivery);
                 let trimPhone = this.inputNotifyNonDelivery.replace(/[^0-9]/g, '');
                 let trimPhoneDashes = trimPhone.slice(0,3)+"-"+trimPhone.slice(3,6)+"-"+trimPhone.slice(6);
                 this.shipmentData.notify[0].nonDelivery[0].phone.push(trimPhoneDashes)
@@ -1010,7 +972,7 @@ export default {
                 this.currentActive = 1;
             }
             this.stepUpdate();
-            console.log(this.currentActive)
+            //console.log(this.currentActive)
         },
         stepUpdate(){
             const prev = document.getElementById("prev")
@@ -1026,7 +988,7 @@ export default {
             });
             const actives = document.querySelectorAll(".active");
             progress.style.width = ((actives.length - 1) / (this.circles.length - 1)) * 100 + "%";
-            console.log((actives.length / this.circles.length))
+            //console.log((actives.length / this.circles.length))
 
             if(this.currentActive === 1){
                 prev.disabled = true;
@@ -1048,7 +1010,7 @@ export default {
             if(this.currentActive === 4){
                 this.createFinalArray();
             }
-            console.log(this.currentActive)
+            //console.log(this.currentActive)
             this.stepUpdate();
         },
         //Adding Shipment Weight
@@ -1219,20 +1181,8 @@ export default {
             }
           this.shipmentDataArray.push(shipData)
         }
-        console.log(this.shipmentDataArray)
+        //console.log(this.shipmentDataArray)
         },
-        // createWeightArray(){
-        //         if(document.getElementById('weightCheckBox').checked){
-        //             document.getElementById('weightRadio').checked = false;
-        //             document.getElementById('shipmentWeight').disabled = true;
-        //             document.getElementById('shipmentWeight').style.backgroundColor = '#d3d3d3';
-        //         }
-        //         if(document.getElementById('weightRadio').checked){
-        //             document.getElementById('weightCheckBox').checked = false;
-        //             document.getElementById('shipmentWeight').disabled = false;
-        //             document.getElementById('shipmentWeight').style.backgroundColor = '#fff';
-        //         }
-        // },
         createFinalArray(){
             for(let i = 0; i < this.count; i++){
             this.shipmentDataArray[i].weight = this.weight[i];
@@ -1291,7 +1241,7 @@ export default {
             this.createFinalArray();
             this.creatingLabels = true;
             for(let i = 0; i < this.shipmentDataArray.length; i++){
-            axios.post('https://localhost:44368/api/Rest/CreateShipmentCognito', this.shipmentDataArray[i], {
+            axios.post('https://api.stage.njls.com/api/Rest/CreateShipmentCognito', this.shipmentDataArray[i], {
                 headers: {
                     'User': this.user.username,
                     // get the user's JWT token given to it by AWS cognito 
@@ -1302,25 +1252,36 @@ export default {
                 let errorMessage = this.dataReturn.shipmentInfo.error[0].errMsg;
                 this.shipmentLabel.shipmentID.push(this.dataReturn.shipmentInfo.shipment[0].shipmentID);
                 this.shipmentLabelTiff.shipmentID.push(this.dataReturn.shipmentInfo.shipment[0].shipmentID);
-                console.log(this.dataReturn)
-                console.log("Shipment ID" + this.dataReturn.shipmentInfo.shipment[0].shipmentID)
-                console.log(this.dataReturn.shipmentInfo.error[0].errMsg)
+                //console.log(this.dataReturn)
+                //console.log("Shipment ID" + this.dataReturn.shipmentInfo.shipment[0].shipmentID)
+                //console.log(this.dataReturn.shipmentInfo.error[0].errMsg)
                 alert( "Shipment " + (this.shipmentDataArray.indexOf(this.shipmentDataArray[i]) + 1) + ": " + errorMessage.slice(12))
-                this.GetShipmentLabels();
+                if(this.shipmentData.secretKey == ''){
+                    this.GetShipmentLabels();
+                }else{
+                    this.creatingLabels = false;
+                }
             })
             //.catch(error => alert(error.response.data.title))
             .catch(function(error){
                     if(error.response.data.title){
                         alert(error.response.data.title)
+                        this.currentActive = 1;
+                    }else if(error.response){
+                        alert(error.response)
+                        this.currentActive = 1;
                     }else{
                         alert("Error with creating shipment.")
+                        this.currentActive = 1;
                     }
-                }).finally(()=> this.creatingLabels = false)
+                })
+                //.finally(()=> this.creatingLabels = false)
             }
             this.currentActive = 5;
         },
         GetShipmentLabels(){
-            axios.post('https://localhost:44368/api/Rest/GetShipmentLabelsCognito', this.shipmentLabel,{
+            this.creatingLabels = true;
+            axios.post('https://api.stage.njls.com/api/Rest/GetShipmentLabelsCognito', this.shipmentLabel,{
                 headers: {
                     'User': this.user.username,
                     // get the user's JWT token given by AWS cognito 
@@ -1328,29 +1289,47 @@ export default {
                 },
                 responseType: 'blob'
             }).then((response)=>{
+                this.showPDF = true;
                 this.pdfDataReturn = response.data;
                 //console.log(typeof this.pdfDataReturn)
                 var newBlob = new Blob([this.pdfDataReturn], {type: "application/pdf"})
                 //var href = URL.createObjectURL(newBlob)
 
-                console.log(newBlob)
+                //console.log(newBlob)
                 //window.open(href)
 
                 var reader = new FileReader();
                 reader.readAsDataURL(newBlob);
                 reader.onloadend = function (){
                    var base64Data = reader.result; 
-                   console.log(base64Data);
+                   //console.log(base64Data);
                    document.getElementById('pdfViewer').src = base64Data;
                 }
                 
-                console.log(this.pdfDataReturn);
+                //console.log(this.pdfDataReturn);
             })
             //.catch(error => alert(error.response.data.title))
+            .catch(error => console.log(error)).finally(()=> this.creatingLabels = false)
+        },
+        GetShipmentLabelsPDF(){
+            axios.post('https://api.stage.njls.com/api/Rest/GetShipmentLabelsCognito', this.shipmentLabel,{
+                headers: {
+                    'User': this.user.username,
+                    // get the user's JWT token given by AWS cognito 
+                    'Authorization': `Bearer ${this.user.signInUserSession.accessToken.jwtToken}`
+                },
+                responseType: 'blob'
+            }).then((response)=>{
+                this.showPDF = true;
+                this.pdfDataReturn = response.data;
+                var newBlob = new Blob([this.pdfDataReturn], {type: "application/pdf"})
+                var href = URL.createObjectURL(newBlob)
+                window.open(href)
+            })
             .catch(error => console.log(error))
         },
         GetShipmentLabelsTiff(){
-            axios.post('https://localhost:44368/api/Rest/GetShipmentLabelsCognito', this.shipmentLabelTiff,{
+            axios.post('https://api.stage.njls.com/api/Rest/GetShipmentLabelsCognito', this.shipmentLabelTiff,{
                 headers: {
                     'User': this.user.username,
                     // get the user's JWT token given by AWS cognito 
@@ -1359,54 +1338,89 @@ export default {
                 responseType: 'blob'
             }).then((response)=>{
                 this.tiffDataReturn = response.data;
-                console.log(typeof this.tiffDataReturn)
                 var newBlob = new Blob([this.tiffDataReturn], {type: "image/tiff"})
                 var href = URL.createObjectURL(newBlob)
 
-                console.log(newBlob)
                 window.open(href)
-
-                var reader = new FileReader();
-                reader.readAsDataURL(newBlob);
-                reader.onloadend = function (){
-                   var base64Data = reader.result; 
-                   console.log(base64Data);
-                }
-                console.log(this.tiffDataReturn);
             })
             .catch(error => console.log(error))
         },
+        // GetUserPreferences(){
+        //     axios.post('https://localhost:44368/api/Rest/GetUserPreference', this.userPreferences,{
+        //         // headers: {
+        //         //     'User': this.user.username,
+        //         //     // get the user's JWT token given to it by AWS cognito 
+        //         //     'Authorization': `Bearer ${this.user.signInUserSession.accessToken.jwtToken}`
+        //         // },
+        //     }).then((response)=>{
+        //         this.userPreferencesDataReturn = response.data;
+        //         for(let i=0; i<this.userPreferencesDataReturn.length; i++){
+        //             if(this.userPreferencesDataReturn[i].settingName == "Non Delivery e-Mail id"){
+        //                 this.shipmentData.notify[0].nonDelivery[0].email.push(this.userPreferencesDataReturn[i].settingValue);
+        //                 this.activeNonDelivEmailBox = true;
+        //                 this.activeNonDelivPhoneBox = true;
+        //             }else if(this.userPreferencesDataReturn[i].settingName == "e-Mail id"){
+        //                 this.shipmentData.notify[0].delivery[0].email.push(this.userPreferencesDataReturn[i].settingValue);
+        //                 this.activeEmailBox = true;
+        //                 this.activePhoneBox = true;
+        //             }else if(this.userPreferencesDataReturn[i].settingName == "Delivery Instructions"){
+        //                 this.shipmentData.DeliveryInstructions = this.userPreferencesDataReturn[i].settingValue;
+        //             }else if(this.userPreferencesDataReturn[i].settingName == "Service Type"){
+        //                 if(this.userPreferencesDataReturn[i].settingValue == "Standard"){
+        //                     this.NextDayStandard();
+        //                 }else if(this.userPreferencesDataReturn[i].settingValue == "Priority"){
+        //                     this.PriorityService();
+        //                 }
+        //             }else if(this.userPreferencesDataReturn[i].settingName == "Signature Required"){
+        //                 if(this.userPreferencesDataReturn[i].settingValue == "Yes"){
+        //                     this.SignatureRequired();
+        //                 }
+        //             }
+        //         }
+        //         console.log(this.userPreferencesDataReturn)
+        //         }
+        //     ).catch(error => console.log(error))
+        // },
         GetUserPreferences(){
-            axios.post('https://localhost:44368/api/Rest/GetUserPreference', this.userPreferences,{
-                // headers: {
-                //     'User': this.user.username,
-                //     // get the user's JWT token given to it by AWS cognito 
-                //     'Authorization': `Bearer ${this.user.signInUserSession.accessToken.jwtToken}`
-                // },
+            axios.post('https://api.stage.njls.com/api/Rest/GetUserPreferenceJSON', {}, {
+                headers: {
+                    'User': this.user.username
+                    // get the user's JWT token given to it by AWS cognito 
+                    //'Authorization': `Bearer ${this.user.signInUserSession.accessToken.jwtToken}`
+                },
             }).then((response)=>{
                 this.userPreferencesDataReturn = response.data;
                 for(let i=0; i<this.userPreferencesDataReturn.length; i++){
-                    if(this.userPreferencesDataReturn[i].settingName == "Non Delivery e-Mail id"){
-                        this.shipmentData.notify[0].nonDelivery[0].email.push(this.userPreferencesDataReturn[i].settingValue);
-                        this.activeNonDelivEmailBox = true;
-                        this.activeNonDelivPhoneBox = true;
-                    }else if(this.userPreferencesDataReturn[i].settingName == "e-Mail id"){
-                        this.shipmentData.notify[0].delivery[0].email.push(this.userPreferencesDataReturn[i].settingValue);
-                        this.activeEmailBox = true;
-                        this.activePhoneBox = true;
-                    }else if(this.userPreferencesDataReturn[i].settingName == "Delivery Instructions"){
-                        this.shipmentData.DeliveryInstructions = this.userPreferencesDataReturn[i].settingValue;
-                    }else if(this.userPreferencesDataReturn[i].settingName == "Service Type"){
-                        if(this.userPreferencesDataReturn[i].settingValue == "Standard"){
-                            this.NextDayStandard();
-                        }
-                    }else if(this.userPreferencesDataReturn[i].settingName == "Signature Required"){
-                        if(this.userPreferencesDataReturn[i].settingValue == "Yes"){
-                            this.SignatureRequired();
-                        }
-                    }
+                    if(this.userPreferencesDataReturn[i].PT[0]["SettingName"] == "Non Delivery e-Mail id" && this.userPreferencesDataReturn[i]["SettingValue"] != ""){
+                         var nonDelivArray = this.userPreferencesDataReturn[i]["SettingValue"].split(',');
+                         for(let i = 0; i < nonDelivArray.length; i++){
+                             this.shipmentData.notify[0].nonDelivery[0].email.push(nonDelivArray[i]);
+                         }
+                         //this.shipmentData.notify[0].nonDelivery[0].email.push(this.userPreferencesDataReturn[i]["SettingValue"]);
+                         this.activeNonDelivEmailBox = true;
+                         this.activeNonDelivPhoneBox = true;
+                     }else if(this.userPreferencesDataReturn[i].PT[0]["SettingName"] == "e-Mail id" && this.userPreferencesDataReturn[i]["SettingValue"] != ""){
+                         var delivArray = this.userPreferencesDataReturn[i]["SettingValue"].split(',');
+                         for(let i = 0; i < delivArray.length; i++){
+                             this.shipmentData.notify[0].delivery[0].email.push(delivArray[i]);
+                         }
+                         //this.shipmentData.notify[0].delivery[0].email.push(this.userPreferencesDataReturn[i]["SettingValue"]);
+                         this.activeEmailBox = true;
+                         this.activePhoneBox = true;
+                     }else if(this.userPreferencesDataReturn[i].PT[0]["SettingName"] == "Delivery Instructions"){
+                         this.shipmentData.DeliveryInstructions = this.userPreferencesDataReturn[i]["SettingValue"];
+                     }else if(this.userPreferencesDataReturn[i].PT[0]["SettingName"] == "Service Type"){
+                         if(this.userPreferencesDataReturn[i]["SettingValue"] == "Standard"){
+                             this.NextDayStandard();
+                         }else if(this.userPreferencesDataReturn[i]["SettingValue"] == "Priority"){
+                             this.PriorityService();
+                         }
+                    }else if(this.userPreferencesDataReturn[i].PT[0]["SettingName"] == "Signature Required"){
+                         if(this.userPreferencesDataReturn[i]["SettingValue"] == "Yes"){
+                             this.SignatureRequired();
+                         }
+                     }
                 }
-                console.log(this.userPreferencesDataReturn)
                 }
             ).catch(error => console.log(error))
         },
@@ -1456,32 +1470,26 @@ export default {
         }
     },
     created(){
-        setTimeout(Auth.signOut, 3600000);
-
-        if(AuthState.SignedIn){
-            this.GetUserPreferences();
-        }
+        //Prevents mulitple calls to GetUserPreferences()
+        var userPreferenceCount = 0;
         //Cognito-Amplify Login setup
         onAuthUIStateChange((nextAuthState, authData) => {
-            //Change AutState to Signout after 1 hour
-            setTimeout(Auth.signOut, 3600000);
-            
             if (nextAuthState === AuthState.SignedIn) {
-                
                 this.authState = nextAuthState;
-                console.log("Sign in nextAuthState: " + nextAuthState);
                 this.signedIn = true;
-                
-                // console.log("user successfully signed in!");
-                // console.log("user data: ", authData);
-                // console.log(authData.signInUserSession.accessToken.jwtToken)
+                // JWT = authData.signInUserSession.accessToken.jwtToken)
                 this.user = authData;
                 this.token = authData.signInUserSession.accessToken.jwtToken;
                 this.njlsUser = authData.attributes;
+
+                //Call UserPreferences when sign in success
+                userPreferenceCount++;
+                if(this.signedIn == true && userPreferenceCount == 1){
+                    this.GetUserPreferences();
+                }
             }
            
             if (!authData) {
-                console.log("user is not signed in...");
                 this.signedIn = false;
             }
 
@@ -2225,6 +2233,7 @@ export default {
 
     .loader{
         margin: auto;
+        margin-bottom: 15px;
         border: 20px solid #EAF0F6;
         border-radius: 50%;
         border-top: 20px solid #33f18a;
@@ -2434,6 +2443,19 @@ export default {
         font-size: 12px;
         margin-left: 5px;
     }
+
+    .pdfSupportMessage{
+        display: none;
+    }
+
+@media screen and (max-width: 500px) {
+    .pdfSupportMessage{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 10px;
+    }
+}
 
 
 @media screen and (max-width: 1000px) {

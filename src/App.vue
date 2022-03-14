@@ -13,8 +13,10 @@
             <ul class="nav_links">
                 <li v-if="!shipmentPages"><a href="#oursolutions" @click="scrollTo('oursolutions')">Our solutions</a></li>
                 <li v-if="!shipmentPages"><a href="#aboutus" @click="scrollTo('aboutus')">About us</a></li>
-                <li><a  @click="()=> CreateAccountTogglePopup('CreateAccountButtonTrigger')">Box Locations</a></li>
-                <li><a  @click="()=> GetInTouchTogglePopup('GetInTouchButtonTrigger')">Get in touch</a></li>
+                <li v-if="!shipmentPages"><a  @click="()=> CreateAccountTogglePopup('CreateAccountButtonTrigger')">Box Locations</a></li>
+                <li v-if="!shipmentPages"><a  @click="()=> GetInTouchTogglePopup('GetInTouchButtonTrigger')">Get in touch</a></li>
+                <li v-if="shipmentPages"><router-link to="/Ship">New Shipment</router-link></li>
+                <li v-if="shipmentPages"><router-link to="/ShipmentCenter">My Shipments</router-link></li>
                 <li><a href="https://www.stage.njls.com/clients/RegisterNewCustomer.aspx" target="_blank">Create an account</a></li>
                 <li style="border-bottom: none;">
                 <amplify-authenticator v-if="authState === 'signedin'">
@@ -39,8 +41,10 @@
             <ul class="nav_links">
                 <li v-if="!shipmentPages"><a href="#oursolutions" @click="scrollTo('oursolutions')">Our solutions</a></li>
                 <li v-if="!shipmentPages"><a href="#aboutus" @click="scrollTo('aboutus')">About us</a></li>
-                <li><a  @click="()=> GetInTouchTogglePopup('GetInTouchButtonTrigger')">Get in touch</a></li>
-                <li><a  @click="()=> CreateAccountTogglePopup('CreateAccountButtonTrigger')">Box Locations</a></li>
+                <li v-if="!shipmentPages"><a  @click="()=> GetInTouchTogglePopup('GetInTouchButtonTrigger')">Get in touch</a></li>
+                <li v-if="!shipmentPages"><a  @click="()=> CreateAccountTogglePopup('CreateAccountButtonTrigger')">Box Locations</a></li>
+                <li v-if="shipmentPages"><router-link to="/Ship">New Shipment</router-link></li>
+                <li v-if="shipmentPages"><router-link to="/ShipmentCenter">My Shipments</router-link></li>
             </ul>
         </nav>
         </div>
@@ -52,13 +56,13 @@
         </div>
 
         <amplify-authenticator v-if="authState === 'signedin'">
-        <div class="sign-out-container">
-            <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
-            <amplify-sign-out slot="sign-out"
-                id="signout-button"
-                >
-            </amplify-sign-out>
-        </div>
+          <div class="sign-out-container">
+              <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
+              <amplify-sign-out slot="sign-out"
+                  id="signout-button"
+                  >
+              </amplify-sign-out>
+          </div>
         </amplify-authenticator>
 
     </header>
@@ -231,10 +235,10 @@ export default {
   },
   computed:{
     shipmentPages(){
-      return this.$route.name == 'Track' || this.$route.name == 'Ship';
+      return this.$route.name == 'Track' || this.$route.name == 'Ship' || this.$route.name == 'ShipmentCenter';
     },
     createShipmentToggleSignIn(){
-      return this.$route.name == 'Ship';
+      return this.$route.name == 'Ship' || this.$route.name == 'ShipmentCenter';
     }
   },
   created(){
@@ -244,9 +248,9 @@ export default {
             console.log(nextAuthState);
             if (nextAuthState === AuthState.SignedIn) {
             this.signedIn = true;
-            console.log("user successfully signed in!");
-            console.log("user data: ", authData);
-            console.log(authData.signInUserSession.accessToken.jwtToken)
+            // console.log("user successfully signed in!");
+            // console.log("user data: ", authData);
+            // console.log(authData.signInUserSession.accessToken.jwtToken)
             this.user = authData;
             this.token = authData.signInUserSession.accessToken.jwtToken;
             this.njlsUser = authData.attributes;
