@@ -501,8 +501,10 @@
                         <p name="DeliveryInstructions">{{shipment.DeliveryInstructions}}</p>
                     </div>
                 </div>
-                
             </div>
+                <div>
+                    <p>By clicking Ship I agree to the <i class="show-terms-conditions-link" @click="showTermsConditions = !showTermsConditions">Terms and Conditions</i></p>
+                </div>
                 <div class="buttonContainer">
                     <button class="saveButton" @click="shipmentData.secretKey = 'secretKey', createShipment()">Save</button>
                     <button class="shipButton" @click="createShipment" type="submit">Ship</button>
@@ -529,9 +531,51 @@
             </div>
             
         </div>
-
+    
       <button v-show="currentActive <= 4" class="btn" id="prev" disabled @click="stepPrev()">Prev</button>
       <button v-show="currentActive <= 4" class="btn" id="next" @click="checkInputAdded()">Next</button>
+    </div>
+
+    <div class="terms-conditions" v-show="currentActive === 4 && showTermsConditions">
+        <div class="close-terms-conditions">
+            <button @click="showTermsConditions = !showTermsConditions">Close</button>
+        </div>
+        <div class="terms-conditions-container">
+            <h3>
+            Every Shipment or Service, Including But Not Limited to Next Day, Same Day, Process 
+            Service and where applicable, eFiling, is Subject to Following Terms and Conditions:
+            </h3>
+            <p>In tendering this shipment for delivery and/or the performance of additional services, 
+                YOU, the Shipper, agree to these terms and conditions which no agent, servant, member 
+                or employee of NJ Lawyers Service, LLC (hereafter NJLS) may alter or modify:
+                <br><br>
+                a) SHIPPER AGREES THAT NJLS SHALL NOT BE LIABLE FOR SPECIAL, INCIDENTAL OR CONSEQUENTIAL 
+                    DAMAGES, INCLUDING BUT NOT LIMITED TO LOSS OF PROFITS OR INCOME, ARISING FROM THE DELIVERY, 
+                    MIS-DELIVERY OR NON-DELIVERY OF THIS SHIPMENT, OR THE NON-PERFORMANCE OF ASSOCIATED SERVICES; and
+                <br><br>
+                b) NJLS HEREBY DISCLAIMS ANY AND ALL WARRANTIES, EXPRESS OR IMPLIED, WITH RESPECT TO THIS SHIPMENT
+                <br><br>
+                c) Shipper's damages for NJLS' failure to deliver or perform the requested service within the guarantees 
+                specified by the Service Guide shall be limited to a refund of the charge for such delivery or service.
+                <br><br>
+                d) "Service Types" set forth on the Create New Shipment Page of the Shipment Center may be subject to 
+                additional fees, surcharges, or limitations and availability as set forth in the current Service Guide 
+                in effect at the time the shipment is tendered for delivery and/or service.
+                <br><br>
+                e) In consideration of the rate charged, it is agreed that the value of the shipment, whether consisting 
+                of one or more items, is not greater than $150.00, unless: (i) Shipper indicates the desire to purchase 
+                EXTRA INSURANCE by selecting that option from the Create New Shipment Page of the Shipment Center and (ii) 
+                shipper pays the additional fee required for EXTRA INSURANCE. By indicating that this shipment requires EXTRA 
+                INSURANCE, the liability of NJLS will increase to a maximum of $2,500.00 for this shipment only.
+                <br><br>
+                f) NJLS shall not be liable for loss or damage to shipments improperly packed or labeled, or for loss or damage 
+                caused by delay in delivery and/or service. A shipment sent without a request for a delivery receipt signature 
+                means that you have released NJLS and given us your permission to leave the shipment at the recipient's address 
+                even if no person is there at the time of delivery to sign for it and the NJLS delivery record shall be conclusive 
+                proof that delivery was completed and NJLS will not be liable for any damages arising from a claim of improper 
+                delivery or non-delivery.
+            </p>
+        </div>
     </div>
   
 </template>
@@ -545,6 +589,7 @@ import axios from 'axios';
 export default {
     data(){
         return{
+            showTermsConditions: false,
             showPDF: false,
             creatingLabels: false,
             lawyerService: false,
@@ -2446,6 +2491,74 @@ export default {
 
     .pdfSupportMessage{
         display: none;
+    }
+    /* Terms and Conditions */
+    .terms-conditions{
+        height: 100%;
+        width: 100%;
+        top: 5%;
+        z-index: 10;
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        animation: terms-conditions-animate .5s ease;
+    }
+
+    @keyframes terms-conditions-animate {
+        from{
+            margin-top: -10%;
+        }
+        to{
+            margin-top: 0%;
+        }
+    }
+
+    .terms-conditions-container{
+        /* display: flex;
+        justify-content: center;
+        flex-direction: column; */
+        overflow-x: hidden;
+        overflow-y: scroll;
+        width: 50%;
+        height: 50%;
+        background-color: #ffffff;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+        padding: 30px;
+        text-align: left;
+    }
+
+    .close-terms-conditions{
+        display: flex;
+        justify-content: flex-end;
+        position: relative;
+        width: 50%;
+        top: 50px;
+    }
+
+    .close-terms-conditions button{
+        z-index: 11;
+        border: none;
+        margin: 1px;
+        background-color: #308ef8;
+        padding: 12px 15px;
+        color: #ffffff;
+        border-radius: 10px;
+        cursor: pointer;
+        transition-duration: .5s;
+    }
+
+    .close-terms-conditions button:hover{
+        background-color: #2877d1;
+        transition-duration: .5s;
+    }
+
+    .show-terms-conditions-link{
+        text-decoration: underline;
+        color: #308ef8;
+        cursor: pointer;
     }
 
 @media screen and (max-width: 500px) {

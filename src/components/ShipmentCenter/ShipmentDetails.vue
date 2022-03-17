@@ -1,4 +1,11 @@
 <template>
+
+<div class="main-container">
+    <div class="loader-container" v-if="gettingShipmentDetails">
+      <h2>Getting Shipment Details</h2>
+      <div class="loader"></div>
+    </div>
+
 <div class="container" v-if="showData">
     <div class="shipment-details-button-container">
       <button class="shipment-details-button" v-if="showData" @click="ToggleShowData">Close</button>
@@ -100,8 +107,9 @@
                 <p>Invalid Credentials or Incorrect Shipment ID</p>
             </div>
         </div>
-
-</div> 
+  </div> 
+</div>
+    
 
   
 </template>
@@ -117,7 +125,8 @@ export default {
             shipmentHistoryData: {data: []},
             shipments: {data: []},
             error: {data: []},
-            showData: false
+            showData: false,
+            gettingShipmentDetails: true
         }
     },
     props:{
@@ -173,7 +182,7 @@ export default {
               this.error = response.data.error
               })
             .catch((error) => {console.log(error)})
-            .finally(()=> this.loading = false)
+            .finally(()=> this.gettingShipmentDetails = false)
         },
         GetAllShipmentData(){
             this.GetShipmentByID();
@@ -188,22 +197,60 @@ export default {
 </script>
 
 <style scoped>
+.main-container{
+  width: 100%;
+  display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+}
+
 .container{
-    width: 100vw;
+    width: 100%;
     display: flex;
     justify-content: center;
     text-align: left;
     flex-direction: column;
 }
 
-.shipment_data{
+/* Loading Shipment Data */
+    .loader-container{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 15px;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 0 100px rgba(0, 0, 0, 0.9);
+    }
+
+    .loader{
+        margin: auto;
+        margin-bottom: 15px;
+        border: 20px solid #EAF0F6;
+        border-radius: 50%;
+        border-top: 20px solid #33f18a;
+        width: 100px;
+        height: 100px;
+        animation: spinner 2s linear infinite;
+    }
+
+    @keyframes spinner {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+  .shipment_data{
+    display: block;
+    margin: auto;
     margin-bottom: 10%;
     width: 65%;
     padding: 15px;
     background-color: #ffffff;
     border-radius: 10px;
     box-shadow: 0 0 100px rgba(0, 0, 0, 0.9);
-}
+  } 
 
 .shipment_data h3{
   padding: 5px;
@@ -295,7 +342,7 @@ export default {
 }
 
     .shipment-details-button-container{
-        width: 60%;
+        width: 80%;
         display: flex;
         justify-content: flex-end;
         position: relative;

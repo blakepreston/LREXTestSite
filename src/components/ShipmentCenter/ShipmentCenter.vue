@@ -426,7 +426,7 @@ export default {
             this.showCurrent = true;
             this.showInTransit = false;
             this.showDelivered = false;
-            axios.post('https://localhost:44368/api/Rest/GetShipmentsByUserAndType', {}, {
+            axios.post('https://api.stage.njls.com/api/Rest/GetShipmentsByUserAndType', {}, {
                 headers: {
                     'User': this.user.username
                     // get the user's JWT token given to it by AWS cognito 
@@ -449,7 +449,7 @@ export default {
             this.showInTransit = true;
             this.showCurrent = false;
             this.showDelivered = false;
-            axios.post('https://localhost:44368/api/Rest/GetTrackShipmentsByCriteria', {searchBy: 'InTransit'}, {
+            axios.post('https://api.stage.njls.com/api/Rest/GetTrackShipmentsByCriteria', {searchBy: 'InTransit'}, {
                 headers: {
                     'User': this.user.username
                     // get the user's JWT token given to it by AWS cognito 
@@ -470,7 +470,7 @@ export default {
             this.showInTransit = false;
             this.showCurrent = false;
             this.showDelivered = true;
-            axios.post('https://localhost:44368/api/Rest/GetTrackShipmentsByCriteria', this.postDelivered, {
+            axios.post('https://api.stage.njls.com/api/Rest/GetTrackShipmentsByCriteria', this.postDelivered, {
                 headers: {
                     'User': this.user.username
                     // get the user's JWT token given to it by AWS cognito 
@@ -501,7 +501,7 @@ export default {
         GetShipmentLabelsPDF(index){
             this.shipmentLabel.shipmentID.push(this.currentShipments[index].ShipmentId);
             console.log(this.shipmentLabel);
-            axios.post('https://localhost:44368/api/Rest/GetShipmentLabelsCognito', this.shipmentLabel,{
+            axios.post('https://api.stage.njls.com/api/Rest/GetShipmentLabelsCognito', this.shipmentLabel,{
                 headers: {
                     'User': this.user.username,
                     // get the user's JWT token given by AWS cognito 
@@ -530,7 +530,7 @@ export default {
             }
         },
         DeleteShipment(){
-            axios.post('https://localhost:44368/api/Rest/DeleteShipmentByShipmentId', this.deleteShipment,{
+            axios.post('https://api.stage.njls.com/api/Rest/DeleteShipmentByShipmentId', this.deleteShipment,{
                 headers: {
                     'User': this.user.username,
                     // get the user's JWT token given by AWS cognito 
@@ -708,7 +708,7 @@ export default {
                 var rowCSV = [];
 
                 for(let j = 0; j < columns.length; j++){
-                    rowCSV.push(columns[j].innerHTML);
+                    rowCSV.push('"' + columns[j].innerHTML + '"');
                 }
 
                 dataCSV.push(rowCSV.join(","));
@@ -727,7 +727,7 @@ export default {
             downloadLink.download = "ShipmentData.csv";
             let url = window.URL.createObjectURL(fileCSV);
             downloadLink.href = url;
-            window.open(url)
+            //window.open(url)
 
             downloadLink.display = "none";
             document.body.appendChild(downloadLink);
@@ -749,17 +749,21 @@ export default {
             this.authState = nextAuthState;
             console.log(nextAuthState);
             if (nextAuthState === AuthState.SignedIn) {
-            this.signedIn = true;
-            this.user = authData;
-            this.token = authData.signInUserSession.accessToken.jwtToken;
-            this.njlsUser = authData.attributes;
+                this.signedIn = true;
+                this.user = authData;
+                this.token = authData.signInUserSession.accessToken.jwtToken;
+                this.njlsUser = authData.attributes;
+                //Call GetShipmentsByUserAndType when sign in success
+                if(getInTransitShipments <= 1){
+                    this.GetTrackShipmentsByCriteriaInTransit();
+                }
             }
 
             //Call GetShipmentsByUserAndType when sign in success
-            getInTransitShipments++;
-            if(this.signedIn == true && getInTransitShipments == 1){
-                this.GetTrackShipmentsByCriteriaInTransit();
-            }
+            // getInTransitShipments++;
+            // if(this.signedIn == true && getInTransitShipments == 1){
+            //     this.GetTrackShipmentsByCriteriaInTransit();
+            // }
 
             if (!authData) {
                 this.signedIn = false;
@@ -954,7 +958,7 @@ export default {
         border-collapse: collapse;
         border-top-left-radius: 10px;
         border-top-right-radius: 10px;
-        margin: 25px 0;
+        margin: 2em 0;
         font-size: 0.9em;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
         text-align: left;
@@ -1202,5 +1206,59 @@ export default {
     .track-shipment button:hover{
         background-color: #2fdf7e;
         transition-duration: .5s;
+    }
+
+    @media only screen and (max-width: 1000px){
+        .filter-button,
+        .filter-button-right{
+            padding: 0px;
+            font-size: 8px;
+            margin: 0;
+        }
+
+        .filter-button-container{
+            padding: 0px;
+            font-size: 8px;
+            width: 100%;
+        }
+
+        .filter-container label{
+            font-size: 12px;
+        }
+
+        .filter-container input{
+            padding: 0px;
+            font-size: 12px;
+        }
+
+        .shipment-table{
+            font-size: 8px;
+            margin: 0;
+            width: 90%;
+        }
+
+        .shipment-table th,
+        .shipment-table td{
+            padding: 4px 6px;
+        }
+
+        .track-shipment{
+            width: 100%;
+            margin: 0;
+        }
+
+        .track-shipment button{
+            padding: 4px 5px;
+            font-size: 8px;
+        }
+
+        .track-shipment input{
+            padding: 0px;
+            font-size: 12px;
+        }
+
+        .track-shipment label{
+            font-weight: 12px;
+        }
     }
 </style>
