@@ -37,9 +37,9 @@
         </div>
 
         <div class="whereContainer" v-show="currentActive === 1">
-            <h2 class="addressHeader">Address</h2>
-            <div class="addressContainer">
-                <div class="addressContainer1">
+            <h2 class="address-header">Address</h2>
+            <div class="address-container">
+                <div class="address-container-1">
                     <div class="inputLabel">
                         <label for="googleAPI">Find Address</label>
                         <input name="googleAPI" type="text" id="placesAPI" class="googlePlaces">
@@ -81,9 +81,8 @@
                     </div>
                 </div>
 
-                <div class="addressContainer2">
+                <div class="address-container-2">
                     <div class="inputLabel">
-                        <!-- <div class="stateDropdown"> -->
                             <label for="state">State</label>
                             <select style="background-color: #d3d3d3;" required name="state" id="state" class="stateInput" v-model="shipmentData.serviceAddress.address.State">
                                 <option value="AL">Alabama</option>
@@ -138,9 +137,7 @@
                                 <option value="WI">Wisconsin</option>
                                 <option value="WY">Wyoming</option>
                             </select>
-                        <!-- </div> -->
                     </div>
-
                     <div class="inputLabel">
                         <label for="zipcode">Zip Code</label>
                         <input style="background-color: #d3d3d3;" required name="zipcode" id="postcode" type="text" v-model="shipmentData.serviceAddress.address.ZipCode">
@@ -166,7 +163,6 @@
         <div class="howContainer" v-show="currentActive === 2">
             <div class="howContainerInner">
                 <div class="serviceTypes">
-                    <!-- <div class="serviceRowOne"> -->
                         <div class="serviceContainer" id="nextdayStandard" @click.prevent="NextDayStandard">
                             <div class="imageHeaderContainer">
                                 <img src="../assets/deliveryTruckLogoTransparent.png" alt="">
@@ -198,9 +194,7 @@
                             <p v-show="showServiceDetails">We will deliver the package on Saturday at our Saturday Service rates.
                             </p>
                         </div>
-                    <!-- </div> -->
 
-                    <!-- <div class="serviceRowTwo"> -->
                         <div class="serviceContainer" id="pickupService" @click.prevent="PickupService">
                         <div class="imageHeaderContainer">
                                 <img src="../assets/deliveryTruckLogoTransparent.png" alt="">
@@ -219,7 +213,6 @@
                                 the package to the recipient’s address by the end of the same business day
                             </p>
                         </div>
-                    <!-- </div> -->
                     
                     </div>       
                     <div class="inputLabel" style="display: none;">
@@ -248,8 +241,8 @@
 
 
         <div class="detailsContainer" v-show="currentActive === 3">
-            <div class="notificationsContainer">
-                <div class="notificationsContainer0">
+            <div class="notifications-container">
+                <div class="notifications-container-0">
                     
                     <div class="weightMainContainer">
                         <div v-for="items in count" :key="items" class="weightInputContainer" id="weightInputContainer">
@@ -268,9 +261,8 @@
                     </div>
                     <button @click="count++, updateShipmentArray()" class="addPackageButton">Add Another Package</button>
 
-                    <!-- <button @click="count++, updateShipmentArray()">Add Another Package</button> -->
                 </div>
-                <div class="notificationsContainer1">
+                <div class="notifications-container-1">
                     
                     <!-- Notifications -->
                     <div>
@@ -319,7 +311,7 @@
                     </div>
                 </div>
 
-                <div class="notificationsContainer2">
+                <div class="notifications-container-2">
                     <h2 class="referenceHeader">References</h2>
                         <div v-if="lawyerService">
                             <div class="referenceInputLabel">
@@ -362,7 +354,6 @@
                                 <label for="addReference">Add Reference:</label>
                                 <div class="inputButtonContainer">
                                     <input id="addReference" type="text" placeholder="Add a Reference" @input="referenceValue = $event.target.value">
-                                    <!-- <button v-if="showRefCount == 4" @click="showRefCount--">-</button> -->
                                     <button v-show="showRefCount <= 4" type="submit" @click="addReference" onclick="document.getElementById('addReference').value = '';">Add</button>
                                 </div>
                             </div>
@@ -402,7 +393,6 @@
                                 </div>
                             </div>
                         
-                    <!-- </div> -->
 
                     <div class="inputLabel">
                         <label for="descriptionref">Description</label>
@@ -410,7 +400,6 @@
                             <input id="descriptionref" type="text" v-model="shipmentData.Description">
                             <button style="display: none">+</button>
                         </div>
-                        
                     </div>
                 </div>
             </div>
@@ -467,7 +456,6 @@
                     <h2>Notifications</h2>
                     <div class="confirmLabelContainer2">
                         <label for="deliveryemail">Delivery Email:</label>
-                        <!-- <p name="deliveryemail" class="notificationArray" v-for="(email, index) in shipment.notify[0].delivery[0].email" :key="index">{{shipment.notify[0].delivery[0].email[index]}}</p> -->
                         <div class="notificationArray" name="deliveryemail" v-for="(email, index) in shipment.notify[0].delivery[0].email" :key="index">
                                 <p>{{shipment.notify[0].delivery[0].email[index]}}</p>
                         </div>
@@ -475,7 +463,6 @@
 
                     <div class="confirmLabelContainer2">
                         <label for="deliveryphone">Delivery Phone:</label>
-                        <!-- <p name="deliveryphone" class="notificationArray" v-for="(email, index) in shipment.notify[0].delivery[0].phone" :key="index">{{shipment.notify[0].delivery[0].phone[index]}}</p> -->
                         <div class="notificationArray" name="deliveryphone" v-for="(email, index) in shipment.notify[0].delivery[0].phone" :key="index">
                                 <p>{{shipment.notify[0].delivery[0].phone[index]}}</p>
                         </div>
@@ -483,7 +470,6 @@
 
                     <div class="confirmLabelContainer2">
                         <label for="nonDeliveryemail">Non Delivery Email:</label>
-                        <!-- <p name="nonDeliveryemail" class="notificationArray" v-for="(email, index) in shipment.notify[0].nonDelivery[0].email" :key="index">{{shipment.notify[0].nonDelivery[0].email[index]}}</p> -->
                         <div class="notificationArray" name="nonDeliveryemail" v-for="(email, index) in shipment.notify[0].nonDelivery[0].email" :key="index">
                                 <p>{{shipment.notify[0].nonDelivery[0].email[index]}}</p>
                         </div>
@@ -512,8 +498,6 @@
         </div>
 
         <div class="finalContainer" v-show="currentActive === 5">
-            <!-- {{shipmentLabel}}
-            {{shipmentDataArray}} -->
             <h1>Thank you for choosing LRex!</h1>
             
             <div v-if="creatingLabels">
@@ -525,7 +509,6 @@
             <p class="pdfSupportMessage">*Your browser may not support embedded PDF's use buttons below.</p>
             <div>
                 <button class="refreshButton" @click="refreshPage()">Create Another Shipment</button>
-                <!-- <button class="getLabelButton" @click="GetShipmentLabels">Get Label as PDF</button> -->
                 <button v-if="showPDF" class="getLabelButton" @click="GetShipmentLabelsPDF">Download Label as PDF</button>
                 <button v-if="showPDF" class="getLabelButton" @click="GetShipmentLabelsTiff">Download Label as Tiff</button>
             </div>
@@ -1354,7 +1337,7 @@ export default {
                 //console.log(this.pdfDataReturn);
             })
             //.catch(error => alert(error.response.data.title))
-            .catch(error => console.log(error)).finally(()=> this.creatingLabels = false)
+            .catch(error => alert(error)).finally(()=> this.creatingLabels = false)
         },
         GetShipmentLabelsPDF(){
             axios.post('https://api.stage.njls.com/api/Rest/GetShipmentLabelsCognito', this.shipmentLabel,{
@@ -1371,7 +1354,7 @@ export default {
                 var href = URL.createObjectURL(newBlob)
                 window.open(href)
             })
-            .catch(error => console.log(error))
+            .catch(error => alert(error))
         },
         GetShipmentLabelsTiff(){
             axios.post('https://api.stage.njls.com/api/Rest/GetShipmentLabelsCognito', this.shipmentLabelTiff,{
@@ -1388,44 +1371,8 @@ export default {
 
                 window.open(href)
             })
-            .catch(error => console.log(error))
+            .catch(error => alert(error))
         },
-        // GetUserPreferences(){
-        //     axios.post('https://localhost:44368/api/Rest/GetUserPreference', this.userPreferences,{
-        //         // headers: {
-        //         //     'User': this.user.username,
-        //         //     // get the user's JWT token given to it by AWS cognito 
-        //         //     'Authorization': `Bearer ${this.user.signInUserSession.accessToken.jwtToken}`
-        //         // },
-        //     }).then((response)=>{
-        //         this.userPreferencesDataReturn = response.data;
-        //         for(let i=0; i<this.userPreferencesDataReturn.length; i++){
-        //             if(this.userPreferencesDataReturn[i].settingName == "Non Delivery e-Mail id"){
-        //                 this.shipmentData.notify[0].nonDelivery[0].email.push(this.userPreferencesDataReturn[i].settingValue);
-        //                 this.activeNonDelivEmailBox = true;
-        //                 this.activeNonDelivPhoneBox = true;
-        //             }else if(this.userPreferencesDataReturn[i].settingName == "e-Mail id"){
-        //                 this.shipmentData.notify[0].delivery[0].email.push(this.userPreferencesDataReturn[i].settingValue);
-        //                 this.activeEmailBox = true;
-        //                 this.activePhoneBox = true;
-        //             }else if(this.userPreferencesDataReturn[i].settingName == "Delivery Instructions"){
-        //                 this.shipmentData.DeliveryInstructions = this.userPreferencesDataReturn[i].settingValue;
-        //             }else if(this.userPreferencesDataReturn[i].settingName == "Service Type"){
-        //                 if(this.userPreferencesDataReturn[i].settingValue == "Standard"){
-        //                     this.NextDayStandard();
-        //                 }else if(this.userPreferencesDataReturn[i].settingValue == "Priority"){
-        //                     this.PriorityService();
-        //                 }
-        //             }else if(this.userPreferencesDataReturn[i].settingName == "Signature Required"){
-        //                 if(this.userPreferencesDataReturn[i].settingValue == "Yes"){
-        //                     this.SignatureRequired();
-        //                 }
-        //             }
-        //         }
-        //         console.log(this.userPreferencesDataReturn)
-        //         }
-        //     ).catch(error => console.log(error))
-        // },
         GetUserPreferences(){
             axios.post('https://api.stage.njls.com/api/Rest/GetUserPreferenceJSON', {}, {
                 headers: {
@@ -1467,7 +1414,7 @@ export default {
                      }
                 }
                 }
-            ).catch(error => console.log(error))
+            ).catch(error => alert(error))
         },
         SignatureRequired(){
             this.shipmentData.additionalServices[0] = 'SignatureRequired';
@@ -1554,29 +1501,21 @@ export default {
 </script>
 
 <style scoped>
-
     body{
         overflow-x: hidden;
         margin: 0;
     }
 
-    .packageNumberContainer{
-        padding-top: 15px;
+    h2, h3{
+        width: 100%;
+        text-align: center;
+        border-radius: 5px;
+        padding-top: 5px;
+        padding-bottom: 5px;
     }
+
     /* Step Progress Bar */
-    .how{
-        font-size: 1.1rem;
-    }
-
-    .where{
-        font-size: 1.1rem;
-    }
-
-    .details{
-        font-size: 1.1rem;
-    }
-
-    .confirm{
+    .how, .where, .details, .confirm{
         font-size: 1.1rem;
     }
 
@@ -1684,6 +1623,7 @@ export default {
         margin-left: 5%;
     }
 
+    /* Add another package */
     .addPackageButton{
         background-color: #33f18a;
         border: 2px solid #33f18a94;
@@ -1718,7 +1658,6 @@ export default {
         margin-left: 15%;
         box-shadow: rgba(0, 0, 0, 0.164) 0px 1px 10px;
         background-color: #fff;
-        /* border: 2px solid #33f18a; */
         border-radius: 5px;
         width: 70%;
         padding-bottom: 20px;
@@ -1735,7 +1674,6 @@ export default {
         color: #fff;
     }
 
-
     @keyframes weightAnimate{
         from{
                 margin-top: -10px;
@@ -1747,29 +1685,25 @@ export default {
             }
         }
 
-    .innerContainer{
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-    }
+    /* Address Input Container */
 
-    .addressContainer{
+    .address-container{
         width: 100%;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
     }
 
-    .addressContainer1{
+    .address-container-1{
         width: 50%;
         animation: containerAnimateLeft .4s;
     }
 
-    .addressHeader{
+    .address-header{
         margin: 0px;
     }
 
-    .addressContainer2{
+    .address-container-2{
         width: 50%;
         animation: containerAnimateRight .4s;
     }
@@ -1797,17 +1731,19 @@ export default {
         }
 
     /* Notifications Container */
-    .notificationsContainer{
+    .notifications-container{
         width: 100%;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
     }
 
-    .notificationsContainer0{
+    .notifications-container-0{
         width: 33%;
         animation: containerAnimateLeft .4s;
     }
+
+    /* Package weight input container */
 
     .weightInputBox{
         display: flex;
@@ -1834,12 +1770,13 @@ export default {
         cursor: pointer;
     }
 
-    .notificationsContainer1{
+    /* Notifaction Input Container */
+    .notifications-container-1{
         width: 33%;
         animation: containerAnimateLeft .4s;
     }
 
-    .notificationsContainer2{
+    .notifications-container-2{
         width: 33%;
         animation: containerAnimateRight .4s;
     }
@@ -1905,7 +1842,6 @@ export default {
         width: 100%;
         padding-bottom: 5px;
     }
-
 
     .confirmContainerInner2 h2{
         text-align: left;
@@ -1981,7 +1917,6 @@ export default {
     input{
         width: 70%;
         padding: 10px;
-        /* height: 32px; */
         font-size: 15px;
         border: 1px solid rgba(0, 0, 0, 0.336);
         border-radius: 5px;
@@ -2028,12 +1963,9 @@ export default {
         margin-left: 8%;
         margin-top: 10px;
         margin-bottom: 10px;
-
         overflow-x: auto;
-
         box-shadow: rgba(0, 0, 0, 0.164) 0px 1px 10px;
         background-color: #fff;
-        /* border: 2px solid #33f18a; */
         border-radius: 5px;
         width: 70%;
         padding: 10px
@@ -2082,7 +2014,6 @@ export default {
         color: white;
     }
 
-
     .inputButtonContainer button:hover{
         background-color: #30df9c;
         transition-duration: .5s;
@@ -2090,7 +2021,6 @@ export default {
 
     .notificationHeaderInner{
         margin: 0;
-        /* width: 0%; */
         margin-left: 15%;
         text-align: left;
     }
@@ -2112,7 +2042,6 @@ export default {
         padding-right: 5px;
         width: 90%;
         margin-bottom: 20px;
-
         animation: itemDropdown;
         animation-duration: .5s;
     }
@@ -2128,11 +2057,9 @@ export default {
         align-items: center;
         width: fit-content;
         height: 25px;
-
         animation: itemDropdown;
         animation-duration: .5s;
     }
-
 
     .removeItemButton{
         margin-left: 10px;
@@ -2154,25 +2081,8 @@ export default {
     .newshipHeader{
         text-align: center;
         width: 100%;
-        
         margin-top: 20px;
         margin-bottom: 20px;
-    }
-
-    h3{
-        width: 100%;
-        text-align: center;
-        border-radius: 5px;
-        padding-top: 5px;
-        padding-bottom: 5px;
-    }
-
-    h2{
-        width: 100%;
-        text-align: center;
-        border-radius: 5px;
-        padding-top: 5px;
-        padding-bottom: 5px;
     }
 
     .buttonContainer{
@@ -2194,7 +2104,6 @@ export default {
         font-size: 12px;
         transform: scale(.97);
         transition-duration: .4s ease;
-
         color: #fff;
         background-color: #308ef8;
     }
@@ -2221,7 +2130,6 @@ export default {
         font-size: 20px;
         transform: scale(.97);
         transition-duration: .4s ease;
-
         color: #fff;
         background-color: #308ef8;
     }
@@ -2230,9 +2138,6 @@ export default {
     .finalContainer{
         display: flex;
         flex-direction: column;
-        /* justify-content: space-between;
-        width: 100%;
-        text-align: left; */
         margin-top: 35px;
         padding: 15px;
         box-shadow: rgba(0, 0, 0, 0.164) 0px 1px 10px;
@@ -2379,16 +2284,6 @@ export default {
         transition-duration: .5s;
     }
 
-    .serviceContainer h3{
-        /* border-bottom: 1px solid #33f18a; */
-        border-radius: 0px;
-        /* border-top-left-radius: 4px;
-        border-top-right-radius: 4px;
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
-        background-color: #33f18a; */
-    }
-
     .serviceRowOne{
         display: flex;
         justify-content: row;
@@ -2465,20 +2360,12 @@ export default {
         padding: 15px 5px;
     }
 
-    /* .stateDropdown{
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-    } */
-
     .stateInput{
         width: 75%;
         padding: 10px;
         border: 1px solid rgba(0, 0, 0, 0.336);
         border-radius: 5px;
         outline: none;
-
     }
 
     .inputLabel p{
@@ -2516,9 +2403,6 @@ export default {
     }
 
     .terms-conditions-container{
-        /* display: flex;
-        justify-content: center;
-        flex-direction: column; */
         overflow-x: hidden;
         overflow-y: scroll;
         width: 50%;
@@ -2583,46 +2467,35 @@ export default {
         font-size: 17px;
     }
 
-    .innerContainer{
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        width: 100%;
-    }
     /* Address Container */
-    .addressContainer{
+    .address-container{
         width: 100%;
         display: flex;
         flex-direction: column;
     }
 
-    .addressContainer1{
+    .address-container-1{
         width: 100%;
     }
 
-    .addressContainer2{
+    .address-container-2{
         width: 100%;
         animation: containerAnimateLeft .4s;
     }
 
     /* Notification Container */
 
-    .notificationsContainer{
+    .notifications-container{
         width: 100%;
         display: flex;
         flex-direction: column;
     }
 
-    
-    .notificationsContainer0{
+    .notifications-container-0, .notifications-container-1{
         width: 100%;
     }
 
-    .notificationsContainer1{
-        width: 100%;
-    }
-
-    .notificationsContainer2{
+    .notifications-container-2{
         width: 100%;
         padding-top: 15px;
         animation: containerAnimateLeft .4s;
@@ -2723,15 +2596,7 @@ export default {
         height: 10vw;
     }
 
-    .how{
-        font-size: 2.5vw;
-    }
-
-    .where{
-        font-size: 2.5vw;
-    }
-
-    .details{
+    .how, .where, .details{
         font-size: 2.5vw;
     }
 
@@ -2752,11 +2617,7 @@ export default {
 }
 
 @media screen and (max-width: 700px) {
-    .serviceRowOne{
-        flex-direction: column;
-    }
-
-    .serviceRowTwo{
+    .serviceRowOne, .serviceRowTwo{
         flex-direction: column;
     }
 

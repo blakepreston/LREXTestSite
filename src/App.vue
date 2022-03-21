@@ -129,6 +129,23 @@
   
   <router-view></router-view>
 
+  <div class="cookie-container-main" v-if="authState === 'signedin' || !shipmentPages">
+    <div class="cookie-container">
+    <p>
+        We use cookies in this website to give you the best experience. To find out more, read our
+        <a href="#">privacy policy</a> and <a href="#">cookie policy</a>.
+      </p>
+      
+      <div class="cookie-button-image">
+          <button class="cookie-button" @click="cookieBanner()">
+            Okay
+          </button>
+          <img src="./assets/lrexDino-transparent.png" alt="">
+      </div>
+      
+    </div>
+  </div>
+  
 </template>
 
 <script>
@@ -155,6 +172,13 @@ export default {
   mounted() {
     this.lastScrollPosition = window.pageYOffset
     window.addEventListener('scroll', this.onScroll)
+
+    // setTimeout(() => {
+    //   const cookieContainer = document.querySelector(".cookie-container-main");
+    //   if (!localStorage.getItem("cookieBannerDisplayed")) {
+    //     cookieContainer.classList.add("active");
+    //   }
+    // }, 2000);
   },
   beforeUnmount() {
     window.removeEventListener('scroll', this.onScroll)
@@ -168,6 +192,11 @@ export default {
     GetInTouchPopup
   },
   methods: {
+    cookieBanner(){
+      const cookieContainer = document.querySelector(".cookie-container-main");
+      cookieContainer.classList.remove("active");
+      localStorage.setItem("cookieBannerDisplayed", "true");
+    },
     onScroll() {
       if (window.pageYOffset < 0) {
         return
@@ -242,12 +271,25 @@ export default {
     }
   },
   created(){
+        //Toggle Cookie Banner
+        setTimeout(() => {
+          const cookieContainer = document.querySelector(".cookie-container-main");
+          if (!localStorage.getItem("cookieBannerDisplayed")) {
+            cookieContainer.classList.add("active");
+          }
+        }, 2000);
         //Cognito-Amplify Login setup
         onAuthUIStateChange((nextAuthState, authData) => {
             this.authState = nextAuthState;
             console.log(nextAuthState);
             if (nextAuthState === AuthState.SignedIn) {
             this.signedIn = true;
+            setTimeout(() => {
+              const cookieContainer = document.querySelector(".cookie-container-main");
+              if (!localStorage.getItem("cookieBannerDisplayed")) {
+                cookieContainer.classList.add("active");
+              }
+            }, 2000);
             // console.log("user successfully signed in!");
             // console.log("user data: ", authData);
             // console.log(authData.signInUserSession.accessToken.jwtToken)
@@ -273,6 +315,8 @@ export default {
 </script>
 
 <style>
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans&display=swap");
+
 #app {
   font-family: 'Work Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -283,6 +327,68 @@ export default {
 
 a{
   cursor: pointer;
+}
+
+button{
+  font-family: 'Work Sans', sans-serif;
+}
+
+/* Cookie Container */
+.cookie-container-main{
+  width: 100%;
+  display: flex;
+  position: fixed;
+  text-align: left;
+  bottom: -100%;
+  justify-content: center;
+  z-index: 15;
+}
+
+.cookie-container-main.active {
+  bottom: .5%;
+}
+
+.cookie-container {
+  justify-content: center;
+  border-radius: 10px;
+  width: 60%;
+  background: #c0c0c0;
+  color: #ffffff;
+  padding: 0 32px;
+  box-shadow: 0 -2px 16px rgba(47, 54, 64, 0.39);
+  transition: 400ms;
+}
+
+.cookie-button {
+  background: #33f18a;
+  border: 0;
+  color: #ffffff;
+  padding: 12px 38px;
+  font-size: 18px;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition-duration: .5s;
+}
+
+.cookie-button:hover{
+  background: #2fdf7e;
+  transition-duration: .5s;
+}
+
+.cookie-container a {
+  color: #2c82e4;
+}
+
+.cookie-button-image{
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+.cookie-button-image img{
+  width: 50px;
+  margin-left: auto;
 }
 
 /* || Header Syles */

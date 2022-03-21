@@ -366,13 +366,12 @@ export default {
         transition-duration: .5s;
     }
 
-/* @media only screen and (max-width: 1000px){
+@media only screen and (max-width: 1000px){
     .shipment_data{
-        margin-top: 20%;
         width: 85%;
     }
 }
-
+/* 
 @media only screen and (max-width: 650px){
     .shipment_data{
         margin-top: 35%;

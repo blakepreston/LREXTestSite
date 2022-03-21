@@ -42,9 +42,9 @@
 
         <div class="shipment-button-container">
             <div class="filter-button-container">
-                <button @click="GetTrackShipmentsByCriteriaInTransit" class="filter-button">In Transit Shipments</button>
-                <button @click="setDateGetDelivered" class="filter-button">Delivered Shipments</button>
-                <button @click="GetShipmentsByUserAndType" class="filter-button">Shipment Information Received</button>
+                <button @click="GetTrackShipmentsByCriteriaInTransit(), removeFilters()" class="filter-button">In Transit Shipments</button>
+                <button @click="setDateGetDelivered(), removeFilters()" class="filter-button">Delivered Shipments</button>
+                <button @click="GetShipmentsByUserAndType(), removeFilters()" class="filter-button">Shipment Information Received</button>
                 
                 <button v-show="!toggleFilters" @click="showFilters" class="filter-button-right">Filter Shipments <i class="fa fa-filter"></i></button>
                 <button v-show="toggleFilters" @click="removeFilters" class="filter-button-right">Remove Filter Results <i class="fa fa-filter"></i></button>
@@ -72,7 +72,13 @@
                 </div>
                 <div class="filter-input-container">
                     <label for="serviceName">Service Name</label>
-                    <input id="serviceName" name="serviceName" type="text">
+                    <select name="serviceName" id="serviceName">
+                        <option value="Next Day Standard">Next Day Standard</option>
+                        <option value="Priority Service">Priority Service</option>
+                        <option value="Saturday Service">Saturday Service</option>
+                        <option value="Pickup Service - NJ only">Pickup Service - NJ only</option>
+                    </select>
+                    <!-- <input id="serviceName" name="serviceName" type="text"> -->
                     <button @click="filterServiceName">Filter</button>
                 </div>
                 <div class="filter-input-container">
@@ -194,27 +200,6 @@
                         <td class="delete-shipment"><i class="fa fa-times-circle" @click="deleteShipment.ShipmentId = currentShipments[index].ShipmentId, DeleteShipmentPopUp(index)"></i></td>
                     </tr>
                 </tbody>
-                <!-- Saved Shipments -->
-                <!-- <thead>
-                    <tr>
-                        <th>Tracking Number</th>
-                        <th>Service Name</th>
-                        <th>Company or Name</th>
-                        <th>Contact Name</th>
-                        <th>Location</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(items, index) in savedShipments" v-bind:key="items">
-                        <td class="shipmentID" id="shipmentID" @click="shipmentDetailsProp.shipmentId = $event.target.textContent, showData = !showData, scrollToTop()">{{savedShipments[index].ShipmentId}}</td>
-                        <td>{{savedShipments[index].p[0].ServiceName}}</td>
-                        <td>{{savedShipments[index].DeliveryCompanyName}}</td>
-                        <td>{{savedShipments[index].DeliveryAttention}}</td>
-                        <td>{{savedShipments[index].p[0].AddressLocation}}</td>
-                        <a @click="GetShipmentLabelsPDF(index)"><td class="print-label">{{savedShipments[index].p[0].ShipmentStatus[0].ShipmentStatus}}</td></a>
-                    </tr>
-                </tbody> -->
             </table>
 
             <table class="shipment-table" v-if="currentShipments.length <= 0">
@@ -422,7 +407,6 @@ export default {
         //Data Methods
         GetShipmentsByUserAndType(){
             this.gettingShipmentData = true;
-            this.toggleFilters = false;
             this.showCurrent = true;
             this.showInTransit = false;
             this.showDelivered = false;
@@ -441,11 +425,10 @@ export default {
 
                     console.log(response.data);
                 }
-            ).catch(error => console.log(error)).finally(()=> this.gettingShipmentData = false)
+            ).catch(error => alert(error)).finally(()=> this.gettingShipmentData = false)
         },
         GetTrackShipmentsByCriteriaInTransit(){
             this.gettingShipmentData = true;
-            this.toggleFilters = false;
             this.showInTransit = true;
             this.showCurrent = false;
             this.showDelivered = false;
@@ -463,7 +446,7 @@ export default {
                     console.log(this.inTransitShipments)
                     console.log(response.data);
                 }
-            ).catch(error => console.log(error)).finally(()=> this.gettingShipmentData = false)
+            ).catch(error => alert(error)).finally(()=> this.gettingShipmentData = false)
         },
         GetTrackShipmentsByCriteriaDelivered(){
             this.gettingShipmentData = true;
@@ -484,21 +467,10 @@ export default {
                     console.log(this.deliveredShipments)
                     console.log(response.data);
                 }
-            ).catch(error => console.log(error)).finally(()=> this.gettingShipmentData = false)
+            ).catch(error => alert(error)).finally(()=> this.gettingShipmentData = false)
         },
-        //Check if label printed
-        // CheckLabelPrinted(){
-        //     this.savedShipments = [];
-        //     for(let i = 0; i < this.currentShipments.length; i++){
-        //         if(this.currentShipments[i].p[0].ShipmentStatus[0].ShipmentStatus === "Saved Shipment"){
-        //             //this.shipmentSaved = true;
-        //             this.savedShipments.push(this.currentShipments[i]);
-        //             this.currentShipments.splice(i,1);
-        //             console.log(this.savedShipments);
-        //         }
-        //     }
-        // },
         GetShipmentLabelsPDF(index){
+            this.gettingShipmentData = true;
             this.shipmentLabel.shipmentID.push(this.currentShipments[index].ShipmentId);
             console.log(this.shipmentLabel);
             axios.post('https://api.stage.njls.com/api/Rest/GetShipmentLabelsCognito', this.shipmentLabel,{
@@ -509,13 +481,13 @@ export default {
                 },
                 responseType: 'blob'
             }).then((response)=>{
-                this.showPDF = true;
                 this.pdfDataReturn = response.data;
                 var newBlob = new Blob([this.pdfDataReturn], {type: "application/pdf"})
                 var href = URL.createObjectURL(newBlob)
                 window.open(href)
+                this.GetShipmentsByUserAndType();
             })
-            .catch(error => console.log(error))
+            .catch(error => alert(error)).finally(()=> this.gettingShipmentData = false)
         },
         DeleteShipmentPopUp(index){
             //alert(this.deleteShipment.ShipmentId)
@@ -542,7 +514,7 @@ export default {
                 this.deleteShipment.ShipmentId = 0;
                 this.GetShipmentsByUserAndType();
             })
-            .catch(error => console.log(error))
+            .catch(error => alert(error))
         },
         //Filter Methods
         filterServiceName(){
@@ -625,10 +597,9 @@ export default {
         },
         showFilters(){
             this.toggleFilters = !this.toggleFilters;
-            this.setDate();
         },
         removeFilters(){
-            this.toggleFilters = !this.toggleFilters;
+            this.toggleFilters = false;
             this.filterArray = [];
         },
         //Date Method
@@ -759,12 +730,6 @@ export default {
                 }
             }
 
-            //Call GetShipmentsByUserAndType when sign in success
-            // getInTransitShipments++;
-            // if(this.signedIn == true && getInTransitShipments == 1){
-            //     this.GetTrackShipmentsByCriteriaInTransit();
-            // }
-
             if (!authData) {
                 this.signedIn = false;
             }
@@ -782,6 +747,10 @@ export default {
 </script>
 
 <style scoped>
+    body{
+        overflow-x: hidden;
+        margin: 0;
+    }
 /* Amplify Authenticator */
 
     amplify-authenticator{
@@ -1070,8 +1039,7 @@ export default {
         font-weight: bold;
     }
 
-    .filter-container input{
-        width: 40%;
+    .filter-container input, .filter-input-container select{
         margin: 5px;
         padding: 10px;
         font-size: 15px;
@@ -1208,38 +1176,65 @@ export default {
         transition-duration: .5s;
     }
 
-    @media only screen and (max-width: 1000px){
-        .filter-button,
-        .filter-button-right{
-            padding: 0px;
-            font-size: 8px;
-            margin: 0;
+    @media only screen and (max-width: 800px){
+        .container{
+            margin-top: 20vh;
         }
 
         .filter-button-container{
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        .filter-button-container>*{
+            flex: 0 0 48.5%;
+        }
+
+        .filter-input-container label, .date-container label{
+            font-size: 12px;
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .filter-input-container input, .date-container input, .filter-input-container select{
             padding: 0px;
-            font-size: 8px;
+            font-size: 12px;
+        }
+
+        .filter-button, .main-date-container button, .filter-button-right{
+            padding: 2px;
+            font-size: 12px;
+            margin: 2.5px;
+        }
+
+        .main-date-container{
             width: 100%;
         }
 
-        .filter-container label{
-            font-size: 12px;
+        .filter-container-main{
+            margin-top: 2.5%;
         }
 
-        .filter-container input{
-            padding: 0px;
-            font-size: 12px;
+        .filter-container{
+            flex-direction: column;
+        }
+
+        .filter-input-container{
+            width: 100%;
         }
 
         .shipment-table{
-            font-size: 8px;
-            margin: 0;
+            font-size: 10px;
             width: 90%;
+        }
+
+        .shipment-table-container{
+            width: 100%;
         }
 
         .shipment-table th,
         .shipment-table td{
-            padding: 4px 6px;
+            padding: 3px 0px 0px 1px;
         }
 
         .track-shipment{
@@ -1249,7 +1244,7 @@ export default {
 
         .track-shipment button{
             padding: 4px 5px;
-            font-size: 8px;
+            font-size: 12px;
         }
 
         .track-shipment input{
@@ -1259,6 +1254,10 @@ export default {
 
         .track-shipment label{
             font-weight: 12px;
+        }
+
+        .delete-confirm-inner{
+            width: 80%;
         }
     }
 </style>
