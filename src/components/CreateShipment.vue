@@ -44,6 +44,12 @@
                         <label for="googleAPI">Find Address</label>
                         <input name="googleAPI" type="text" id="placesAPI" class="googlePlaces">
                     </div>
+
+                    <p>- or -</p>
+
+                    <div class="address-book-button">
+                        <button @click="GetAddressBookData">Use Address Book</button>
+                    </div>
                     
                     <div class="inputLabel">
                         <label for="compName">Company or Name</label>
@@ -560,6 +566,29 @@
             </p>
         </div>
     </div>
+
+    <div class="address-book-table-container" v-if="addressBookToggle">
+        <table class="address-book-table" id="address-book-table">
+                <thead>
+                    <tr>
+                        <th>Select</th>
+                        <th>Company Name</th>
+                        <th>Contact Name</th>
+                        <th>Address</th>
+                        <th>Location</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(items, index) in addressBook[0]" v-bind:key="items">
+                        <td><button @click="addressBookSelect(index)">Select</button></td>
+                        <td>{{addressBook[0][index].CompanyName}}</td>
+                        <td>{{addressBook[0][index].Attention}}</td>
+                        <td>{{addressBook[0][index].Address}}</td>
+                        <td>{{addressBook[0][index].Location}}</td>
+                    </tr>
+                </tbody>
+            </table>
+    </div>
   
 </template>
 
@@ -799,7 +828,9 @@ export default {
                 userID: 1932,
                 preferenceGroup: 'SP'
             },
-            userPreferencesDataReturn:[]
+            userPreferencesDataReturn:[],
+            addressBook: [],
+            addressBookToggle: false
         }
     },
     mounted(){
@@ -1416,6 +1447,29 @@ export default {
                 }
             ).catch(error => alert(error))
         },
+        GetAddressBookData(){
+            this.addressBookToggle = true;
+            //this.gettingShipmentData = true;
+            //this.showCurrent = true;
+            //this.showInTransit = false; //https://api.stage.njls.com/
+            //this.showDelivered = false; //https://localhost:44368/
+            axios.post('https://localhost:44368/api/Rest/GetAddressesByUserName', {}, {
+                headers: {
+                    'User': this.user.username
+                    // get the user's JWT token given to it by AWS cognito 
+                    //'Authorization': `Bearer ${this.user.signInUserSession.accessToken.jwtToken}`
+                },
+            }).then((response)=>{
+                this.addressBook = [];
+                //for(let i = 0; i < response.data.length; i++){
+                    this.addressBook.push(response.data[0].A);
+                //}
+                    //this.CheckLabelPrinted();
+
+                    console.log(this.addressBook);
+                }
+            ).catch(error => alert(error))//.finally(()=> this.gettingShipmentData = false)
+        },
         SignatureRequired(){
             this.shipmentData.additionalServices[0] = 'SignatureRequired';
         },
@@ -1459,6 +1513,17 @@ export default {
             document.getElementById('priorityService').style.backgroundColor = 'white';
             document.getElementById('saturdayService').style.backgroundColor = 'white';
             document.getElementById('pickupService').style.backgroundColor = 'white';
+        },
+        //Set Address From Address Book
+        addressBookSelect(index){
+            document.getElementById('placesAPI').value = '';
+            this.shipmentData.serviceAddress.address.Address1 = this.addressBook[0][index].Address;
+            this.shipmentData.serviceAddress.address.CompanyName = this.addressBook[0][index].CompanyName;
+            this.shipmentData.serviceAddress.address.ZipCode = this.addressBook[0][index].ZipCode;
+            this.shipmentData.serviceAddress.address.City = this.addressBook[0][index].City;
+            this.shipmentData.serviceAddress.address.State = this.addressBook[0][index].State;
+            this.shipmentData.serviceAddress.address.Attention = this.addressBook[0][index].Attention;
+            this.addressBookToggle = false;
         }
     },
     created(){
@@ -1697,6 +1762,22 @@ export default {
     .address-container-1{
         width: 50%;
         animation: containerAnimateLeft .4s;
+    }
+
+    .address-container-1 p{
+        padding: 0;
+        margin: 0;
+    }
+
+    .address-book-button button{
+        background-color: #33f18a;
+        box-shadow: rgba(0, 0, 0, 0.164) 0px 1px 5px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition-duration: .5s;
+        border: none;
+        color: #ffffff;
+        margin-top: 5px;
     }
 
     .address-header{
@@ -2443,6 +2524,80 @@ export default {
         text-decoration: underline;
         color: #308ef8;
         cursor: pointer;
+    }
+
+    /* Address Book */
+
+    .address-book-table-container{
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        position: absolute;
+        top: 5%;
+        z-index: 10;
+        animation: address-book-animate .5s ease;
+    }
+
+    @keyframes address-book-animate {
+        from{margin-top: -5%;}
+        top{margin-top: 0%;}
+    }
+
+    .address-book-table{
+        text-align: left;
+        background-color: #ffffff;
+    }
+
+    .address-book-table button{
+        background-color: #33f18a;
+        box-shadow: rgba(0, 0, 0, 0.164) 0px 1px 5px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition-duration: .5s;
+        border: none;
+        color: #ffffff;
+    }
+
+    .address-book-table{
+        width: 60%;
+        border-collapse: collapse;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        margin: 2em 0;
+        font-size: 0.9em;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        text-align: left;
+        animation: address-book-table-animate 1s ease;
+    }
+
+    .address-book-table th:first-child{
+        border-top-left-radius: 10px;
+    }
+
+    .address-book-table th:last-child{
+        border-top-right-radius: 10px;
+    }
+
+    .address-book-table tbody tr:nth-of-type(even) {
+        background-color: #f3f3f3;
+    }
+
+    .address-book-table tbody tr:last-of-type {
+        border-bottom: 2px solid #308ef8;
+    }
+
+    .address-book-table th{
+        background-color: #33f18a;
+        color: #ffffff;
+    }
+
+    .address-book-table th,
+    .address-book-table td{
+        padding: 12px 15px;
+    }
+
+    .address-book-table tbody tr{
+        border-bottom: 1px solid #dddddd;
     }
 
 @media screen and (max-width: 500px) {

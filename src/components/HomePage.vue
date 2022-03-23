@@ -169,7 +169,10 @@
       </DriveWithUsPopup>
 
       <div v-if="loading" class="loading-container">
-        <div class="loading-dropdown"><p>Getting Shipment Data</p></div>
+        <div class="loading-dropdown">
+          <p>Getting Shipment Data</p>
+          <div class="loader"></div>
+        </div>
       </div>
 
       <ShipmentTrackingPopup 
@@ -506,10 +509,10 @@ html, body{
 
 .loading-container{
   width: 100vw;
-  height: 50px;
+  height: 75px;
 
   position: absolute;
-  top: 10px;
+  top: 30px;
   z-index: 99;
 
   display: flex;
@@ -523,6 +526,22 @@ html, body{
   0%{opacity: 0;}
   70%{transform: translateY(10px);}
   100%{transform: translateY(30px); opacity: 1;}
+}
+
+.loader{
+    margin: auto;
+    margin-bottom: 15px;
+    border: 20px solid #EAF0F6;
+    border-radius: 50%;
+    border-top: 20px solid #33f18a;
+    width: 50px;
+    height: 50px;
+    animation: spinner 2s linear infinite;
+}
+
+@keyframes spinner {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 .popup-container{

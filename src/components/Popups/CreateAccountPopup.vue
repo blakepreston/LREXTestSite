@@ -458,9 +458,8 @@ export default {
 }
 
 @keyframes drop {
-  0%{}
-  70%{transform: translateY(20px);}
-  100%{transform: translateY(1px);}
+  from{margin-top: -5%;}
+  to{margin-top: 1%;}
 }
 
 .closeCreateAccount {
@@ -557,8 +556,8 @@ th{
 }
 
 @keyframes tabledrop {
-  70%{transform: translateY(15px);}
-  100%{transform: translateY(0px);}
+  from{margin-top: -2.5%;}
+  to{margin-top: 0%;}
 }
 
 .inner-table{

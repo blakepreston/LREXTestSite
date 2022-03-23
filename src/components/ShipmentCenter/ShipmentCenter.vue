@@ -321,6 +321,14 @@
             <h2>Getting Shipment Data</h2>
             <div class="loader"></div>
         </div>
+
+        <div class="loader-container" v-if="gettingLabelData">
+            <div class="loader-inner-container">
+                <h2>Getting Shipment Label</h2>
+                <div class="loader"></div>
+            </div>
+        </div>
+        
     </div>
     <!-- <ShipmentDetails/> -->
 </template>
@@ -382,7 +390,7 @@ export default {
             showDelivered: false,
             showDeleteConfirm: false,
             gettingShipmentData: false,
-            gettingShipmentDataComponent: true,
+            gettingLabelData: false,
             dateTo: '',
             dateFrom: '',
             postDelivered:{
@@ -408,9 +416,9 @@ export default {
         GetShipmentsByUserAndType(){
             this.gettingShipmentData = true;
             this.showCurrent = true;
-            this.showInTransit = false;
-            this.showDelivered = false;
-            axios.post('https://api.stage.njls.com/api/Rest/GetShipmentsByUserAndType', {}, {
+            this.showInTransit = false; //https://api.stage.njls.com/
+            this.showDelivered = false; //https://localhost:44368/
+            axios.post('https://localhost:44368/api/Rest/GetShipmentsByUserAndType', {}, {
                 headers: {
                     'User': this.user.username
                     // get the user's JWT token given to it by AWS cognito 
@@ -432,7 +440,7 @@ export default {
             this.showInTransit = true;
             this.showCurrent = false;
             this.showDelivered = false;
-            axios.post('https://api.stage.njls.com/api/Rest/GetTrackShipmentsByCriteria', {searchBy: 'InTransit'}, {
+            axios.post('https://localhost:44368/api/Rest/GetTrackShipmentsByCriteria', {searchBy: 'InTransit'}, {
                 headers: {
                     'User': this.user.username
                     // get the user's JWT token given to it by AWS cognito 
@@ -453,7 +461,7 @@ export default {
             this.showInTransit = false;
             this.showCurrent = false;
             this.showDelivered = true;
-            axios.post('https://api.stage.njls.com/api/Rest/GetTrackShipmentsByCriteria', this.postDelivered, {
+            axios.post('https://localhost:44368/api/Rest/GetTrackShipmentsByCriteria', this.postDelivered, {
                 headers: {
                     'User': this.user.username
                     // get the user's JWT token given to it by AWS cognito 
@@ -470,10 +478,11 @@ export default {
             ).catch(error => alert(error)).finally(()=> this.gettingShipmentData = false)
         },
         GetShipmentLabelsPDF(index){
-            this.gettingShipmentData = true;
+            this.gettingLabelData = true;
             this.shipmentLabel.shipmentID.push(this.currentShipments[index].ShipmentId);
+            this.scrollToTop();
             console.log(this.shipmentLabel);
-            axios.post('https://api.stage.njls.com/api/Rest/GetShipmentLabelsCognito', this.shipmentLabel,{
+            axios.post('https://localhost:44368/api/Rest/GetShipmentLabelsCognito', this.shipmentLabel,{
                 headers: {
                     'User': this.user.username,
                     // get the user's JWT token given by AWS cognito 
@@ -487,7 +496,7 @@ export default {
                 window.open(href)
                 this.GetShipmentsByUserAndType();
             })
-            .catch(error => alert(error)).finally(()=> this.gettingShipmentData = false)
+            .catch(error => alert(error)).finally(()=> this.gettingLabelData = false)
         },
         DeleteShipmentPopUp(index){
             //alert(this.deleteShipment.ShipmentId)
@@ -502,7 +511,7 @@ export default {
             }
         },
         DeleteShipment(){
-            axios.post('https://api.stage.njls.com/api/Rest/DeleteShipmentByShipmentId', this.deleteShipment,{
+            axios.post('https://localhost:44368/api/Rest/DeleteShipmentByShipmentId', this.deleteShipment,{
                 headers: {
                     'User': this.user.username,
                     // get the user's JWT token given by AWS cognito 
@@ -868,6 +877,24 @@ export default {
         100% { transform: rotate(360deg); }
     }
 
+    .loader-container{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .loader-inner-container{
+      padding: 15px;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 0 100px rgba(0, 0, 0, 0.9);
+      z-index: 15;
+      position: absolute;
+      top: 2.5%;
+    }
+
     /* Shipment Details */
     .shipment-details-container{
         width: 100%;
@@ -931,6 +958,7 @@ export default {
         font-size: 0.9em;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
         text-align: left;
+        animation: shipment-table-animate .5s ease;
     }
 
     /* .shipment-table thead tr{
