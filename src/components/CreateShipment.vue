@@ -42,13 +42,11 @@
                 <div class="address-container-1">
                     <div class="inputLabel">
                         <label for="googleAPI">Find Address</label>
-                        <input name="googleAPI" type="text" id="placesAPI" class="googlePlaces">
-                    </div>
-
-                    <p>- or -</p>
-
-                    <div class="address-book-button">
-                        <button @click="GetAddressBookData">Use Address Book</button>
+                        
+                        <div class="address-book-button">
+                            <input name="googleAPI" type="text" id="placesAPI" class="googlePlaces">
+                            <button @click="GetAddressBookData">My Addresses</button>
+                        </div>
                     </div>
                     
                     <div class="inputLabel">
@@ -568,10 +566,40 @@
     </div>
 
     <div class="address-book-table-container" v-if="addressBookToggle">
-        <table class="address-book-table" id="address-book-table">
+        <div class="address-book-table-inner">
+            <div class="close-search-address-book"><button @click="addressBookToggle = false">Close</button></div>
+            <h2>Address Book</h2>
+            <div class="search-address-book">
+                <input type="text" id="searchAddressBook">
+                <button @click="searchAddressBookArray()">Search</button>
+                <button @click="clearSearchResults()" v-if="searchAddressToggle">Clear Results</button>
+            </div>
+
+            <table class="address-book-table" id="address-book-table" v-if="searchAddressToggle">
                 <thead>
                     <tr>
-                        <th>Select</th>
+                        <th></th>
+                        <th>Company Name</th>
+                        <th>Contact Name</th>
+                        <th>Address</th>
+                        <th>Location</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(items, index) in searchAddressBookResult" v-bind:key="items">
+                        <td><button @click="searchAddressBookSelect(index)">Select</button></td>
+                        <td>{{searchAddressBookResult[index].CompanyName}}</td>
+                        <td>{{searchAddressBookResult[index].Attention}}</td>
+                        <td>{{searchAddressBookResult[index].Address}}</td>
+                        <td>{{searchAddressBookResult[index].Location}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <table class="address-book-table" id="address-book-table">
+                <thead>
+                    <tr>
+                        <th></th>
                         <th>Company Name</th>
                         <th>Contact Name</th>
                         <th>Address</th>
@@ -588,6 +616,7 @@
                     </tr>
                 </tbody>
             </table>
+        </div>
     </div>
   
 </template>
@@ -830,7 +859,10 @@ export default {
             },
             userPreferencesDataReturn:[],
             addressBook: [],
-            addressBookToggle: false
+            addressBookToggle: false,
+            searchAddressBook: [],
+            searchAddressBookResult: [],
+            searchAddressToggle: false
         }
     },
     mounted(){
@@ -1524,6 +1556,47 @@ export default {
             this.shipmentData.serviceAddress.address.State = this.addressBook[0][index].State;
             this.shipmentData.serviceAddress.address.Attention = this.addressBook[0][index].Attention;
             this.addressBookToggle = false;
+        },
+        searchAddressBookSelect(index){
+            document.getElementById('placesAPI').value = '';
+            this.shipmentData.serviceAddress.address.Address1 = this.searchAddressBookResult[index].Address;
+            this.shipmentData.serviceAddress.address.CompanyName = this.searchAddressBookResult[index].CompanyName;
+            this.shipmentData.serviceAddress.address.ZipCode = this.searchAddressBookResult[index].ZipCode;
+            this.shipmentData.serviceAddress.address.City = this.searchAddressBookResult[index].City;
+            this.shipmentData.serviceAddress.address.State = this.searchAddressBookResult[index].State;
+            this.shipmentData.serviceAddress.address.Attention = this.searchAddressBookResult[index].Attention;
+            this.addressBookToggle = false;
+        },
+        searchAddressBookArray(){
+            this.searchAddressBook = [];
+            this.searchAddressBookResult = [];
+            this.searchAddressToggle = true;
+            for(let i = 0; i < this.addressBook[0].length; i++){
+                let address = this.addressBook[0][i].Address.toLowerCase();
+                let companyName = this.addressBook[0][i].CompanyName.toLowerCase();
+                let zipcode = this.addressBook[0][i].ZipCode.toLowerCase();
+                let city = this.addressBook[0][i].City.toLowerCase();
+                let state = this.addressBook[0][i].State.toLowerCase();
+                let attention = this.addressBook[0][i].Attention.toLowerCase();
+
+                let searchArray = [address, companyName, zipcode, city, state, attention]
+               
+                this.searchAddressBook.push(searchArray.join(''));
+                
+            }
+
+            let searchValue = document.getElementById('searchAddressBook').value;
+            for(let j = 0; j < this.searchAddressBook.length; j++){
+                if(this.searchAddressBook[j].includes(searchValue)){
+                    this.searchAddressBookResult.push(this.addressBook[0][j]);
+                }
+            }
+        },
+        clearSearchResults(){
+            this.searchAddressBook = [];
+            this.searchAddressBookResult = [];
+            this.searchAddressToggle = false;
+            document.getElementById('searchAddressBook').value = '';
         }
     },
     created(){
@@ -1769,6 +1842,14 @@ export default {
         margin: 0;
     }
 
+    .address-book-button{
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        width: 75%;
+    }
+
     .address-book-button button{
         background-color: #33f18a;
         box-shadow: rgba(0, 0, 0, 0.164) 0px 1px 5px;
@@ -1777,7 +1858,8 @@ export default {
         transition-duration: .5s;
         border: none;
         color: #ffffff;
-        margin-top: 5px;
+        width: 30%;
+        margin-left: 1%;
     }
 
     .address-header{
@@ -2527,15 +2609,53 @@ export default {
     }
 
     /* Address Book */
+    .search-address-book{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        margin-top: 10px;
+    }
+
+    .search-address-book button{
+        background-color: #33f18a;
+        color: #ffffff;
+        border-radius: 5px;
+        border: 0;
+        cursor: pointer;
+        padding: 5px;
+        margin-left: 5px;
+        transition-duration: .5s;
+    }
+
+    .search-address-book button:hover{
+        background-color: #30df9c;
+        transition-duration: .5s;
+    }
 
     .address-book-table-container{
         display: flex;
         justify-content: center;
         width: 100%;
+        height: 100%;
         position: absolute;
-        top: 5%;
+        top: 10%;
         z-index: 10;
         animation: address-book-animate .5s ease;
+    }
+
+    .address-book-table-container h2{
+        text-align: left;
+        margin: 0;
+    }
+
+    .address-book-table-inner{
+        padding: 10px;
+        background-color: #eeeeee;
+        border-radius: 10px;
+        height: 60%;
+        overflow-y: scroll;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
     }
 
     @keyframes address-book-animate {
@@ -2559,7 +2679,6 @@ export default {
     }
 
     .address-book-table{
-        width: 60%;
         border-collapse: collapse;
         border-top-left-radius: 10px;
         border-top-right-radius: 10px;
@@ -2598,6 +2717,28 @@ export default {
 
     .address-book-table tbody tr{
         border-bottom: 1px solid #dddddd;
+    }
+
+    .close-search-address-book{
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .close-search-address-book button{
+        z-index: 11;
+        border: none;
+        margin: 1px;
+        background-color: #308ef8;
+        padding: 12px 15px;
+        color: #ffffff;
+        border-radius: 10px;
+        cursor: pointer;
+        transition-duration: .5s;
+    }
+
+    .close-search-address-book button:hover{
+        background-color: #2877d1;
+        transition-duration: .5s;
     }
 
 @media screen and (max-width: 500px) {
@@ -2778,6 +2919,20 @@ export default {
 
     .serviceContainer{
         width: 90vw;
+    }
+
+    .address-book-table{
+            font-size: 10px;
+            width: 90%;
+        }
+
+    .address-book-table-container{
+        width: 100%;
+    }
+
+    .address-book-table th,
+    .address-book-table td{
+        padding: 3px 0px 0px 1px;
     }
 }
 </style>
