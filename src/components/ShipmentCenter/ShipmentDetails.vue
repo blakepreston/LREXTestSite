@@ -25,6 +25,12 @@
                 <div v-if="shipments[0].signatureRequired">
                 <p>Signature Required</p>
                 </div>
+                <div v-if="coldStorageData">
+                  <p>Cold Storage</p>
+                </div>
+                <div v-if="shipments[0].shipmentWeight >= 16">
+                  <p>Shipment Weight: {{shipments[0].shipmentWeight}}(lbs)</p>
+                </div>
                 <h3>Ship By</h3>
                 <p>{{shipments[0].pickupAttention}}</p>
                 <p>{{shipments[0].pickupAddress1}}</p>
@@ -75,7 +81,7 @@
                     <div class="linkStyling">
                         <a href="" id="proof-of-delivery" target="_blank">
                         GO
-                        <a class="notAvailable" v-if="shipmentHistoryData[0].signatureId == 0">not available</a>
+                        <a class="notAvailable" v-if="!shipmentHistoryData[0].signatureId">not available</a>
                         </a>
                     </div>
                         
@@ -92,7 +98,7 @@
                         <div class="linkStyling">
                             <a href="" id="location-of-delivery" target="_blank">
                             GO
-                            <a class="notAvailable" v-if="shipmentHistoryData[1].signatureId == 0">not available</a>
+                            <a class="notAvailable" v-if="!shipmentHistoryData[1].signatureId">not available</a>
                             </a>
                         </div>
                     </div>
@@ -125,12 +131,15 @@ export default {
             shipmentHistoryData: {data: []},
             shipments: {data: []},
             error: {data: []},
+            coldStorageData: {},
             showData: false,
             gettingShipmentDetails: true
         }
     },
     props:{
-        shipmentDetailsProp: Object
+        shipmentDetailsProp: Object,
+        username: String,
+        cognitoJWT: String
     },
     methods: {
       ToggleShowData(){
@@ -162,20 +171,28 @@ export default {
         }
       },
         GetShipmentHistoryByID() {
-          const headers ={
-            }
-            axios.post('https://api.stage.njls.com/api/rest/GetShipmentHistoryByShipmentIdNoAuth', this.shipmentDetailsProp, {headers: headers})
+            axios.post('https://api.stage.njls.com/api/rest/GetShipmentHistoryByShipmentIdCognito', this.shipmentDetailsProp, 
+              {headers:{
+                'User': this.username,
+                // get the user's JWT token given to it by AWS cognito 
+                'Authorization': `Bearer ${this.cognitoJWT}`
+              }})
             .then((response) => {
-              this.shipmentHistoryData = response.data.shipmentHistory
-              console.log(this.shipmentHistoryData)
+              this.shipmentHistoryData = response.data.shipmentHistory;
+              console.log("History Data");
+              console.log(this.shipmentHistoryData);
+              this.coldStorageData = response.data.coldstorageTable[0];
               this.error = response.data.error
               })
             .catch(error => console.log(error))
         },
       GetShipmentByID() {
-          const headers ={
-            }
-            axios.post('https://api.stage.njls.com/api/rest/GetShipmentByShipmentIdNoAuth', this.shipmentDetailsProp, {headers: headers})
+            axios.post('https://api.stage.njls.com/api/rest/GetShipmentByShipmentIdCognito', this.shipmentDetailsProp, 
+            {headers:{
+                'User': this.username,
+                // get the user's JWT token given to it by AWS cognito 
+                'Authorization': `Bearer ${this.cognitoJWT}`
+              }})
             .then((response) => {
               this.shipments = response.data.shipment
               console.log(this.shipments)

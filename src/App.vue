@@ -157,6 +157,7 @@ import CreateAccountPopup from './components/Popups/CreateAccountPopup.vue'
 import GetInTouchPopup from './components/Popups/GetInTouchPopup.vue'
 import {ref} from 'vue';
 import {AuthState, onAuthUIStateChange} from "@aws-amplify/ui-components";
+import {Auth} from 'aws-amplify';
 
 export default {
   name: 'App',
@@ -173,15 +174,11 @@ export default {
     this.lastScrollPosition = window.pageYOffset
     window.addEventListener('scroll', this.onScroll)
 
-    // setTimeout(() => {
-    //   const cookieContainer = document.querySelector(".cookie-container-main");
-    //   if (!localStorage.getItem("cookieBannerDisplayed")) {
-    //     cookieContainer.classList.add("active");
-    //   }
-    // }, 2000);
+    //Sign user out when JWT expires
+    setTimeout(() => {Auth.signOut({global: true})}, 3600000);
   },
   beforeUnmount() {
-    window.removeEventListener('scroll', this.onScroll)
+    window.removeEventListener('scroll', this.onScroll);
   },
   components: {
     HomePage,
@@ -331,6 +328,18 @@ a{
 
 button{
   font-family: 'Work Sans', sans-serif;
+}
+
+::-webkit-scrollbar {
+    background-color: white;
+    border-radius: 10px;
+    width: 5px;
+    height: 5px;
+}
+
+::-webkit-scrollbar-thumb{
+    background-color: #33f18a;
+    border-radius: 10px;
 }
 
 /* Cookie Container */

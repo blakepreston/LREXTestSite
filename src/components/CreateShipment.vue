@@ -71,7 +71,7 @@
                     
                     <div class="inputLabel">
                         <label for="address">Address</label>
-                        <input style="background-color: #d3d3d3;" required name="address" id="address" type="text" v-model="shipmentData.serviceAddress.address.Address1">
+                        <input disabled style="background-color: #d3d3d3;" required name="address" id="address" type="text" v-model="shipmentData.serviceAddress.address.Address1">
                     </div>
 
                     <div class="inputLabel">
@@ -81,14 +81,14 @@
 
                     <div class="inputLabel">
                         <label for="city">City</label>
-                        <input style="background-color: #d3d3d3;" required name="city" id="locality" type="text" v-model="shipmentData.serviceAddress.address.City">
+                        <input disabled style="background-color: #d3d3d3;" required name="city" id="locality" type="text" v-model="shipmentData.serviceAddress.address.City">
                     </div>
                 </div>
 
                 <div class="address-container-2">
                     <div class="inputLabel">
                             <label for="state">State</label>
-                            <select style="background-color: #d3d3d3;" required name="state" id="state" class="stateInput" v-model="shipmentData.serviceAddress.address.State">
+                            <select disabled style="background-color: #d3d3d3;" required name="state" id="state" class="stateInput" v-model="shipmentData.serviceAddress.address.State">
                                 <option value="AL">Alabama</option>
                                 <option value="AK">Alaska</option>
                                 <option value="AZ">Arizona</option>
@@ -144,7 +144,7 @@
                     </div>
                     <div class="inputLabel">
                         <label for="zipcode">Zip Code</label>
-                        <input style="background-color: #d3d3d3;" required name="zipcode" id="postcode" type="text" v-model="shipmentData.serviceAddress.address.ZipCode">
+                        <input disabled style="background-color: #d3d3d3;" required name="zipcode" id="postcode" type="text" v-model="shipmentData.serviceAddress.address.ZipCode">
                     </div>
                     <div class="inputLabel">
                         <label for="phone">Phone</label>
@@ -229,6 +229,10 @@
                         <div class="signatureInputLabel">
                             <label for="additionalservices">Signature Required</label>
                             <input id="additionalservices" type="checkbox" value="SignatureRequired" class="checkBox" v-model="shipmentData.additionalServices">
+                        </div>
+                        <div class="signatureInputLabel">
+                            <label for="additionalservices">Cold Storage</label>
+                            <input id="additionalservices" type="checkbox" value="ColdStorage" class="checkBox" v-model="shipmentData.additionalServices">
                         </div>
                         <div class="signatureInputLabel">
                             <label for="additionalservices">Extra Insurance</label>
@@ -565,10 +569,13 @@
         </div>
     </div>
 
-    <div class="address-book-table-container" v-if="addressBookToggle">
+    <div class="address-book-table-container" v-if="addressBookToggle && addressBook[0]">
         <div class="address-book-table-inner">
-            <div class="close-search-address-book"><button @click="addressBookToggle = false">Close</button></div>
-            <h2>Address Book</h2>
+            <div class="close-search-address-book">
+                <h2>Address Book</h2>
+                <button @click="addressBookToggle = false">Close</button>
+            </div>
+            
             <div class="search-address-book">
                 <input type="text" id="searchAddressBook">
                 <button @click="searchAddressBookArray()">Search</button>
@@ -1331,6 +1338,7 @@ export default {
         createShipment(){
             this.createFinalArray();
             this.creatingLabels = true;
+            console.log(this.shipmentDataArray);
             for(let i = 0; i < this.shipmentDataArray.length; i++){
             axios.post('https://api.stage.njls.com/api/Rest/CreateShipmentCognito', this.shipmentDataArray[i], {
                 headers: {
@@ -1439,9 +1447,9 @@ export default {
         GetUserPreferences(){
             axios.post('https://api.stage.njls.com/api/Rest/GetUserPreferenceJSON', {}, {
                 headers: {
-                    'User': this.user.username
+                    'User': this.user.username,
                     // get the user's JWT token given to it by AWS cognito 
-                    //'Authorization': `Bearer ${this.user.signInUserSession.accessToken.jwtToken}`
+                    'Authorization': `Bearer ${this.user.signInUserSession.accessToken.jwtToken}`
                 },
             }).then((response)=>{
                 this.userPreferencesDataReturn = response.data;
@@ -1485,11 +1493,11 @@ export default {
             //this.showCurrent = true;
             //this.showInTransit = false; //https://api.stage.njls.com/
             //this.showDelivered = false; //https://localhost:44368/
-            axios.post('https://localhost:44368/api/Rest/GetAddressesByUserName', {}, {
+            axios.post('https://api.stage.njls.com/api/Rest/GetAddressesByUserName', {}, {
                 headers: {
-                    'User': this.user.username
+                    'User': this.user.username,
                     // get the user's JWT token given to it by AWS cognito 
-                    //'Authorization': `Bearer ${this.user.signInUserSession.accessToken.jwtToken}`
+                    'Authorization': `Bearer ${this.user.signInUserSession.accessToken.jwtToken}`
                 },
             }).then((response)=>{
                 this.addressBook = [];
@@ -1611,6 +1619,7 @@ export default {
                 this.user = authData;
                 this.token = authData.signInUserSession.accessToken.jwtToken;
                 this.njlsUser = authData.attributes;
+                console.log(this.token);
 
                 //Call UserPreferences when sign in success
                 userPreferenceCount++;
@@ -1858,8 +1867,9 @@ export default {
         transition-duration: .5s;
         border: none;
         color: #ffffff;
-        width: 30%;
+        width: 25%;
         margin-left: 1%;
+        padding: 5px 0px 5px 0px;
     }
 
     .address-header{
@@ -2734,6 +2744,7 @@ export default {
         border-radius: 10px;
         cursor: pointer;
         transition-duration: .5s;
+        margin-bottom: 0;
     }
 
     .close-search-address-book button:hover{

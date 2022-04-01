@@ -298,7 +298,7 @@
                 <button class="shipment-details-button" v-if="showData" @click="showData = false">Close</button>
             </div> -->
             
-            <ShipmentDetails @toggleShowData="ShowDataToggle($event)" class="shipment-details-component" v-if="shipmentDetailsProp.shipmentId > 0 && showData" :shipmentDetailsProp="shipmentDetailsProp"/>
+            <ShipmentDetails @toggleShowData="ShowDataToggle($event)" class="shipment-details-component" v-if="shipmentDetailsProp.shipmentId > 0 && showData" :shipmentDetailsProp="shipmentDetailsProp" :username="cognitoUserName" :cognitoJWT="cognitoJWT"/>
         </div>
 
         <div class="delete-confirm" v-if="showDeleteConfirm">
@@ -384,6 +384,8 @@ export default {
                 shipmentId: 0,
                 IncludeImageURL: true
             },
+            cognitoUserName: '',
+            cognitoJWT: '',
             showData: false,
             showCurrent: false,
             showInTransit: true,
@@ -413,16 +415,17 @@ export default {
             this.showData = showData;
         },
         //Data Methods
+        //Gets Shipment Information Received
         GetShipmentsByUserAndType(){
             this.gettingShipmentData = true;
             this.showCurrent = true;
             this.showInTransit = false; //https://api.stage.njls.com/
             this.showDelivered = false; //https://localhost:44368/
-            axios.post('https://localhost:44368/api/Rest/GetShipmentsByUserAndType', {}, {
+            axios.post('https://api.stage.njls.com/api/Rest/GetShipmentsByUserAndTypeCognito', {}, {
                 headers: {
-                    'User': this.user.username
+                    'User': this.user.username,
                     // get the user's JWT token given to it by AWS cognito 
-                    //'Authorization': `Bearer ${this.user.signInUserSession.accessToken.jwtToken}`
+                    'Authorization': `Bearer ${this.user.signInUserSession.accessToken.jwtToken}`
                 },
             }).then((response)=>{
                 this.currentShipments = [];
@@ -440,11 +443,11 @@ export default {
             this.showInTransit = true;
             this.showCurrent = false;
             this.showDelivered = false;
-            axios.post('https://localhost:44368/api/Rest/GetTrackShipmentsByCriteria', {searchBy: 'InTransit'}, {
+            axios.post('https://api.stage.njls.com/api/Rest/GetTrackShipmentsByCriteriaCognito', {searchBy: 'InTransit'}, {
                 headers: {
-                    'User': this.user.username
+                    'User': this.user.username,
                     // get the user's JWT token given to it by AWS cognito 
-                    //'Authorization': `Bearer ${this.user.signInUserSession.accessToken.jwtToken}`
+                    'Authorization': `Bearer ${this.user.signInUserSession.accessToken.jwtToken}`
                 },
             }).then((response)=>{
                 this.inTransitShipments = [];
@@ -461,11 +464,11 @@ export default {
             this.showInTransit = false;
             this.showCurrent = false;
             this.showDelivered = true;
-            axios.post('https://localhost:44368/api/Rest/GetTrackShipmentsByCriteria', this.postDelivered, {
+            axios.post('https://api.stage.njls.com/api/Rest/GetTrackShipmentsByCriteriaCognito', this.postDelivered, {
                 headers: {
-                    'User': this.user.username
+                    'User': this.user.username,
                     // get the user's JWT token given to it by AWS cognito 
-                    //'Authorization': `Bearer ${this.user.signInUserSession.accessToken.jwtToken}`
+                    'Authorization': `Bearer ${this.user.signInUserSession.accessToken.jwtToken}`
                 },
             }).then((response)=>{
                 this.deliveredShipments = [];
@@ -482,7 +485,7 @@ export default {
             this.shipmentLabel.shipmentID.push(this.currentShipments[index].ShipmentId);
             this.scrollToTop();
             console.log(this.shipmentLabel);
-            axios.post('https://localhost:44368/api/Rest/GetShipmentLabelsCognito', this.shipmentLabel,{
+            axios.post('https://api.stage.njls.com/api/Rest/GetShipmentLabelsCognito', this.shipmentLabel,{
                 headers: {
                     'User': this.user.username,
                     // get the user's JWT token given by AWS cognito 
@@ -511,11 +514,11 @@ export default {
             }
         },
         DeleteShipment(){
-            axios.post('https://localhost:44368/api/Rest/DeleteShipmentByShipmentId', this.deleteShipment,{
+            axios.post('https://api.stage.njls.com/api/Rest/DeleteShipmentByShipmentId', this.deleteShipment,{
                 headers: {
                     'User': this.user.username,
                     // get the user's JWT token given by AWS cognito 
-                    //'Authorization': `Bearer ${this.user.signInUserSession.accessToken.jwtToken}`
+                    'Authorization': `Bearer ${this.user.signInUserSession.accessToken.jwtToken}`
                 }
             }).then((response)=>{
                 console.log(response)
@@ -733,6 +736,9 @@ export default {
                 this.user = authData;
                 this.token = authData.signInUserSession.accessToken.jwtToken;
                 this.njlsUser = authData.attributes;
+                //Send Props to shipment details child component
+                this.cognitoUserName = this.user.username;
+                this.cognitoJWT = authData.signInUserSession.accessToken.jwtToken;
                 //Call GetShipmentsByUserAndType when sign in success
                 if(getInTransitShipments <= 1){
                     this.GetTrackShipmentsByCriteriaInTransit();
@@ -1084,7 +1090,7 @@ export default {
         border-radius: 10px;
         cursor: pointer;
         transition-duration: .5s;
-        margin: 10px;
+        margin: 5px;
     }
 
     .filter-container button:hover{
@@ -1101,7 +1107,7 @@ export default {
     }
 
     .filter-input-container{
-        width: 25%;
+        width: 20%;
     }
 
     /* Data Container */
