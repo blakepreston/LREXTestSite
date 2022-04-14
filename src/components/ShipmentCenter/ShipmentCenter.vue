@@ -35,6 +35,7 @@
         <div class="track-shipment-container">
             <div class="track-shipment">
                 <label for="shipmentID">Tracking #: </label>
+                <!-- shipmentDetailsProp.shipmentId = $event.target.value || SetShipmentId($event.target.value)-->
                 <input name="shipmentID" @input="shipmentDetailsProp.shipmentId = $event.target.value" type="text">
                 <button type="submit" @click="showData = !showData, scrollToTop()">Get Shipment</button>
             </div>
@@ -56,12 +57,12 @@
             <div class="filter-container">
                 <div class="main-date-container">
                     <div class="date-container">
-                        <!-- DateTo -->
+                        <!-- DateFrom -->
                         <label for="end">From:</label>
                         <input type="date" name="end" id="dateFrom" v-model="dateFrom">
                     </div>
                     <div class="date-container">
-                        <!-- DateFrom -->
+                        <!-- DateTo -->
                         <label for="start">To:</label>
                         <input type="date" name="start" id="dateTo" v-model="dateTo">
                     </div>
@@ -70,31 +71,36 @@
                     <button @click="GetInTransitDateRange" v-if="showInTransit">Get Shipments</button>
                     <button @click="GetCurrentShipmentDateRange" v-if="showCurrent">Get Shipments</button>
                 </div>
-                <div class="filter-input-container">
-                    <label for="serviceName">Service Name</label>
-                    <select name="serviceName" id="serviceName">
-                        <option value="Next Day Standard">Next Day Standard</option>
-                        <option value="Priority Service">Priority Service</option>
-                        <option value="Saturday Service">Saturday Service</option>
-                        <option value="Pickup Service - NJ only">Pickup Service - NJ only</option>
-                    </select>
-                    <!-- <input id="serviceName" name="serviceName" type="text"> -->
-                    <button @click="filterServiceName">Filter</button>
+                <div class="filter-search-container">
+                    <div class="filter-input-container">
+                        <select name="serviceName" id="serviceName">
+                            <option value="" disabled selected>Filter by Service</option>
+                            <option value="Next Day Standard">Next Day Standard</option>
+                            <option value="Priority Service">Priority Service</option>
+                            <option value="Saturday Service">Saturday Service</option>
+                            <option value="Pickup Service - NJ only">Pickup Service - NJ only</option>
+                        </select>
+                        <!-- <input id="serviceName" name="serviceName" type="text"> -->
+                        <button @click="filterServiceName">Filter</button>
+                    </div>
+                    <div class="filter-input-container">
+                        <input placeholder="Filter by Company Name" id="companyName" name="companyName" type="text">
+                        <button @click="filterCompanyName">Filter</button>
+                    </div>
+                    <div class="filter-input-container">
+                        <input placeholder="Filter by Contact Name" id="contactName" name="contactName" type="text">
+                        <button @click="filterContactName">Filter</button>
+                    </div>
                 </div>
-                <div class="filter-input-container">
-                    <label for="companyName">Company Name</label>
-                    <input id="companyName" name="companyName" type="text">
-                    <button @click="filterCompanyName">Filter</button>
-                </div>
-                <div class="filter-input-container">
-                    <label for="contactName">Contact Name</label>
-                    <input id="contactName" name="contactName" type="text">
-                    <button @click="filterContactName">Filter</button>
-                </div>
+               
             </div>
         </div>
         
         <div class="shipment-table-container" id="filter-table">
+            <table v-if="filterArray.length <= 0 && toggleFilterTable" class="shipment-table">
+                <thead><tr><th></th></tr></thead>
+                <tbody><tr><td>No filter results found.</td></tr></tbody>
+            </table>
             <table v-if="filterArray.length > 0 && showCurrent" class="shipment-table">
                 <thead>
                     <tr>
@@ -110,6 +116,7 @@
                 </thead>
                 <tbody>
                     <tr v-for="(items, index) in filterArray" v-bind:key="items">
+                        <!-- SetShipmentId($event.target.value) || shipmentDetailsProp.shipmentId = $event.target.textContent-->
                         <td class="shipmentID" id="shipmentID" v-if="filterArray[index].p[0].ShipmentStatus[0].ShipmentStatus != 'Saved Shipment'" @click="shipmentDetailsProp.shipmentId = $event.target.textContent, showData = !showData, scrollToTop()">{{filterArray[index].ShipmentId}}</td>
                         <td v-if="filterArray[index].p[0].ShipmentStatus[0].ShipmentStatus == 'Saved Shipment'">{{filterArray[index].ShipmentId}}</td>
                         <td>{{filterArray[index].p[0].ServiceName}}</td>
@@ -380,6 +387,7 @@ export default {
             filterArray: [],
             deleteShipmentArray: [],
             toggleFilters: false,
+            toggleFilterTable: false,
             shipmentDetailsProp: {
                 shipmentId: 0,
                 IncludeImageURL: true
@@ -411,6 +419,9 @@ export default {
         }
     },
     methods:{
+        SetShipmentId(shipmentID){
+            this.shipmentDetailsProp.shipmentId = shipmentID;
+        },
         ShowDataToggle(showData){
             this.showData = showData;
         },
@@ -421,7 +432,7 @@ export default {
             this.showCurrent = true;
             this.showInTransit = false; //https://api.stage.njls.com/
             this.showDelivered = false; //https://localhost:44368/
-            axios.post('https://api.stage.njls.com/api/Rest/GetShipmentsByUserAndTypeCognito', {}, {
+            axios.get('https://api.stage.njls.com/api/Rest/GetShipmentsByUserAndTypeCognito', {
                 headers: {
                     'User': this.user.username,
                     // get the user's JWT token given to it by AWS cognito 
@@ -434,7 +445,7 @@ export default {
                 }
                     //this.CheckLabelPrinted();
 
-                    console.log(response.data);
+                    //console.log(response.data);
                 }
             ).catch(error => alert(error)).finally(()=> this.gettingShipmentData = false)
         },
@@ -454,8 +465,8 @@ export default {
                 for(let i = 0; i < response.data.length; i++){
                     this.inTransitShipments.push(response.data[i]);
                 }
-                    console.log(this.inTransitShipments)
-                    console.log(response.data);
+                    //console.log(this.inTransitShipments)
+                    //console.log(response.data);
                 }
             ).catch(error => alert(error)).finally(()=> this.gettingShipmentData = false)
         },
@@ -475,8 +486,8 @@ export default {
                 for(let i = 0; i < response.data.length; i++){
                     this.deliveredShipments.push(response.data[i]);
                 }
-                    console.log(this.deliveredShipments)
-                    console.log(response.data);
+                    //console.log(this.deliveredShipments)
+                    //console.log(response.data);
                 }
             ).catch(error => alert(error)).finally(()=> this.gettingShipmentData = false)
         },
@@ -484,7 +495,7 @@ export default {
             this.gettingLabelData = true;
             this.shipmentLabel.shipmentID.push(this.currentShipments[index].ShipmentId);
             this.scrollToTop();
-            console.log(this.shipmentLabel);
+            //console.log(this.shipmentLabel);
             axios.post('https://api.stage.njls.com/api/Rest/GetShipmentLabelsCognito', this.shipmentLabel,{
                 headers: {
                     'User': this.user.username,
@@ -531,10 +542,11 @@ export default {
         //Filter Methods
         filterServiceName(){
             this.filterArray = [];
+            this.toggleFilterTable = true;
             var filterValue = document.getElementById("serviceName").value;
             document.getElementById("companyName").value = '';
             document.getElementById("contactName").value = '';
-            console.log(filterValue)
+            //console.log(filterValue)
             if(this.showInTransit == true){
                 for(let i = 0; i < this.inTransitShipments.length; i++){
                 if(this.inTransitShipments[i].p[0].ServiceName == filterValue){
@@ -557,10 +569,11 @@ export default {
         },
         filterCompanyName(){
             this.filterArray = [];
+            this.toggleFilterTable = true;
             var filterValue = document.getElementById("companyName").value;
             document.getElementById("contactName").value = '';
             document.getElementById("serviceName").value ='';
-            console.log(filterValue)
+            //console.log(filterValue)
             if(this.showInTransit == true){
                 for(let i = 0; i < this.inTransitShipments.length; i++){
                     if(this.inTransitShipments[i].DeliveryCompanyName == filterValue){
@@ -583,10 +596,11 @@ export default {
         },
         filterContactName(){
             this.filterArray = [];
+            this.toggleFilterTable = true;
             var filterValue = document.getElementById("contactName").value;
             document.getElementById("serviceName").value = '';
             document.getElementById("companyName").value = '';
-            console.log(filterValue)
+            //console.log(filterValue)
             if(this.showInTransit == true){
                 for(let i = 0; i < this.inTransitShipments.length; i++){
                     if(this.inTransitShipments[i].DeliveryAttention == filterValue){
@@ -612,6 +626,7 @@ export default {
         },
         removeFilters(){
             this.toggleFilters = false;
+            this.toggleFilterTable = false;
             this.filterArray = [];
         },
         //Date Method
@@ -619,8 +634,8 @@ export default {
             this.dateTo = document.getElementById('dateTo').value;
             this.dateFrom = document.getElementById('dateFrom').value;
 
-            console.log(this.dateTo)
-            console.log(this.dateFrom)
+            //console.log(this.dateTo)
+            //console.log(this.dateFrom)
         },
         //Scroll Method
         scrollToTop(){
@@ -644,7 +659,7 @@ export default {
         setDateRange(){
             this.postDelivered.DateTo = document.getElementById('dateTo').value;
             this.postDelivered.DateFrom = document.getElementById('dateFrom').value;
-            console.log(this.postDelivered)
+            //console.log(this.postDelivered)
             this.GetTrackShipmentsByCriteriaDelivered();
         },
         GetInTransitDateRange(){
@@ -653,13 +668,13 @@ export default {
             let dateFrom = document.getElementById('dateFrom').value;
             let convertDateTo = new Date(dateTo);
             let convertDateFrom = new Date(dateFrom);
-            console.log("Date From: " + dateFrom)
-            console.log("Date To: " + dateTo)
+            //console.log("Date From: " + dateFrom)
+            //console.log("Date To: " + dateTo)
             for(let i = 0; i < this.inTransitShipments.length; i++){
                 //Get Shipment Created Date From In Transit
                 let shipmentCreateDate = this.inTransitShipments[i].CreatedDate.substr(0,10);
                 let convertShipmentCreateDate = new Date(shipmentCreateDate);
-                console.log("Shipment Date Create: " + shipmentCreateDate)
+                //console.log("Shipment Date Create: " + shipmentCreateDate)
                     if(convertShipmentCreateDate <= convertDateTo && convertShipmentCreateDate >= convertDateFrom){
                         this.filterArray.push(this.inTransitShipments[i]);
                     }
@@ -671,13 +686,13 @@ export default {
             let dateFrom = document.getElementById('dateFrom').value;
             let convertDateTo = new Date(dateTo);
             let convertDateFrom = new Date(dateFrom);
-            console.log("Date From: " + dateFrom)
-            console.log("Date To: " + dateTo)
+            //console.log("Date From: " + dateFrom)
+            //console.log("Date To: " + dateTo)
             for(let i = 0; i < this.currentShipments.length; i++){
                 //Get Shipment Created Date From In Transit
                 let shipmentCreateDate = this.currentShipments[i].CreatedDate.substr(0,10);
                 let convertShipmentCreateDate = new Date(shipmentCreateDate);
-                console.log("Shipment Date Create: " + shipmentCreateDate)
+                //console.log("Shipment Date Create: " + shipmentCreateDate)
                     if(convertShipmentCreateDate <= convertDateTo && convertShipmentCreateDate >= convertDateFrom){
                         this.filterArray.push(this.currentShipments[i]);
                     }
@@ -722,7 +737,15 @@ export default {
     mounted(){
         //Sign user out when JWT expires
         setTimeout(() => {Auth.signOut({global: true})}, 3600000);
-        
+
+        Auth.currentAuthenticatedUser().then(user => {
+          console.log("Shipment Center Mounted SIGNED IN USER")
+          console.log(user)
+        }).catch(error => {
+          console.log("Authstate error: ")
+          console.log(error)
+          Auth.signOut({global: true})
+        });
     },
     created(){
         //Get Current Shipments
@@ -730,7 +753,7 @@ export default {
         //Cognito-Amplify Login setup
         onAuthUIStateChange((nextAuthState, authData) => {
             this.authState = nextAuthState;
-            console.log(nextAuthState);
+            //console.log(nextAuthState);
             if (nextAuthState === AuthState.SignedIn) {
                 this.signedIn = true;
                 this.user = authData;
@@ -1100,28 +1123,35 @@ export default {
 
     .filter-container{
         text-align: left;
-        width: 80%;
+        width: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
+        flex-wrap: wrap;
     }
+
 
     .filter-input-container{
-        width: 20%;
+        display: flex;
+        align-items: center;
     }
 
-    /* Data Container */
+    .filter-search-container{
+        flex-direction: column;
+        text-align: left;
+    }
+
+    /* Date Container */
     .main-date-container{
         display: flex;
         text-align: left;
         flex-direction: column;
-        width: 20%;
         margin-right: 2%;
     }
 
     .main-date-container input{
-        width: 50%;
         margin: 5px;
+        margin-left: auto;
         padding: 5px;
         font-size: 10px;
         border: 1px solid rgba(0, 0, 0, 0.336);
@@ -1150,10 +1180,6 @@ export default {
         justify-content: row;
         align-items: center;
         padding: 5px;
-    }
-
-    .date-container label{
-        margin-right: auto;
     }
 
 /* Print Label */
@@ -1221,10 +1247,10 @@ export default {
         }
 
         .filter-button-container>*{
-            flex: 0 0 48.5%;
+            flex: 0 0 80%;
         }
 
-        .filter-input-container label, .date-container label{
+        .date-container label{
             font-size: 12px;
             display: flex;
             justify-content: flex-start;
@@ -1233,65 +1259,75 @@ export default {
         .filter-input-container input, .date-container input, .filter-input-container select{
             padding: 0px;
             font-size: 12px;
+            width: 60%;
         }
 
         .filter-button, .main-date-container button, .filter-button-right{
-            padding: 2px;
+            padding: 10px 2px 10px 2px;
             font-size: 12px;
             margin: 2.5px;
         }
 
-        .main-date-container{
-            width: 100%;
-        }
-
-        .filter-container-main{
-            margin-top: 2.5%;
-        }
-
-        .filter-container{
-            flex-direction: column;
-        }
-
-        .filter-input-container{
-            width: 100%;
+        .filter-button-right{
+            margin-top: 5%;
         }
 
         .shipment-table{
-            font-size: 10px;
-            width: 90%;
+            font-size: 8px;
+            width: 80%;
         }
 
         .shipment-table-container{
             width: 100%;
         }
 
-        .shipment-table th,
+        .shipment-table th{
+            padding: 5px;
+        }
+
         .shipment-table td{
             padding: 3px 0px 0px 1px;
         }
 
-        .track-shipment{
+        .track-shipment-container{
             width: 100%;
+        }
+
+        .track-shipment{
+            width: 80%;
             margin: 0;
+            text-align: center;
         }
 
         .track-shipment button{
-            padding: 4px 5px;
+            padding: 10px 5px 10px 5px;
             font-size: 12px;
+            margin: 2.5px;
         }
 
         .track-shipment input{
-            padding: 0px;
+            padding: 10px 5px 10px 5px;
             font-size: 12px;
+            margin: 2.5px;
         }
 
         .track-shipment label{
-            font-weight: 12px;
+            font-size: 12px;
+            margin: 2.5px;
         }
 
         .delete-confirm-inner{
             width: 80%;
+        }
+
+        .main-date-container{
+            width: 40%;
+        }
+    }
+
+    @media only screen and (max-width: 400px){
+        .filter-search-container, .main-date-container{
+            width: 40%;
         }
     }
 </style>

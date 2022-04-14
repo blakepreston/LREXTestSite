@@ -13,7 +13,7 @@
             <ul class="nav_links">
                 <li v-if="!shipmentPages"><a href="#oursolutions" @click="scrollTo('oursolutions')">Our solutions</a></li>
                 <li v-if="!shipmentPages"><a href="#aboutus" @click="scrollTo('aboutus')">About us</a></li>
-                <li v-if="!shipmentPages"><a  @click="()=> CreateAccountTogglePopup('CreateAccountButtonTrigger')">Box Locations</a></li>
+                <li v-if="!shipmentPages"><a  @click="()=> DropBoxTogglePopup('DropBoxButtonTrigger')">Box Locations</a></li>
                 <li v-if="!shipmentPages"><a  @click="()=> GetInTouchTogglePopup('GetInTouchButtonTrigger')">Get in touch</a></li>
                 <li v-if="shipmentPages"><router-link to="/Ship">New Shipment</router-link></li>
                 <li v-if="shipmentPages"><router-link to="/ShipmentCenter">My Shipments</router-link></li>
@@ -42,7 +42,7 @@
                 <li v-if="!shipmentPages"><a href="#oursolutions" @click="scrollTo('oursolutions')">Our solutions</a></li>
                 <li v-if="!shipmentPages"><a href="#aboutus" @click="scrollTo('aboutus')">About us</a></li>
                 <li v-if="!shipmentPages"><a  @click="()=> GetInTouchTogglePopup('GetInTouchButtonTrigger')">Get in touch</a></li>
-                <li v-if="!shipmentPages"><a  @click="()=> CreateAccountTogglePopup('CreateAccountButtonTrigger')">Box Locations</a></li>
+                <li v-if="!shipmentPages"><a  @click="()=> DropBoxTogglePopup('DropBoxButtonTrigger')">Box Locations</a></li>
                 <li v-if="shipmentPages"><router-link to="/Ship">New Shipment</router-link></li>
                 <li v-if="shipmentPages"><router-link to="/ShipmentCenter">My Shipments</router-link></li>
             </ul>
@@ -50,7 +50,6 @@
         </div>
 
         <div class="create_account">
-          <!-- @click="()=> CreateAccountTogglePopup('CreateAccountButtonTrigger')" -->
             <li><a href="https://www.stage.njls.com/clients/RegisterNewCustomer.aspx" target="_blank">Create an account</a></li>
             <a v-if="!createShipmentToggleSignIn"><button class="button_signin" @click="()=> SignInTogglePopup('SignInButtonTrigger')">Sign in</button></a>
         </div>
@@ -73,22 +72,12 @@
       v-if="SignInPopupTriggers.SignInButtonTrigger" 
       :SignInTogglePopup="()=> SignInTogglePopup('SignInButtonTrigger')"
       class="signin-popup">
-        <!-- <h2>Sign In</h2>
-        <input type="text" placeholder="UserName">
-        <input type="text" placeholder="Password"> -->
     </SignInPopup>
 
-    <CreateAccountPopup 
-      v-if="CreateAccountPopupTriggers.CreateAccountButtonTrigger" 
-      :CreateAccountTogglePopup="()=> CreateAccountTogglePopup('CreateAccountButtonTrigger')"
-      class="signin-popup">
-        <!-- <h2>Create an account</h2> -->
-        <!-- <input type="text" placeholder="Enter userName">
-        <input type="text" placeholder="Enter password">
-        <input type="text" placeholder="Re-enter password"> -->
-        
-        
-    </CreateAccountPopup>
+    <DropBoxLocation 
+      v-if="DropBoxPopupTriggers.DropBoxButtonTrigger" 
+      :DropBoxTogglePopup="()=> DropBoxTogglePopup('DropBoxButtonTrigger')"
+    ></DropBoxLocation>
 
     <GetInTouchPopup 
       v-if="GetInTouchPopupTriggers.GetInTouchButtonTrigger" 
@@ -153,8 +142,8 @@ import HomePage from './components/HomePage.vue'
 import OurSolutions from './components/OurSolutions.vue'
 import AboutUs from './components/AboutUs.vue'
 import SignInPopup from './components/Popups/SignInPopup.vue'
-import CreateAccountPopup from './components/Popups/CreateAccountPopup.vue'
 import GetInTouchPopup from './components/Popups/GetInTouchPopup.vue'
+import DropBoxLocation from './components/Popups/DropBoxLocation.vue'
 import {ref} from 'vue';
 import {AuthState, onAuthUIStateChange} from "@aws-amplify/ui-components";
 import {Auth} from 'aws-amplify';
@@ -185,8 +174,8 @@ export default {
     OurSolutions,
     AboutUs,
     SignInPopup,
-    CreateAccountPopup,
-    GetInTouchPopup
+    GetInTouchPopup,
+    DropBoxLocation
   },
   methods: {
     cookieBanner(){
@@ -232,13 +221,13 @@ export default {
       SignInPopupTriggers.value[trigger] = !SignInPopupTriggers.value[trigger]
     }
 
-    //Create Account Popup
-    const CreateAccountPopupTriggers = ref({
-      CreateAccountButtonTrigger: false
+    //DropBox Popup
+    const DropBoxPopupTriggers = ref({
+      DropBoxButtonTrigger: false
     });
 
-    const CreateAccountTogglePopup = (trigger) =>{
-      CreateAccountPopupTriggers.value[trigger] = !CreateAccountPopupTriggers.value[trigger]
+    const DropBoxTogglePopup = (trigger) =>{
+      DropBoxPopupTriggers.value[trigger] = !DropBoxPopupTriggers.value[trigger]
     }
 
     //Get in touch Popup
@@ -253,8 +242,8 @@ export default {
     return{
       SignInTogglePopup,
       SignInPopupTriggers,
-      CreateAccountTogglePopup,
-      CreateAccountPopupTriggers,
+      DropBoxTogglePopup,
+      DropBoxPopupTriggers,
       GetInTouchTogglePopup,
       GetInTouchPopupTriggers
     }
@@ -268,6 +257,17 @@ export default {
     }
   },
   created(){
+        console.log("Current State: ")
+        //console.log(Auth.currentAuthenticatedUser());
+        
+        Auth.currentAuthenticatedUser().then(user => {
+          console.log("SIGNED IN USER")
+          console.log(user)
+        }).catch(error => {
+          console.log("Authstate error: ")
+          console.log(error)
+          Auth.signOut({global: true})
+        });
         //Toggle Cookie Banner
         setTimeout(() => {
           const cookieContainer = document.querySelector(".cookie-container-main");

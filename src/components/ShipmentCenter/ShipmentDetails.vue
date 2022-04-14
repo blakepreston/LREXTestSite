@@ -12,7 +12,7 @@
     </div>
     <div id="shipmentTrackingContents" class="shipment_data" v-for="ship in shipments" v-bind:key="ship"> 
                 <img class="logo" src="../../assets/LREXHeaderLogo.jpg" alt="LREX" style="width: 80px;">
-                <h3>Tracking #: {{shipments[0].shipmentId}}</h3>
+                <h3 v-if="shipments[0].shipmentId">Tracking #: {{shipments[0].shipmentId}}</h3>
                 <div v-if="shipments[0].priorityService">
                 <p>Priority Service</p>
                 </div>
@@ -42,78 +42,40 @@
                 <p>{{shipments[0].deliveryCity}}, {{shipments[0].deliveryState}}, {{shipments[0].deliveryZipCode}} </p>
                 <h3>Package History</h3>
 
-                <table class="shipment-table">
+                <table v-if="shipmentHistoryData" class="shipment-table">
                 <tr>
                     <th>Description</th>
                     <th>Date</th>
                     <th>Notes</th>
+                    <th>Delivery Image</th>
                 </tr>
-                <tr v-if="shipmentHistoryData[0]">
-                    <td v-if="shipmentHistoryData[0].description">{{shipmentHistoryData[0].description}}</td>
-                    <td v-if="shipmentHistoryData[0].processedDate">{{shipmentHistoryData[0].processedDate}}</td>
-                    <td v-if="shipmentHistoryData[0].notes">{{shipmentHistoryData[0].notes}}</td>
-                </tr>
-                <tr v-if="shipmentHistoryData[1]">
-                    <td v-if="shipmentHistoryData[1].description">{{shipmentHistoryData[1].description}}</td>
-                    <td v-if="shipmentHistoryData[1].processedDate">{{shipmentHistoryData[1].processedDate}}</td>
-                    <td v-if="shipmentHistoryData[1].notes">{{shipmentHistoryData[1].notes}}</td>
-                </tr>
-                <tr v-if="shipmentHistoryData[2]">
-                    <td v-if="shipmentHistoryData[2].description">{{shipmentHistoryData[2].description}}</td>
-                    <td v-if="shipmentHistoryData[2].processedDate">{{shipmentHistoryData[2].processedDate}}</td>
-                    <td v-if="shipmentHistoryData[2].notes">{{shipmentHistoryData[2].notes}}</td>
-                </tr>
-                <tr v-if="shipmentHistoryData[3]">
-                    <td v-if="shipmentHistoryData[3].description">{{shipmentHistoryData[3].description}}</td>
-                    <td v-if="shipmentHistoryData[3].processedDate">{{shipmentHistoryData[3].processedDate}}</td>
-                    <td v-if="shipmentHistoryData[3].notes">{{shipmentHistoryData[3].notes}}</td>
+                <tr v-for="(items, index) in shipmentHistoryData" v-bind:key="items">
+                    <td>{{shipmentHistoryData[index].description}}</td>
+                    <td>{{shipmentHistoryData[index].processedDate}}</td>
+                    <td>{{shipmentHistoryData[index].notes}}</td>
+                    <td v-if="!shipmentHistoryData[index].imageURL"></td>
+                    <td v-if="shipmentHistoryData[index].imageURL">
+                      <div>
+                        <a v-if="shipmentHistoryData[index].signatureId > 0" :href="shipmentHistoryData[index].imageURL" class="delivery-image-link" target="_blank">Go</a>
+                      </div>
+                    </td>
                 </tr>
                 </table>
 
                 <button class="print-page" @click.prevent="PrintDiv()">Print this page</button>
-                <button class="show-url" @click.prevent="ShowURL()" v-if="shipmentHistoryData[0].signatureId">Delivery Images</button>
-                <div class="images-tracking" id="images-tracking">
                 
-                <div class="proofDelivery">
-                    
-                    <div class="proofDeliveryLink" v-if="shipmentHistoryData[0]">
-                    <p>Proof of Delivery: </p> 
-                    <div class="linkStyling">
-                        <a href="" id="proof-of-delivery" target="_blank">
-                        GO
-                        <a class="notAvailable" v-if="!shipmentHistoryData[0].signatureId">not available</a>
-                        </a>
-                    </div>
-                        
-                    
-                    </div>
-                
-                </div>
-                
-                
-                <div class="locationDelivery">
-                    
-                    <div class="locationDeliveryLink" v-if="shipmentHistoryData[1]">
-                        <p>Delivery Location: </p> 
-                        <div class="linkStyling">
-                            <a href="" id="location-of-delivery" target="_blank">
-                            GO
-                            <a class="notAvailable" v-if="!shipmentHistoryData[1].signatureId">not available</a>
-                            </a>
-                        </div>
-                    </div>
-                
-                </div>
-                
-            </div>
-            
-            <div v-if="shipments == null" style="text-align: center;" class="shipmentError">
-                <p>{{error[0].errMsg}}</p>
-                <br>
-                <p>Invalid Credentials or Incorrect Shipment ID</p>
-            </div>
-        </div>
-  </div> 
+                <div class="shipmentError">
+                  <div v-if="!shipments">
+                      <!-- <p>{{error[0].errMsg}}</p> -->
+                      <p>Unable to get Shipment Data.</p>
+                  </div>
+                  <div v-if="!shipmentHistoryData">
+                      <!-- <p>{{error[0].errMsg}}</p> -->
+                      <p>Unable to get Shipment History Data.</p>
+                  </div>
+              </div>
+        </div>  
+    </div> 
 </div>
     
 
@@ -128,8 +90,8 @@ export default {
 
     data(){
         return{
-            shipmentHistoryData: {data: []},
-            shipments: {data: []},
+            shipmentHistoryData: {},
+            shipments: {},
             error: {data: []},
             coldStorageData: {},
             showData: false,
@@ -156,20 +118,6 @@ export default {
         a.document.close();
         a.print();
     },
-      ShowURL(){
-        var trackingelement = document.getElementById("images-tracking");
-        var proofDelivery = document.getElementById("proof-of-delivery");
-        var locationDelivery = document.getElementById("location-of-delivery");
-
-        proofDelivery.setAttribute('href', this.shipmentHistoryData[0].imageURL);
-        locationDelivery.setAttribute('href', this.shipmentHistoryData[1].imageURL);
-
-        if(trackingelement.style.display === "none"){
-          trackingelement.style.display = "flex";
-        }else{
-          trackingelement.style.display = "none";
-        }
-      },
         GetShipmentHistoryByID() {
             axios.post('https://api.stage.njls.com/api/rest/GetShipmentHistoryByShipmentIdCognito', this.shipmentDetailsProp, 
               {headers:{
@@ -179,12 +127,12 @@ export default {
               }})
             .then((response) => {
               this.shipmentHistoryData = response.data.shipmentHistory;
-              console.log("History Data");
+              console.log("Shipment History Data:");
               console.log(this.shipmentHistoryData);
               this.coldStorageData = response.data.coldstorageTable[0];
               this.error = response.data.error
               })
-            .catch(error => console.log(error))
+            .catch(error => alert(error))
         },
       GetShipmentByID() {
             axios.post('https://api.stage.njls.com/api/rest/GetShipmentByShipmentIdCognito', this.shipmentDetailsProp, 
@@ -195,10 +143,11 @@ export default {
               }})
             .then((response) => {
               this.shipments = response.data.shipment
+              console.log('Shipment Data: ')
               console.log(this.shipments)
               this.error = response.data.error
               })
-            .catch((error) => {console.log(error)})
+            .catch((error) => {alert(error)})
             .finally(()=> this.gettingShipmentDetails = false)
         },
         GetAllShipmentData(){
@@ -214,21 +163,21 @@ export default {
 </script>
 
 <style scoped>
-.main-container{
-  width: 100%;
-  display: flex;
+    .main-container{
+      width: 100%;
+      display: flex;
       justify-content: center;
       align-items: center;
       flex-direction: column;
-}
+    }
 
-.container{
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    text-align: left;
-    flex-direction: column;
-}
+    .container{
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      text-align: left;
+      flex-direction: column;
+    }
 
 /* Loading Shipment Data */
     .loader-container{
@@ -267,96 +216,49 @@ export default {
     background-color: #ffffff;
     border-radius: 10px;
     box-shadow: 0 0 100px rgba(0, 0, 0, 0.9);
-  } 
+    } 
 
-.shipment_data h3{
-  padding: 5px;
-  background-color: #33f18a;
-  border-bottom: 1px solid #33f18a;
-  width: 100%;
-}
-
-.images-tracking{
-  /* display: flex; */
-  display: none;
-  flex-direction: column;
-  margin-bottom: 20px;
-}
+    .shipment_data h3{
+      padding: 5px;
+      background-color: #33f18a;
+      border-bottom: 1px solid #33f18a;
+      width: 100%;
+    }
 
 
-.show-url{
-  padding: 15px 20px;
-  background-color: #33f18a;
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  margin-bottom: 10px;
-}
+    .shipmentError{
+      padding: 15px;
+    }
 
-.print-page{
-  padding: 15px 20px;
-  background-color: #33f18a;
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  margin-bottom: 10px;
-  margin-right: 10px;
-}
+    .print-page{
+      padding: 15px 20px;
+      background-color: #33f18a;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      margin-bottom: 10px;
+      margin-right: 10px;
+    }
 
-.locationDelivery, .proofDelivery{
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
+    .shipment-table{
+      width: 100%;
+      margin-bottom: 15px;
+    }
 
-.locationDeliveryLink, .proofDeliveryLink{
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
+    .shipment-table th{
+      background-color: #33f18a;
+    }
 
-.linkStyling a{
-  text-decoration: none;
-}
+    .shipment-table td, th{
+      padding: 5px;
+      border: 1px solid #ddd;
+    }
 
-.linkStyling{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  background-color: #308ef8;
-  color: black;
-  border-radius: 50%;
-
-  width: 40px;
-  height: 40px;
-
-  margin-left: 10px;
-}
-
-.shipment-table{
-  width: 100%;
-  margin-bottom: 15px;
-}
-
-.shipment-table th{
-  background-color: #33f18a;
-}
-
-.shipment-table td, th{
-  padding: 5px;
-  border: 1px solid #ddd;
-}
-
-.logo{
-  width: 80px;
-  margin-bottom: -10px;
-  margin-left: 5px;
-}
-
-.shipmentError{
-    margin-top: 20%;
-}
+    .logo{
+      width: 80px;
+      margin-bottom: -10px;
+      margin-left: 5px;
+    }
 
     .shipment-details-button-container{
         width: 80%;
@@ -383,15 +285,29 @@ export default {
         transition-duration: .5s;
     }
 
-@media only screen and (max-width: 1000px){
-    .shipment_data{
-        width: 85%;
+    .delivery-image-link{
+      text-decoration: none;
+      color: #ffffff;
+      background-color: #308ef8;
+      border-radius: 50%;
+      padding: 2.5px;
+      transition-duration: .5s ease;
     }
-}
-/* 
-@media only screen and (max-width: 650px){
-    .shipment_data{
-        margin-top: 35%;
+
+    .delivery-image-link:hover{
+      background-color: #2877d1;
+      transition-duration: .5s ease;
     }
-}*/
+
+    @media only screen and (max-width: 600px){
+        .container{
+          font-size: 10px;
+        }
+    }
+
+    @media only screen and (max-width: 1000px){
+        .shipment_data{
+            width: 85%;
+        }
+    }
 </style>

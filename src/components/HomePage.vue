@@ -1,27 +1,11 @@
 <template>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>LREX</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Work+Sans&display=swap" rel="stylesheet">
-  
-</head>
-<body>
-  <div class="track_package">
+    <div class="track_package">
         <img src="../assets/Delivery-Truck.jpg" alt="Truck">
         <div class="form_shiptrack">
             <h1>Your shipping partner.</h1>
             <p>Track a package</p>
-            <form id="shipmentForm" class="shipmentForm" @submit.prevent="ShipmentTrackingTogglePopup('ShipmentTrackingButtonTrigger');  GetShipmentByID(); GetShipmentHistoryByID();">
+            <form id="shipmentForm" class="shipmentForm" @submit.prevent="ShipmentTrackingTogglePopup('ShipmentTrackingButtonTrigger');">
                     <input type="text" name="shipment" v-model="posts.shipmentId">
-                    <!-- <input  placeholder="Shipment ID" type="text" name="shipment" v-model="posts.shipmentId" class="shipmentInput">
-                    <input  placeholder="Username" type="text" class="userInput" v-model="username">
-                    <input placeholder="API Key" type="text" class="apiInput" v-model="userapikey">
-                    <button type="submit">Get Data</button> -->
             </form>
         </div>
     </div>
@@ -52,75 +36,6 @@
     <div class="arrow_right" @click.prevent="next"></div>
   </div>
     
-    
-
-    <div class="container_offerings">
-      
-      <table>
-        <tr>
-          <td>
-            <div>
-              <img class="trucklogo" src="../assets/deliveryTruckLogo.png" alt="">
-              <h1>Next Day</h1>
-            </div>
-          </td>
-          <td><p>Guaranteed next business day delivery for small packages and 
-          documents. Ship via web or integration with your system, pickup 
-          from your location or drop off in one of our many drop box locations 
-          across the state. Tracking, alerts, and photo delivery available in our primary service area.</p></td>
-        </tr>
-
-        <tr>
-          <td>
-            <div>
-              <img class="trucklogo" src="../assets/deliveryTruckLogo.png" alt="">
-              <h1>Shipping Options</h1>
-            </div>
-          </td>
-          <td><p> <strong>Cold Store</strong>  – For packages that can’t stay overnight without it. <br>
-            <strong>Signature Required</strong>  – To be sure your package is delivered to a human. <br>
-            <strong>Priority Delivery</strong>  – Guaranteed delivery before 1pm. <br> 
-            <strong>Court Priority</strong>  – Automatically added for deliveries to courthouses. Our legal customers have relied on us for over 90 years to deliver their most important documents and packages.</p></td>
-        </tr>
-
-        <tr>
-          <td>
-            <div>
-              <img class="trucklogo" src="../assets/fastdeliverytruck.png" alt="">
-              <h1>Same Day</h1>
-            </div>
-          </td>
-          <td><p>A premium courier service for your most important packages. 
-          Your package is our only package, we come and pickup when you 
-          tell us and deliver as quickly as we can get there. 
-          Available in our primary service area.</p></td>
-        </tr>
-        
-        <tr>
-          <td>
-            <div>
-              <img class="trucklogo" src="../assets/clocktruck.png" alt="">
-              <h1>Priority Today</h1>
-            </div>
-          </td>
-          <td><p>Volume Deliveries, pickup from your location and deliver in your local region all the features of 
-          Next Day but delivered Today. Available in limited areas, contact your account manager or our 
-          sales team to find out more.</p></td>
-        </tr>
-        
-        <tr>
-          <td>
-            <div>
-              <img class="trucklogo" src="../assets/zipshiptruck.png" alt="">
-              <h1>ZipShip</h1>
-            </div>
-          </td>
-          <td><p>No Printer, No Paper, No Problem. Create a shipping label and email us the label and 
-            your documents and leave the rest to us. We print, pack and deliver Next Day.</p></td>
-        </tr>
-      </table>
-    </div>
-    
     <div class="headline_container">
       <div class="headline_article">
         <p>We customize a shipping solution for you, the right process, the right technology, and the right people.</p>
@@ -130,7 +45,7 @@
         </p>
       </div>
       <div class="headline_bubble">
-        <div>Going the extra mile for your last mile. Technology makes a difference.</div>
+        <h2>Going the extra mile for your last mile. Technology makes a difference.</h2>
       </div>
     </div>
 
@@ -168,136 +83,18 @@
           
       </DriveWithUsPopup>
 
-      <div v-if="loading" class="loading-container">
-        <div class="loading-dropdown">
-          <p>Getting Shipment Data</p>
-          <div class="loader"></div>
-        </div>
-      </div>
-
       <ShipmentTrackingPopup 
         v-if="ShipmentTrackingPopupTriggers.ShipmentTrackingButtonTrigger" 
         :ShipmentTrackingTogglePopup="()=> ShipmentTrackingTogglePopup('ShipmentTrackingButtonTrigger')"
+        :shipmentIdProp = "posts.shipmentId"
         class="signin-popup"
         id="shipmentTrackingContents">
-          <!-- <div v-html="trackingData" class="trackingData"></div> -->
-          <div class="shipment_data" v-for="ship in shipments" v-bind:key="ship"> 
-            <img class="logo" src="../assets/LREXHeaderLogo.jpg" alt="LREX" style="width: 80px;">
-            <h3>Tracking #: {{shipments[0].shipmentId}}</h3>
-            <div v-if="shipments[0].priorityService">
-              <p>Priority Service</p>
-            </div>
-            <div v-if="!shipments[0].priorityService">
-              <p>Next Day Standard</p>
-            </div>
-            <div v-if="shipments[0].sameDay !== 0">
-              <p>Same Day</p>
-            </div>
-            <div v-if="shipments[0].signatureRequired">
-              <p>Signature Required</p>
-            </div>
-            <h3>Ship By</h3>
-            <!-- <p>{{shipments[0].pickupAttention}}</p> -->
-            <p>{{shipments[0].pickupAddress1}}</p>
-            <p>{{shipments[0].pickupAddress2}}</p>
-            <p>{{shipments[0].pickupCity}}, {{shipments[0].pickupState}}, {{shipments[0].pickupZipCode}} </p>
-            <h3>Ship To</h3>
-            <p>{{shipments[0].deliveryCompanyName}}</p>
-            <p>{{shipments[0].deliveryAddress1}}</p>
-            <p>{{shipments[0].deliveryCity}}, {{shipments[0].deliveryState}}, {{shipments[0].deliveryZipCode}} </p>
-            <h3>Package History</h3>
-
-            <table class="shipment-table">
-              <tr>
-                <th>Description</th>
-                <th>Date</th>
-                <th>Notes</th>
-              </tr>
-              <tr v-if="shipmentHistoryData[0]">
-                <td v-if="shipmentHistoryData[0].description">{{shipmentHistoryData[0].description}}</td>
-                <td v-if="shipmentHistoryData[0].processedDate">{{shipmentHistoryData[0].processedDate}}</td>
-                <td v-if="shipmentHistoryData[0].notes">{{shipmentHistoryData[0].notes}}</td>
-              </tr>
-              <tr v-if="shipmentHistoryData[1]">
-                <td v-if="shipmentHistoryData[1].description">{{shipmentHistoryData[1].description}}</td>
-                <td v-if="shipmentHistoryData[1].processedDate">{{shipmentHistoryData[1].processedDate}}</td>
-                <td v-if="shipmentHistoryData[1].notes">{{shipmentHistoryData[1].notes}}</td>
-              </tr>
-              <tr v-if="shipmentHistoryData[2]">
-                <td v-if="shipmentHistoryData[2].description">{{shipmentHistoryData[2].description}}</td>
-                <td v-if="shipmentHistoryData[2].processedDate">{{shipmentHistoryData[2].processedDate}}</td>
-                <td v-if="shipmentHistoryData[2].notes">{{shipmentHistoryData[2].notes}}</td>
-              </tr>
-              <tr v-if="shipmentHistoryData[3]">
-                <td v-if="shipmentHistoryData[3].description">{{shipmentHistoryData[3].description}}</td>
-                <td v-if="shipmentHistoryData[3].processedDate">{{shipmentHistoryData[3].processedDate}}</td>
-                <td v-if="shipmentHistoryData[3].notes">{{shipmentHistoryData[3].notes}}</td>
-              </tr>
-            </table>
-
-            <button class="print-page" @click.prevent="PrintDiv()">Print this page</button>
-            <button class="show-url" @click.prevent="ShowURL()" v-if="shipmentHistoryData[0].signatureId">Delivery Images</button>
-            <div class="images-tracking" id="images-tracking">
-              
-              <!-- <div class="proofDelivery">
-                <div v-if="shipmentHistoryData[0].signatureId == 0"  class="notAvailable">
-                  <p>Image not available</p>
-                </div>
-
-                <p>Proof of Delivery: <a href="" id="proof-of-delivery" target="_blank">Link</a></p> 
-              </div> -->
-              
-              <div class="proofDelivery">
-                
-                <div class="proofDeliveryLink" v-if="shipmentHistoryData[0]">
-                  <p>Proof of Delivery: </p> 
-                  <div class="linkStyling">
-                    <a href="" id="proof-of-delivery" target="_blank">
-                      GO
-                      <a class="notAvailable" v-if="shipmentHistoryData[0].signatureId == 0">not available</a>
-                    </a>
-                  </div>
-                    
-                  
-                </div>
-              
-              </div>
-              
-              
-              <div class="locationDelivery">
-                
-                <div class="locationDeliveryLink" v-if="shipmentHistoryData[1]">
-                  <p>Delivery Location: </p> 
-                  <div class="linkStyling">
-                    <a href="" id="location-of-delivery" target="_blank">
-                      GO
-                      <a class="notAvailable" v-if="shipmentHistoryData[1].signatureId == 0">not available</a>
-                    </a>
-                  </div>
-                    
-                  
-                </div>
-              
-              </div>
-              
-            </div>
-          </div>
-
-            <div v-if="shipments == null" style="text-align: center;">
-              <p>{{error[0].errMsg}}</p>
-              <br>
-              <p>Invalid Credentials or Incorrect Shipment ID</p>
-            </div>
-          
       </ShipmentTrackingPopup>
     </div>
-</body>
-</html>
 
 </template>
 
 <script>
-  import axios from 'axios'
   import Carousel from './Carousel/Carousel.vue'
   import CarouselSlide from './Carousel/CarouselSlide.vue'
   import ImageCarousel from './ImageCarousel/ImageCarousel.vue'
@@ -331,86 +128,13 @@
           visibleSlide: 0,
           visibleSlideImg: 1,
           direction: 'left',
-          trackingData: {},
-          track:{
-            trackingNumber: null
-          },
           posts:{
             shipmentId: null,
             IncludeImageURL: true
-          },
-          shipments: {data: []},
-          shipmentHistoryData: {data: []},
-          error: {data: []},
-          username: null,
-          userapikey: null,
-          loading: false
+          }
         }
     },
     methods:{
-      PrintDiv(){
-      var divContents = document.getElementById("shipmentTrackingContents").innerHTML;
-      var a = window.open('', '', 'height=1000, width=1000');
-      a.document.write('<html>');
-      a.document.write('<head><style> body{font-family: sans-serif; font-size: 16px;} h3{border-bottom:2px solid black} button,.proofDelivery,.locationDelivery{display: none;} th,td{border: 1px solid black;} th{background-color: #33f18a} table{width: 70%;}</style></head>');
-      a.document.write('<body>');
-      a.document.write(divContents);
-      a.document.write('</body></html>');
-      a.document.close();
-      a.print();
-    },
-      ShowURL(){
-        var trackingelement = document.getElementById("images-tracking");
-        var proofDelivery = document.getElementById("proof-of-delivery");
-        var locationDelivery = document.getElementById("location-of-delivery");
-
-        proofDelivery.setAttribute('href', this.shipmentHistoryData[0].imageURL);
-        locationDelivery.setAttribute('href', this.shipmentHistoryData[1].imageURL);
-
-        if(trackingelement.style.display === "none"){
-          trackingelement.style.display = "flex";
-        }else{
-          trackingelement.style.display = "none";
-        }
-      },
-      GetShipmentHistoryByID() {
-          const headers ={
-            // 'User': '16132A',              
-            // 'ApiKey': '123456'
-            //'User': 'kanwarv',              
-            //'ApiKey': '64bf43886d11456f'
-            // 'User': this.username,
-            // 'ApiKey': this.userapikey
-            }
-
-            //axios.post('https://localhost:44368/api/Rest/GetShipmentHistoryByShipmentId', this.posts, {headers: headers})
-            axios.post('https://api.stage.njls.com/api/rest/GetShipmentHistoryByShipmentIdNoAuth', this.posts, {headers: headers})
-            //.then(response => console.log(response.data))
-            .then((response) => {
-              this.shipmentHistoryData = response.data.shipmentHistory
-              this.error = response.data.error
-              })
-            .catch(error => console.log(error))
-        },
-      GetShipmentByID() {
-          this.loading = true;
-          const headers ={
-            // 'User': '16132A',              
-            // 'ApiKey': '123456'
-            //'User': 'kanwarv',              
-            //'ApiKey': '64bf43886d11456f'
-            }
-
-            //axios.post('https://localhost:44368/api/Rest/GetShipmentByShipmentId', this.posts, {headers: headers})
-            axios.post('https://api.stage.njls.com/api/rest/GetShipmentByShipmentIdNoAuth', this.posts, {headers: headers})
-            //.then(response => console.log(response.data))
-            .then((response) => {
-              this.shipments = response.data.shipment
-              this.error = response.data.error
-              })
-            .catch((error) => {console.log(error)})
-            .finally(()=> this.loading = false)
-        },
       next(){
       if(this.visibleSlide >= this.textsLength - 1){
           this.visibleSlide = 0;
@@ -491,58 +215,7 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-html, body{
-  margin: 0;
-  width: 100%;
-}
-
 /****Popup */
-.loading-dropdown{
-  width: 20vw;
-  padding: 10px;
-  border: 2px solid #33f18a;
-  background-color: white;
-  border-radius: 5px;
-  color: black;
-  text-align: center;
-}
-
-.loading-container{
-  width: 100vw;
-  height: 75px;
-
-  position: absolute;
-  top: 30px;
-  z-index: 99;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  animation: loadingdrop .5s ease forwards;
-}
-
-@keyframes loadingdrop {
-  0%{opacity: 0;}
-  70%{transform: translateY(10px);}
-  100%{transform: translateY(30px); opacity: 1;}
-}
-
-.loader{
-    margin: auto;
-    margin-bottom: 15px;
-    border: 20px solid #EAF0F6;
-    border-radius: 50%;
-    border-top: 20px solid #33f18a;
-    width: 50px;
-    height: 50px;
-    animation: spinner 2s linear infinite;
-}
-
-@keyframes spinner {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
 
 .popup-container{
   display: flex;
@@ -565,96 +238,6 @@ html, body{
   background-color: rgb(235, 235, 235);
   width: 40%;
 }
-
-.shipment_data{
-  width: 100%;
-}
-
-.shipment_data h3{
-  padding: 5px;
-  border-bottom: 1px solid #33f18a;
-  background-color: #33f18a;
-  width: 100%;
-}
-
-.images-tracking{
-  /* display: flex; */
-  display: none;
-  flex-direction: column;
-  margin-bottom: 20px;
-}
-
-
-.show-url{
-  padding: 15px 20px;
-  background-color: #33f18a;
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  margin-bottom: 10px;
-}
-
-.print-page{
-  padding: 15px 20px;
-  background-color: #33f18a;
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  margin-bottom: 10px;
-  margin-right: 10px;
-}
-
-.locationDelivery, .proofDelivery{
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.locationDeliveryLink, .proofDeliveryLink{
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.linkStyling a{
-  text-decoration: none;
-}
-
-.linkStyling{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  background-color: #308ef8;
-  color: black;
-  border-radius: 50%;
-
-  width: 40px;
-  height: 40px;
-
-  margin-left: 10px;
-}
-
-.shipment-table{
-  width: 65%;
-  margin-bottom: 15px;
-}
-
-.shipment-table th{
-  background-color: #33f18a;
-}
-
-.shipment-table td, th{
-  padding: 5px;
-  border: 1px solid #ddd;
-}
-
-.logo{
-  width: 80px;
-  margin-top: 3%;
-  margin-left: 5px;
-}
-
 
 /**************************************/
 /* || Shipment Tracking Syles */
@@ -729,40 +312,6 @@ html, body{
         z-index:5;
         color:white;
     }
-
-    /**Testing Input */
-    /* .userInput{
-      border: #ddd 1px solid;
-      border-radius: 0px 0px 0px 0px;
-      padding: 1.5vw;
-    }
-
-    .apiInput{
-      border: #ddd 1px solid;
-      border-radius: 0px 50px 50px 0px;
-      padding: 1.5vw;
-    }
-
-    .shipmentInput{
-      border: #ddd 1px solid;
-      border-radius: 50px 0px 0px 50px;
-      padding: 1.5vw;
-    }
-
-    .shipmentForm{
-        display: flex;
-        transition: all 0.3s ease 0s;
-        margin-top: 2px;
-    }
-
-    .shipmentForm button{
-      margin-left: 10px;
-      justify-content: center;
-      align-items: center;
-      font-weight: bold;
-      font-family: 'Work Sans', sans-serif;
-    } */
-
     
 /**************************************/
 /* || LREX Paragraph Syles */
@@ -900,36 +449,6 @@ html, body{
   cursor: pointer;
 }
 
-/**************************/
-/* || Shipment Offerings Syles */
-.container_offerings{
-  margin-top: 3vw;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.container_offerings table{
-  width: 70vw;
-}
-
-.container_offerings h1{
-  margin-top: 0;
-  font-size: 3.2vw;
-}
-
-.container_offerings p{
-  font-size: 1.2vw;
-  text-align: left;
-  margin-left: 2vw;
-  width: 40vw;
-}
-
-.trucklogo{
-  width: 8vw;
-  margin: 0;
-}
-
 
 /**************************/
 /* || Custom Solutions Syles */
@@ -952,6 +471,8 @@ html, body{
 .headline_bubble{
   margin-left: 5%;
   width: 40vw;
+  background-color: #308ef8;
+  border-radius: 200px;
 }
 
 .headline_article p{
@@ -962,13 +483,12 @@ html, body{
   text-align: left;
 }
 
-.headline_bubble div{
-  background-color: #308ef8;
+.headline_bubble h2{
   font-family: 'Work Sans', sans-serif;
-  font-size: 3vw;
-  padding-top: 10%;
-  padding-bottom: 10%;
-  border-radius: 200px;
+  /* font-size: 3vw; */
+  font-size: 2.5vw;
+  padding: 20px;
+  font-weight: 1;
 }
 
 /**************************/
@@ -1038,14 +558,6 @@ html, body{
   border: rgb(151, 151, 151) 1px solid;
   background-color: rgb(235, 235, 235);
   width: 70%;
-}
-
-/* .images-tracking{
-  font-size: 4vw;
-} */
-
-.shipment_data h3{
-  margin: 0;
 }
 
 /**************************/
@@ -1214,38 +726,23 @@ html, body{
   margin-top: 40px;
   margin-bottom: 40px;
 }
-/**************************/
-/* || Shipment Offerings Syles */
-
-.container_offerings table{
-  width: 90vw;
-}
-
-.container_offerings h1{
-  font-size: 4.5vw;
-}
-
-.container_offerings p{
-  font-size: 3vw;
-  width: 60vw;
-}
-
 
 /**************************/
 /* || Custom Solutions Syles */
   .headline_container{
-    flex-direction: column-reverse;
+    flex-direction: column;
   }
 
   .headline_article{
     width: 80vw;
     margin-right: 0;
-    margin-top: 5vh;
+    margin-top: 1vh;
     margin-left: 5vw;
   }
 
   .headline_bubble{
     margin-left: 0;
+    margin-top: 1vh;
     width: 90vw;
   }
 
@@ -1253,7 +750,7 @@ html, body{
     font-size: 4vw;
   }
 
-  .headline_bubble div{
+  .headline_bubble h2{
     font-size: 6vw;
   }
 

@@ -15,6 +15,9 @@
                 <div v-if="shipments[0].signatureRequired">
                 <p>Signature Required</p>
                 </div>
+                <div v-if="coldStorageData">
+                  <p>Cold Storage</p>
+                </div>
                 <h3>Ship By</h3>
                 <p>{{shipments[0].pickupAttention}}</p>
                 <p>{{shipments[0].pickupAddress1}}</p>
@@ -26,88 +29,40 @@
                 <p>{{shipments[0].deliveryCity}}, {{shipments[0].deliveryState}}, {{shipments[0].deliveryZipCode}} </p>
                 <h3>Package History</h3>
 
-                <table class="shipment-table">
+                <table v-if="shipmentHistoryData" class="shipment-table">
                 <tr>
                     <th>Description</th>
                     <th>Date</th>
                     <th>Notes</th>
+                    <th>Delivery Image</th>
                 </tr>
-                <tr v-if="shipmentHistoryData[0]">
-                    <td v-if="shipmentHistoryData[0].description">{{shipmentHistoryData[0].description}}</td>
-                    <td v-if="shipmentHistoryData[0].processedDate">{{shipmentHistoryData[0].processedDate}}</td>
-                    <td v-if="shipmentHistoryData[0].notes">{{shipmentHistoryData[0].notes}}</td>
-                </tr>
-                <tr v-if="shipmentHistoryData[1]">
-                    <td v-if="shipmentHistoryData[1].description">{{shipmentHistoryData[1].description}}</td>
-                    <td v-if="shipmentHistoryData[1].processedDate">{{shipmentHistoryData[1].processedDate}}</td>
-                    <td v-if="shipmentHistoryData[1].notes">{{shipmentHistoryData[1].notes}}</td>
-                </tr>
-                <tr v-if="shipmentHistoryData[2]">
-                    <td v-if="shipmentHistoryData[2].description">{{shipmentHistoryData[2].description}}</td>
-                    <td v-if="shipmentHistoryData[2].processedDate">{{shipmentHistoryData[2].processedDate}}</td>
-                    <td v-if="shipmentHistoryData[2].notes">{{shipmentHistoryData[2].notes}}</td>
-                </tr>
-                <tr v-if="shipmentHistoryData[3]">
-                    <td v-if="shipmentHistoryData[3].description">{{shipmentHistoryData[3].description}}</td>
-                    <td v-if="shipmentHistoryData[3].processedDate">{{shipmentHistoryData[3].processedDate}}</td>
-                    <td v-if="shipmentHistoryData[3].notes">{{shipmentHistoryData[3].notes}}</td>
+                <tr v-for="(items, index) in shipmentHistoryData" v-bind:key="items">
+                    <td>{{shipmentHistoryData[index].description}}</td>
+                    <td>{{shipmentHistoryData[index].processedDate}}</td>
+                    <td>{{shipmentHistoryData[index].notes}}</td>
+                    <td v-if="!shipmentHistoryData[index].imageURL"></td>
+                    <td v-if="shipmentHistoryData[index].imageURL">
+                      <div>
+                        <a v-if="shipmentHistoryData[index].signatureId > 0" :href="shipmentHistoryData[index].imageURL" class="delivery-image-link" target="_blank">Go</a>
+                      </div>
+                    </td>
                 </tr>
                 </table>
 
                 <button class="print-page" @click.prevent="PrintDiv()">Print this page</button>
-                <button class="show-url" @click.prevent="ShowURL()" v-if="shipmentHistoryData[0].signatureId">Delivery Images</button>
-                <div class="images-tracking" id="images-tracking">
-                
-                <!-- <div class="proofDelivery">
-                    <div v-if="shipmentHistoryData[0].signatureId == 0"  class="notAvailable">
-                    <p>Image not available</p>
-                    </div>
-
-                    <p>Proof of Delivery: <a href="" id="proof-of-delivery" target="_blank">Link</a></p> 
-                </div> -->
-                
-                <div class="proofDelivery">
-                    
-                    <div class="proofDeliveryLink" v-if="shipmentHistoryData[0]">
-                    <p>Proof of Delivery: </p> 
-                    <div class="linkStyling">
-                        <a href="" id="proof-of-delivery" target="_blank">
-                        GO
-                        <a class="notAvailable" v-if="shipmentHistoryData[0].signatureId == 0">not available</a>
-                        </a>
-                    </div>
-                        
-                    
-                    </div>
-                
-                </div>
                 
                 
-                <div class="locationDelivery">
-                    
-                    <div class="locationDeliveryLink" v-if="shipmentHistoryData[1]">
-                    <p>Delivery Location: </p> 
-                    <div class="linkStyling">
-                        <a href="" id="location-of-delivery" target="_blank">
-                        GO
-                        <a class="notAvailable" v-if="shipmentHistoryData[1].signatureId == 0">not available</a>
-                        </a>
-                    </div>
-                        
-                    
-                    </div>
-                
-                </div>
-                
-                </div>
-                
-            </div>
-
-            <div v-if="shipments == null" style="text-align: center;" class="shipmentError">
-                <p>{{error[0].errMsg}}</p>
-                <br>
-                <p>Invalid Credentials or Incorrect Shipment ID</p>
-            </div>
+        </div>  
+          <div class="shipmentError">
+              <div v-if="!shipments">
+                  <!-- <p>{{error[0].errMsg}}</p> -->
+                  <p>Unable to get Shipment Data.</p>
+              </div>
+              <div v-if="!shipmentHistoryData">
+                  <!-- <p>{{error[0].errMsg}}</p> -->
+                  <p>Unable to get Shipment History Data.</p>
+              </div>
+          </div>
 </div>
 
   
@@ -126,37 +81,24 @@ export default {
             shipmentId: this.$route.params.shipId,
             IncludeImageURL: true
             },
-            shipmentHistoryData: {data: []},
-            shipments: {data: []},
-            error: {data: []}
+            shipmentHistoryData: {},
+            shipments: {},
+            error: {},
+            coldStorageData: {},
         }
     },
     methods: {
          PrintDiv(){
-      var divContents = document.getElementById("shipmentTrackingContents").innerHTML;
-      var a = window.open('', '', 'height=1000, width=1000');
-      a.document.write('<html>');
-      a.document.write('<head><style> body{font-family: sans-serif; font-size: 16px;} h3{border-bottom:2px solid black} button,.proofDelivery,.locationDelivery{display: none;} th,td{border: 1px solid black;} th{background-color: #33f18a} table{width: 70%;}</style></head>');
-      a.document.write('<body>');
-      a.document.write(divContents);
-      a.document.write('</body></html>');
-      a.document.close();
-      a.print();
-    },
-      ShowURL(){
-        var trackingelement = document.getElementById("images-tracking");
-        var proofDelivery = document.getElementById("proof-of-delivery");
-        var locationDelivery = document.getElementById("location-of-delivery");
-
-        proofDelivery.setAttribute('href', this.shipmentHistoryData[0].imageURL);
-        locationDelivery.setAttribute('href', this.shipmentHistoryData[1].imageURL);
-
-        if(trackingelement.style.display === "none"){
-          trackingelement.style.display = "flex";
-        }else{
-          trackingelement.style.display = "none";
-        }
-      },
+            var divContents = document.getElementById("shipmentTrackingContents").innerHTML;
+            var a = window.open('', '', 'height=1000, width=1000');
+            a.document.write('<html>');
+            a.document.write('<head><style> body{font-family: sans-serif; font-size: 16px;} h3{border-bottom:2px solid black} button,.proofDelivery,.locationDelivery{display: none;} th,td{border: 1px solid black;} th{background-color: #33f18a} table{width: 70%;}</style></head>');
+            a.document.write('<body>');
+            a.document.write(divContents);
+            a.document.write('</body></html>');
+            a.document.close();
+            a.print();
+          },
         GetShipmentHistoryByID() {
           const headers ={
             }
@@ -164,6 +106,7 @@ export default {
             .then((response) => {
               this.shipmentHistoryData = response.data.shipmentHistory
               this.error = response.data.error
+              this.coldStorageData = response.data.coldstorageTable[0];
               })
             .catch(error => console.log(error))
         },
@@ -179,7 +122,7 @@ export default {
             .finally(()=> this.loading = false)
         }
     },
-    created(){
+    mounted(){
         this.GetShipmentHistoryByID()
         this.GetShipmentByID()
     }
@@ -207,22 +150,6 @@ export default {
   width: 100%;
 }
 
-.images-tracking{
-  /* display: flex; */
-  display: none;
-  flex-direction: column;
-  margin-bottom: 20px;
-}
-
-
-.show-url{
-  padding: 15px 20px;
-  background-color: #33f18a;
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  margin-bottom: 10px;
-}
 
 .print-page{
   padding: 15px 20px;
@@ -232,37 +159,6 @@ export default {
   cursor: pointer;
   margin-bottom: 10px;
   margin-right: 10px;
-}
-
-.locationDelivery, .proofDelivery{
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.locationDeliveryLink, .proofDeliveryLink{
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.linkStyling a{
-  text-decoration: none;
-}
-
-.linkStyling{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  background-color: #308ef8;
-  color: black;
-  border-radius: 50%;
-
-  width: 40px;
-  height: 40px;
-
-  margin-left: 10px;
 }
 
 .shipment-table{
@@ -286,8 +182,22 @@ export default {
 }
 
 .shipmentError{
-    margin-top: 20%;
+  padding: 15px;
 }
+
+.delivery-image-link{
+      text-decoration: none;
+      color: #ffffff;
+      background-color: #308ef8;
+      border-radius: 50%;
+      padding: 2.5px;
+      transition-duration: .5s ease;
+    }
+
+    .delivery-image-link:hover{
+      background-color: #2877d1;
+      transition-duration: .5s ease;
+    }
 
 @media only screen and (max-width: 1000px){
     .shipment_data{

@@ -1,16 +1,4 @@
 <template>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>LREX</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Work+Sans&display=swap" rel="stylesheet">
-</head>
-<body>
-
   <div class="our_story">
     <div class="text_our_story">
         <h1>Woman Driven Again</h1>
@@ -30,10 +18,10 @@
     </div>
   </div>
 
-  <div class="founder_owner_section">
-    <div class="about_frieda">
+  <div class="main-about-section">
+    <div class="about-section">
       <h1>Our founder, Frieda</h1>
-      <div class="about_frieda_text">
+      <div class="about-section-text">
         <img src="../assets/Owner.jpg" alt="">
           <p>Equam reiciur, nusamus
             esedit exere, tem este por sit
@@ -52,11 +40,11 @@
     </div>
   </div>
 
-<div class="founder_owner_section">
-      <div class="about_mary">
+<div class="main-about-section">
+      <div class="about-section">
       <h1>Mary Beth Dixon</h1>
-      <div class="about_mary_text">
-        <img src="../assets/Owner2.jpg" alt="">
+      <div class="about-section-text">
+        <img src="../assets/Owner.jpg" alt="">
           <p>Equam reiciur, nusamus
             esedit exere, tem este por sit
             volor sanis sum audam, que
@@ -74,10 +62,10 @@
     </div>
 </div>
 
-<div class="founder_owner_section">
-      <div class="about_vic">
+<div class="main-about-section">
+      <div class="about-section">
       <h1>Vic Kanwar</h1>
-      <div class="about_vic_text">
+      <div class="about-section-text">
         <img src="../assets/Owner3.jpg" alt="">
           <p>Equam reiciur, nusamus
             esedit exere, tem este por sit
@@ -144,8 +132,8 @@
     <div class="footer_two">
       <div class="footer_track">
             <p>Track a package.</p>
-                <form @submit.prevent="ShipmentTrackingTogglePopup('ShipmentTrackingButtonTrigger');  GetShipmentByID(); GetShipmentHistoryByID();">
-                    <input type="text"> <br>
+                <form @submit.prevent="ShipmentTrackingTogglePopup('ShipmentTrackingButtonTrigger');">
+                    <input type="text" v-model="posts.shipmentId"> <br>
                 </form>
       </div>
       <div class="footer_dino">
@@ -153,62 +141,35 @@
       </div>
     </div>
 
-</body>
-</html>
-
+    <ShipmentTrackingPopup 
+        v-if="ShipmentTrackingPopupTriggers.ShipmentTrackingButtonTrigger" 
+        :ShipmentTrackingTogglePopup="()=> ShipmentTrackingTogglePopup('ShipmentTrackingButtonTrigger')"
+        :shipmentIdProp = "posts.shipmentId"
+        class="signin-popup"
+        id="shipmentTrackingContents">
+    </ShipmentTrackingPopup>
 </template>
 
 <script>
 import JoinTeamPopup from './Popups/JoinTeamPopup.vue'
 import {ref} from 'vue';
-import axios from 'axios'
-//import ShipmentTrackingPopup from './Popups/ShipmentTrackingPopup.vue'
+import ShipmentTrackingPopup from './Popups/ShipmentTrackingPopup.vue'
 
 export default{
-    methods:{
-      GetShipmentHistoryByID() {
-          const headers ={
-            // 'User': '16132A',              
-            // 'ApiKey': '123456'
-            'User': 'kanwarv',              
-            'ApiKey': '64bf43886d11456f'
-            // 'User': this.username,
-            // 'ApiKey': this.userapikey
-            }
-
-            //axios.post('https://localhost:44368/api/Rest/GetShipmentHistoryByShipmentId', this.posts, {headers: headers})
-            axios.post('https://api.njls.com/api/rest/GetShipmentHistoryByShipmentId', this.posts, {headers: headers})
-            //.then(response => console.log(response.data))
-            .then((response) => {
-              this.shipmentHistoryData = response.data.shipmentHistory
-              this.error = response.data.error
-              })
-            .catch(error => console.log(error))
-        },
-      GetShipmentByID() {
-          const headers ={
-            // 'User': '16132A',              
-            // 'ApiKey': '123456'
-            'User': 'kanwarv',              
-            'ApiKey': '64bf43886d11456f'
-            }
-
-            //axios.post('https://localhost:44368/api/Rest/GetShipmentByShipmentId', this.posts, {headers: headers})
-            axios.post('https://api.njls.com/api/rest/GetShipmentByShipmentId', this.posts, {headers: headers})
-            //.then(response => console.log(response.data))
-            .then((response) => {
-              this.shipments = response.data.shipment
-              this.error = response.data.error
-              })
-            .catch((error) => {console.log(error)})
-        }
+  data(){
+    return{
+      posts:{
+            shipmentId: null,
+            IncludeImageURL: true
+          },
+          loading: false
+      }
     },
     components:{
         JoinTeamPopup,
-        //ShipmentTrackingPopup
+        ShipmentTrackingPopup
     },
     setup(){
-
     //Get in touch Popup
     const JoinTeamPopupTriggers = ref({
       JoinTeamButtonTrigger: false
@@ -218,9 +179,20 @@ export default{
       JoinTeamPopupTriggers.value[trigger] = !JoinTeamPopupTriggers.value[trigger]
     }
 
+    //ShipmentTracking Popup
+    const ShipmentTrackingPopupTriggers = ref({
+      ShipmentTrackingButtonTrigger: false
+    });
+
+    const ShipmentTrackingTogglePopup = (trigger) =>{
+      ShipmentTrackingPopupTriggers.value[trigger] = !ShipmentTrackingPopupTriggers.value[trigger]
+    }
+
     return{
       JoinTeamTogglePopup,
-      JoinTeamPopupTriggers
+      JoinTeamPopupTriggers,
+      ShipmentTrackingTogglePopup,
+      ShipmentTrackingPopupTriggers
     }
   }
 }
@@ -228,12 +200,9 @@ export default{
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-html, body{
-  margin: 0;
-  width: 100%;
-}
 
 /****Popup */
+
 .popup-container{
   display: flex;
   flex-direction: column;
@@ -255,13 +224,6 @@ html, body{
   background-color: rgb(235, 235, 235);
   width: 40%;
 }
-
-.ship_with_us img{
-    position: absolute;
-    z-index: 1;
-    width: 90vw;
-    height: auto;
-  }
 
 /**************************/    
 /* || Our Story Syles */
@@ -289,9 +251,8 @@ html, body{
   font-size: 2vw;
 }
 
-/*Frieda*/
-
-.founder_owner_section{
+/* About Section */
+.main-about-section{
   font-family: 'Work Sans', sans-serif;
   color: black;
   display: flex;
@@ -300,7 +261,7 @@ html, body{
   text-align: left;
 }
 
-.about_frieda{
+.about-section{
   display: flex;
   flex-direction: column;
   width: 90vw;
@@ -308,76 +269,20 @@ html, body{
   padding-bottom: 2vh;
 }
 
-.about_frieda h1{
+.about-text h1{
   font-size: 2vw;
 }
 
-.about_frieda_text{
+.about-section-text{
   display: flex;
   flex-direction: row;
 }
 
-.about_frieda_text p{
+.about-section-text p{
   font-size: 2vw;
 }
 
-.about_frieda_text img{
-  border-radius: 50%;
-  width: 15vw;
-  margin-right: 10vw;
-}
-
-/*Mary*/
-.about_mary{
-  display: flex;
-  flex-direction: column;
-  width: 90vw;
-  border-bottom: black 2px solid;
-  padding-bottom: 2vh;
-}
-
-.about_mary h1{
-  font-size: 2vw;
-}
-
-.about_mary_text{
-  display: flex;
-  flex-direction: row;
-}
-
-.about_mary_text p{
-  font-size: 2vw;
-}
-
-.about_mary_text img{
-  border-radius: 50%;
-  width: 15vw;
-  margin-right: 10vw;
-}
-
-/*Vic*/
-.about_vic{
-  display: flex;
-  flex-direction: column;
-  width: 90vw;
-  border-bottom: black 2px solid;
-  padding-bottom: 2vh;
-}
-
-.about_vic h1{
-  font-size: 2vw;
-}
-
-.about_vic_text{
-  display: flex;
-  flex-direction: row;
-}
-
-.about_vic_text p{
-  font-size: 2vw;
-}
-
-.about_vic_text img{
+.about-section-text img{
   border-radius: 50%;
   width: 15vw;
   margin-right: 10vw;
@@ -562,54 +467,21 @@ html, body{
   font-size: 4vw;
 }
 
-/*Frieda*/
-.about_frieda h1{
+/* About Section */
+
+.about-section h1{
   font-size: 4vw;
 }
 
-.about_frieda_text p{
-  font-size: 4vw;
-}
-
-.about_frieda_text{
+.about-section-text{
   flex-direction: column;
 }
 
-.about_frieda_text img{
-  width: 20vw;
-}
-
-/*Mary*/
-.about_mary h1{
+.about-section-text p{
   font-size: 4vw;
 }
 
-.about_mary_text p{
-  font-size: 4vw;
-}
-
-.about_mary_text{
-  flex-direction: column;
-}
-
-.about_mary_text img{
-  width: 20vw;
-}
-
-/*Vic*/
-.about_vic h1{
-  font-size: 4vw;
-}
-
-.about_vic_text p{
-  font-size: 4vw;
-}
-
-.about_vic_text{
-  flex-direction: column;
-}
-
-.about_vic_text img{
+.about-section-text img{
   width: 20vw;
 }
 

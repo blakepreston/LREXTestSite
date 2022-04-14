@@ -43,7 +43,7 @@
                     <div class="inputLabel">
                         <label for="googleAPI">Find Address</label>
                         
-                        <div class="address-book-button">
+                        <div class="address-book-input">
                             <input name="googleAPI" type="text" id="placesAPI" class="googlePlaces">
                             <button @click="GetAddressBookData">My Addresses</button>
                         </div>
@@ -179,43 +179,54 @@
                             <div v-show="showNextDayStandard === false" @click="showNextDayStandard = !showNextDayStandard" class="arrowContainer"><i class="arrow down"></i></div>
                             <div v-show="showNextDayStandard === true" @click="showNextDayStandard = !showNextDayStandard" class="arrowContainer"><i class="arrow up"></i></div>
                         </div>
+                        
                         <div class="serviceContainer" id="priorityService" @click.prevent="PriorityService">
                             <div class="imageHeaderContainer">
                                 <img src="../assets/clocktruckTransparent.png" alt="">
                                 <h3>Priority Service</h3>
                             </div>
-                            <p v-show="showServiceDetails">We will deliver Priority Deliveries by 12:30 pm the next business 
+                            <p v-show="showPriorityService == true">We will deliver Priority Deliveries by 12:30 pm the next business 
                                 day at Priority Service rates. Out of State Deliveries are not 
                                 guaranteed. Priority Today deliveries per dedicated schedule. 
                                 (By Contract Only)
                             </p>
+                            <div v-show="showPriorityService === false" @click="showPriorityService = !showPriorityService" class="arrowContainer"><i class="arrow down"></i></div>
+                            <div v-show="showPriorityService === true" @click="showPriorityService = !showPriorityService" class="arrowContainer"><i class="arrow up"></i></div>
                         </div>
+
                         <div class="serviceContainer" id="saturdayService" @click.prevent="SaturdayService">
                             <div class="imageHeaderContainer">
                                 <img src="../assets/fastdeliverytruckTransparent.png" alt="">
                                 <h3>Saturday Service</h3>
                             </div>
-                            <p v-show="showServiceDetails">We will deliver the package on Saturday at our Saturday Service rates.
+                            <p v-show="showSaturdayService == true">We will deliver the package on Saturday at our Saturday Service rates.
                             </p>
+                            <div v-show="showSaturdayService === false" @click="showSaturdayService = !showSaturdayService" class="arrowContainer"><i class="arrow down"></i></div>
+                            <div v-show="showSaturdayService === true" @click="showSaturdayService = !showSaturdayService" class="arrowContainer"><i class="arrow up"></i></div>
                         </div>
 
                         <div class="serviceContainer" id="pickupService" @click.prevent="PickupService">
-                        <div class="imageHeaderContainer">
+                            <div class="imageHeaderContainer">
                                 <img src="../assets/deliveryTruckLogoTransparent.png" alt="">
                                 <h3>Pickup Service</h3>
                             </div>
-                        <p v-show="showServiceDetails">We pick up your package from the recipient address the next business
-                            day and deliver the following business day.
-                        </p>
+                            <p v-show="showPickupService == true">We pick up your package from the recipient address the next business
+                                day and deliver the following business day.
+                            </p>
+                            <div v-show="showPickupService === false" @click="showPickupService = !showPickupService" class="arrowContainer"><i class="arrow down"></i></div>
+                            <div v-show="showPickupService === true" @click="showPickupService = !showPickupService" class="arrowContainer"><i class="arrow up"></i></div>
                         </div>
+
                         <div class="serviceContainer" id="sameDayService" @click.prevent="SameDayService">
                             <div class="imageHeaderContainer">
                                 <img src="../assets/fastdeliverytruckTransparent.png" alt="">
                                 <h3>Same Day Service</h3>
                             </div>
-                            <p v-show="showServiceDetails">If LRex accepts the job, LRex will pick up and then attempt to deliver 
+                            <p v-show="showSameDayService == true">If LRex accepts the job, LRex will pick up and then attempt to deliver 
                                 the package to the recipient’s address by the end of the same business day
                             </p>
+                            <div v-show="showSameDayService === false" @click="showSameDayService = !showSameDayService" class="arrowContainer"><i class="arrow down"></i></div>
+                            <div v-show="showSameDayService === true" @click="showSameDayService = !showSameDayService" class="arrowContainer"><i class="arrow up"></i></div>
                         </div>
                     
                     </div>       
@@ -234,13 +245,9 @@
                             <label for="additionalservices">Cold Storage</label>
                             <input id="additionalservices" type="checkbox" value="ColdStorage" class="checkBox" v-model="shipmentData.additionalServices">
                         </div>
-                        <div class="signatureInputLabel">
+                        <!-- <div class="signatureInputLabel">
                             <label for="additionalservices">Extra Insurance</label>
                             <input id="additionalservices" type="checkbox" value="ExtraInsurance" class="checkBox" v-model="shipmentData.additionalServices">
-                        </div>
-                        <!-- <div class="signatureInputLabel">
-                            <label for="additionalservices">Cold Storage</label>
-                            <input id="additionalservices" type="checkbox" value="SignatureRequired" class="checkBox" v-model="shipmentData.additionalServices">
                         </div> -->
                     </div>
                 </div>
@@ -593,6 +600,7 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <tr v-if="searchAddressBookResult.length <= 0"><td>No addresses match search.</td></tr>
                     <tr v-for="(items, index) in searchAddressBookResult" v-bind:key="items">
                         <td><button @click="searchAddressBookSelect(index)">Select</button></td>
                         <td>{{searchAddressBookResult[index].CompanyName}}</td>
@@ -644,7 +652,10 @@ export default {
             referenceValue: '',
             showRefCount: 0,
             showNextDayStandard: false,
-            showServiceDetails: false,
+            showPriorityService: false,
+            showSaturdayService: false,
+            showPickupService: false,
+            showSameDayService: false,
             inputNotify: '',
             inputNotifyNonDelivery: '',
             currentActive: 1,
@@ -860,10 +871,6 @@ export default {
                 labelFormat: "TIFF",
                 multipleLabelPerSheet: true
             },
-            userPreferences:{
-                userID: 1932,
-                preferenceGroup: 'SP'
-            },
             userPreferencesDataReturn:[],
             addressBook: [],
             addressBookToggle: false,
@@ -875,6 +882,15 @@ export default {
     mounted(){
         //Sign user out when JWT expires
         setTimeout(() => {Auth.signOut({global: true})}, 3600000);
+
+        Auth.currentAuthenticatedUser().then(user => {
+          console.log("Create Shipment Mounted SIGNED IN USER")
+          console.log(user)
+        }).catch(error => {
+          console.log("Authstate error: ")
+          console.log(error)
+          Auth.signOut({global: true})
+        });
         //Step Progress Bar
         this.circles = document.querySelectorAll(".circle");
 
@@ -889,7 +905,6 @@ export default {
         );
 
         googlePlaces.addListener("place_changed", ()=>{
-            console.log(googlePlaces.getPlace());
             this.addressComponents = googlePlaces.getPlace();
         });
 
@@ -919,7 +934,6 @@ export default {
                 break;
             }
 
-
             case "locality":{
                 document.querySelector("#locality").value = component.long_name;
                 this.shipmentData.serviceAddress.address.City = component.long_name;
@@ -944,12 +958,10 @@ export default {
             let deliveryNotifInput = document.getElementById("deliveryInput").value;
             let nonDeliveryNotifInput = document.getElementById("nonDeliveryInput").value;
             let referenceAddInput = document.getElementById("addReference").value;
-            //let weightInputValue = document.getElementById('shipmentWeight').value;
 
             //If user does not click "Add" this will check and add the input
             if(this.currentActive === 3){
-                // console.log("Count Length: " + this.count)
-                // console.log(this.weight)
+                //Check Delivery Input
                 if(deliveryNotifInput != ""){
                     this.inputIsValid();
                     document.getElementById('deliveryInput').value = '';
@@ -959,6 +971,7 @@ export default {
                     alert("Please Add Delivery Notification Email/Phone")
                 }
 
+                //Check Non-Delivery Input
                 if(nonDeliveryNotifInput != ""){
                     this.inputIsValidNonDelivery();
                     document.getElementById('nonDeliveryInput').value = '';
@@ -968,11 +981,13 @@ export default {
                     alert("Please Add Non-Delivery Notification Email/Phone")
                 }
 
+                //Check/Add Reference Input
                 if(referenceAddInput != ""){
                     this.addReference();
                     document.getElementById('addReference').value = '';
                 }
 
+                //Check that user added shipment weight
                 if(this.weight.length < this.count){
                     alert("Please enter a valid weight.")
                 }else{
@@ -998,7 +1013,6 @@ export default {
                 }else{
                    this.stepNext(); 
                 }
-                
             }else if(this.currentActive === 2){
                 if(this.shipmentData.Service === ''){
                     alert("Please select a shipment service")
@@ -1006,7 +1020,6 @@ export default {
                     this.stepNext(); 
                 }
             }
-            
         },
         //Add Reference
         addReference(){
@@ -1028,10 +1041,6 @@ export default {
                 document.getElementById("reference5").value = this.referenceValue;
                 this.shipmentData.Ref5 = this.referenceValue;
             }
-        },
-        //Show Details
-        displayServiceDetail(){
-            this.showServiceDetails = !this.showServiceDetails
         },
         //Validate Notification Input
         inputIsValid(){
@@ -1070,7 +1079,6 @@ export default {
                 this.currentActive = 1;
             }
             this.stepUpdate();
-            //console.log(this.currentActive)
         },
         stepUpdate(){
             const prev = document.getElementById("prev")
@@ -1086,7 +1094,6 @@ export default {
             });
             const actives = document.querySelectorAll(".active");
             progress.style.width = ((actives.length - 1) / (this.circles.length - 1)) * 100 + "%";
-            //console.log((actives.length / this.circles.length))
 
             if(this.currentActive === 1){
                 prev.disabled = true;
@@ -1108,7 +1115,6 @@ export default {
             if(this.currentActive === 4){
                 this.createFinalArray();
             }
-            //console.log(this.currentActive)
             this.stepUpdate();
         },
         //Adding Shipment Weight
@@ -1277,9 +1283,8 @@ export default {
             ],
             AppCode: ''
             }
-          this.shipmentDataArray.push(shipData)
-        }
-        //console.log(this.shipmentDataArray)
+            this.shipmentDataArray.push(shipData)
+            }
         },
         createFinalArray(){
             for(let i = 0; i < this.count; i++){
@@ -1338,7 +1343,6 @@ export default {
         createShipment(){
             this.createFinalArray();
             this.creatingLabels = true;
-            console.log(this.shipmentDataArray);
             for(let i = 0; i < this.shipmentDataArray.length; i++){
             axios.post('https://api.stage.njls.com/api/Rest/CreateShipmentCognito', this.shipmentDataArray[i], {
                 headers: {
@@ -1351,9 +1355,6 @@ export default {
                 let errorMessage = this.dataReturn.shipmentInfo.error[0].errMsg;
                 this.shipmentLabel.shipmentID.push(this.dataReturn.shipmentInfo.shipment[0].shipmentID);
                 this.shipmentLabelTiff.shipmentID.push(this.dataReturn.shipmentInfo.shipment[0].shipmentID);
-                //console.log(this.dataReturn)
-                //console.log("Shipment ID" + this.dataReturn.shipmentInfo.shipment[0].shipmentID)
-                //console.log(this.dataReturn.shipmentInfo.error[0].errMsg)
                 alert( "Shipment " + (this.shipmentDataArray.indexOf(this.shipmentDataArray[i]) + 1) + ": " + errorMessage.slice(12))
                 if(this.shipmentData.secretKey == ''){
                     this.GetShipmentLabels();
@@ -1361,7 +1362,6 @@ export default {
                     this.creatingLabels = false;
                 }
             })
-            //.catch(error => alert(error.response.data.title))
             .catch(function(error){
                     if(error.response.data.title){
                         alert(error.response.data.title)
@@ -1374,7 +1374,6 @@ export default {
                         this.currentActive = 1;
                     }
                 })
-                //.finally(()=> this.creatingLabels = false)
             }
             this.currentActive = 5;
         },
@@ -1390,24 +1389,14 @@ export default {
             }).then((response)=>{
                 this.showPDF = true;
                 this.pdfDataReturn = response.data;
-                //console.log(typeof this.pdfDataReturn)
                 var newBlob = new Blob([this.pdfDataReturn], {type: "application/pdf"})
-                //var href = URL.createObjectURL(newBlob)
-
-                //console.log(newBlob)
-                //window.open(href)
-
                 var reader = new FileReader();
                 reader.readAsDataURL(newBlob);
                 reader.onloadend = function (){
                    var base64Data = reader.result; 
-                   //console.log(base64Data);
                    document.getElementById('pdfViewer').src = base64Data;
                 }
-                
-                //console.log(this.pdfDataReturn);
             })
-            //.catch(error => alert(error.response.data.title))
             .catch(error => alert(error)).finally(()=> this.creatingLabels = false)
         },
         GetShipmentLabelsPDF(){
@@ -1445,7 +1434,7 @@ export default {
             .catch(error => alert(error))
         },
         GetUserPreferences(){
-            axios.post('https://api.stage.njls.com/api/Rest/GetUserPreferenceJSON', {}, {
+            axios.get('https://api.stage.njls.com/api/Rest/GetUserPreferenceJSON', {
                 headers: {
                     'User': this.user.username,
                     // get the user's JWT token given to it by AWS cognito 
@@ -1489,26 +1478,17 @@ export default {
         },
         GetAddressBookData(){
             this.addressBookToggle = true;
-            //this.gettingShipmentData = true;
-            //this.showCurrent = true;
-            //this.showInTransit = false; //https://api.stage.njls.com/
-            //this.showDelivered = false; //https://localhost:44368/
-            axios.post('https://api.stage.njls.com/api/Rest/GetAddressesByUserName', {}, {
+            axios.get('https://api.stage.njls.com/api/Rest/GetAddressesByUserName', {
                 headers: {
                     'User': this.user.username,
                     // get the user's JWT token given to it by AWS cognito 
                     'Authorization': `Bearer ${this.user.signInUserSession.accessToken.jwtToken}`
                 },
             }).then((response)=>{
-                this.addressBook = [];
-                //for(let i = 0; i < response.data.length; i++){
+                    this.addressBook = [];
                     this.addressBook.push(response.data[0].A);
-                //}
-                    //this.CheckLabelPrinted();
-
-                    console.log(this.addressBook);
                 }
-            ).catch(error => alert(error))//.finally(()=> this.gettingShipmentData = false)
+            ).catch(error => alert(error))
         },
         SignatureRequired(){
             this.shipmentData.additionalServices[0] = 'SignatureRequired';
@@ -1851,15 +1831,15 @@ export default {
         margin: 0;
     }
 
-    .address-book-button{
+    .address-book-input{
         display: flex;
         flex-direction: row;
         justify-content: flex-start;
         align-items: center;
-        width: 75%;
+        width: 74%;
     }
 
-    .address-book-button button{
+    .address-book-input button{
         background-color: #33f18a;
         box-shadow: rgba(0, 0, 0, 0.164) 0px 1px 5px;
         border-radius: 5px;
@@ -2085,6 +2065,10 @@ export default {
         padding-right: 5px;
         padding-top: 5px;
         font-weight: bold;
+    }
+
+    .signatureInputLabel input{
+        margin-left: auto;
     }
 
     input{
@@ -2673,9 +2657,15 @@ export default {
         top{margin-top: 0%;}
     }
 
+    @keyframes address-book-table-animate {
+        from{margin-left: -2.5%;}
+        top{margin-left: 0%;}
+    }
+
     .address-book-table{
         text-align: left;
         background-color: #ffffff;
+        animation: address-book-table-animate .25s ease;
     }
 
     .address-book-table button{

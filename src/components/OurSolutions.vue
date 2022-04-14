@@ -1,117 +1,62 @@
 <template>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>LREX</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Work+Sans&display=swap" rel="stylesheet">
-</head>
-<body>
-
   <div class="ship_with_us">
-        <!-- <img src="../assets/Delivery-Truck-Dropoff.png" alt="Truck"> -->
-        <!-- <img src="../assets/man-opening-truck.jpg" alt="Truck"> -->
         <img src="../assets/box-by-door.jpg" alt="Truck">
         <div class="ship_with_us_layout">
             <h1>If your business is driving <br> we have a route for you.</h1>
             <p>Putting women behind the wheel.</p>
-             <!-- <a href="https://www.stage.njls.com/clients/RegisterNewCustomer.aspx" target="_blank" style="text-decoration: none;"><button>Create an account</button></a>  -->
              <a @click="()=> DriveWithUsTogglePopup('DriveWithUsButtonTrigger')" style="text-decoration: none;"><button>Drive with us</button></a> 
         </div>
     </div>
 
-    <!-- <div class="industry_solutions">
-        <h1>Industry Solutions</h1>
-        <div class="legal_solution">
-            <div>Legal</div>
-            <p>A longer description of legal
-                industry solutions.</p>
-        </div>
+        <div class="shipping-options">
+            <h1>Shipping Options</h1>
+            <div class="next-day-container">
+                <div>Next Day</div>
+                <p>Guaranteed next business day delivery for small packages and 
+                    documents. Ship via web or integration with your system, pickup 
+                    from your location or drop off in one of our many drop box locations 
+                    across the state. Tracking, alerts, and photo delivery available in our 
+                    primary service area.</p>
+            </div>
 
-        <div class="realestate_solution">
-            <div>Real Estate</div>
-            <p>A longer description of real estate
-                industry solutions.</p>
-        </div>
+            <div class="shipping-options-inner">
+                <div>Shipping Options</div>
+                <p><strong>Cold Store</strong>  – For packages that can’t stay overnight without it. <br>
+                <strong>Signature Required</strong>  – To be sure your package is delivered to a human. <br>
+                <strong>Priority Delivery</strong>  – Guaranteed delivery before 1pm. <br> 
+                <strong>Court Priority</strong>  – Automatically added for deliveries to courthouses. Our 
+                legal customers have relied on us for over 90 years to deliver their most important documents 
+                and packages.</p>
+            </div>
 
-        <div class="pharma_solution">
-            <div>Pharma</div>
-            <p>A longer description of pharma
-                industry solutions.</p>
-        </div>
+            <div class="same-day-container">
+                <div>Same Day</div>
+                <p>A premium courier service for your most important packages. 
+                    Your package is our only package, we come and pickup when you 
+                    tell us and deliver as quickly as we can get there. 
+                    Available in our primary service area.</p>
+            </div>
 
-        <div class="general_solution">
-            <div>General</div>
-            <p>A longer description of general
-                industry solutions.</p>
-        </div>
-    </div> -->
+            <div class="priority-today-container">
+                <div>Priority Today</div>
+                <p>Volume Deliveries, pickup from your location and deliver in your local region all the features of 
+                    Next Day but delivered Today. Available in limited areas, contact your account manager or our 
+                    sales team to find out more.</p>
+            </div>
 
-        <div class="industry_solutions">
-        <h1>Shipping Options</h1>
-        <div class="legal_solution">
-            <div>Next Day</div>
-            <p>Guaranteed next business day delivery for small packages and 
-                documents. Ship via web or integration with your system, pickup 
-                from your location or drop off in one of our many drop box locations 
-                across the state. Tracking, alerts, and photo delivery available in our 
-                primary service area.</p>
-        </div>
-
-        <div class="realestate_solution">
-            <div>Shipping Options</div>
-            <p><strong>Cold Store</strong>  – For packages that can’t stay overnight without it. <br>
-            <strong>Signature Required</strong>  – To be sure your package is delivered to a human. <br>
-            <strong>Priority Delivery</strong>  – Guaranteed delivery before 1pm. <br> 
-            <strong>Court Priority</strong>  – Automatically added for deliveries to courthouses. Our 
-            legal customers have relied on us for over 90 years to deliver their most important documents 
-            and packages.</p>
-        </div>
-
-        <div class="pharma_solution">
-            <div>Same Day</div>
-            <p>A premium courier service for your most important packages. 
-                Your package is our only package, we come and pickup when you 
-                tell us and deliver as quickly as we can get there. 
-                Available in our primary service area.</p>
-        </div>
-
-        <div class="general_solution">
-            <div>Priority Today</div>
-            <p>Volume Deliveries, pickup from your location and deliver in your local region all the features of 
-                Next Day but delivered Today. Available in limited areas, contact your account manager or our 
-                sales team to find out more.</p>
-        </div>
-
-        <div class="pharma_solution">
-            <div>ZipShip</div>
-            <p>No Printer, No Paper, No Problem. Create a shipping label and email us the label and 
-            your documents and leave the rest to us. We print, pack and deliver Next Day.</p>
-        </div>
+            <div class="zip-ship-container">
+                <div>ZipShip</div>
+                <p>No Printer, No Paper, No Problem. Create a shipping label and email us the label and 
+                your documents and leave the rest to us. We print, pack and deliver Next Day.</p>
+            </div>
     </div>
 
     <div class="headline_recruiting">
       <img src="../assets/woman-in-car.jpg" alt="">
-      <!-- <img src="../assets/woman-with-package.jpg" alt=""> -->
-      <!-- <img src="../assets/box-by-door.jpg" alt=""> -->
       <div class="sign_up"><a href="https://www.stage.njls.com/clients/RegisterNewCustomer.aspx" target="_blank">Sign Up</a></div>
-       <!-- @click="()=> SignUpTogglePopup('SignUpButtonTrigger')" -->
     </div>
 
     <div class="popup-container">
-        <CreateAccountPopup 
-            v-if="CreateAccountPopupTriggers.CreateAccountButtonTrigger" 
-            :CreateAccountTogglePopup="()=> CreateAccountTogglePopup('CreateAccountButtonTrigger')"
-            class="signin-popup">
-                <h2>Create an account</h2>
-                <input type="text" placeholder="Enter userName">
-                <input type="text" placeholder="Enter password">
-                <input type="text" placeholder="Re-enter password">
-        </CreateAccountPopup>
-
         <SignUpPopup 
             v-if="SignUpPopupTriggers.SignUpButtonTrigger" 
             :SignUpTogglePopup="()=> SignUpTogglePopup('SignUpButtonTrigger')"
@@ -123,27 +68,20 @@
         </SignUpPopup>
 
         <DriveWithUsPopup 
-        v-if="DriveWithUsPopupTriggers.DriveWithUsButtonTrigger" 
-        :DriveWithUsTogglePopup="()=> DriveWithUsTogglePopup('DriveWithUsButtonTrigger')"
-        class="DriveWithUs-popup">
-          
-      </DriveWithUsPopup>
+            v-if="DriveWithUsPopupTriggers.DriveWithUsButtonTrigger" 
+            :DriveWithUsTogglePopup="()=> DriveWithUsTogglePopup('DriveWithUsButtonTrigger')"
+            class="DriveWithUs-popup">
+        </DriveWithUsPopup>
     </div>
-
-</body>
-</html>
-
 </template>
 
 <script>
-import CreateAccountPopup from './Popups/CreateAccountPopup.vue'
 import SignUpPopup from './Popups/SignUpPopup.vue'
 import DriveWithUsPopup from './Popups/DriveWithUsPopup.vue'
 import {ref} from 'vue';
 
 export default{
     components:{
-        CreateAccountPopup,
         SignUpPopup,
         DriveWithUsPopup
     },
@@ -156,15 +94,6 @@ export default{
       DriveWithUsPopupTriggers.value[trigger] = !DriveWithUsPopupTriggers.value[trigger]
     }
 
-    //Get in touch Popup
-    const CreateAccountPopupTriggers = ref({
-      CreateAccountButtonTrigger: false
-    });
-
-    const CreateAccountTogglePopup = (trigger) =>{
-      CreateAccountPopupTriggers.value[trigger] = !CreateAccountPopupTriggers.value[trigger]
-    }
-
     //Sign up Popup
     const SignUpPopupTriggers = ref({
       SignUpButtonTrigger: false
@@ -175,8 +104,6 @@ export default{
     }
 
     return{
-      CreateAccountTogglePopup,
-      CreateAccountPopupTriggers,
       SignUpTogglePopup,
       SignUpPopupTriggers,
       DriveWithUsTogglePopup,
@@ -189,10 +116,6 @@ export default{
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-html, body{
-  margin: 0;
-  width: 100%;
-}
 /****Popup */
 .popup-container{
   display: flex;
@@ -286,7 +209,7 @@ html, body{
 
 /**************************/
 /* || Industry Solutions Syles */
-    .industry_solutions{
+    .shipping-options{
         font-family: 'Work Sans', sans-serif;
         display: flex;
         flex-direction: column;
@@ -295,13 +218,13 @@ html, body{
         margin-top: 20%;
     }
 
-    .industry_solutions h1{
+    .shipping-options h1{
         color: black;
         font-size: 4vw;
     }
 
-/*Legal*/
-    .legal_solution{
+/* Shipping Options Styles */
+    .next-day-container, .shipping-options-inner, .same-day-container, .zip-ship-container, .priority-today-container{
         padding-top: 3vw;
         border-top: black 2px solid;
         width: 80vw;
@@ -311,7 +234,13 @@ html, body{
         align-items: center;
     }
 
-    .legal_solution div{
+    .next-day-container p, .shipping-options-inner p, .same-day-container p, .zip-ship-container p, .priority-today-container p{
+        font-size: 2vw;
+        width: 60vw;
+        text-align: left;
+    }
+
+    .next-day-container div{
         background-color: black;
         color: white;
         padding-top: 5vw;
@@ -321,23 +250,7 @@ html, body{
         font-size: 4vw;
     }
 
-    .legal_solution p{
-        font-size: 2vw;
-        width: 60vw;
-        text-align: left;
-    }
-/*Real Estate*/
-    .realestate_solution{
-        padding-top: 3vw;
-        border-top: black 2px solid;
-        width: 80vw;
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .realestate_solution div{
+    .shipping-options-inner div{
         background-color: black;
         color: white;
         padding-top: 5vw;
@@ -349,24 +262,7 @@ html, body{
         font-size: 4vw;
     }
 
-    .realestate_solution p{
-        font-size: 2vw;
-        width: 60vw;
-        text-align: left;
-    }
-
-/*Pharma*/
-    .pharma_solution{
-        padding-top: 3vw;
-        border-top: black 2px solid;
-        width: 80vw;
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .pharma_solution div{
+    .same-day-container div, .zip-ship-container div{
         background-color: black;
         color: white;
         padding-top: 5vw;
@@ -376,41 +272,16 @@ html, body{
         font-size: 4vw;
     }
 
-    .pharma_solution p{
-        font-size: 2vw;
-        width: 60vw;
-        text-align: left;
-    }
-/*General*/
-        .general_solution{
-        padding-top: 3vw;
-        padding-bottom: 3vw;
-        border-top: black 2px solid;
-        border-bottom: black 2px solid;
-        width: 80vw;
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .general_solution div{
+    .priority-today-container div{
         background-color: black;
         color: white;
         padding-top: 5vw;
         padding-bottom: 5vw;
         width: 50vw;
-        /* border-radius: 200px; */
         font-size: 4vw;
-        /* clip-path: polygon(0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%); */
         clip-path: polygon(15% 5%, 85% 5%, 100% 50%, 85% 95%, 15% 95%, 0% 50%);
     }
 
-    .general_solution p{
-        font-size: 2vw;
-        width: 60vw;
-        text-align: left;
-    }
 /**************************/
 /* || Recruiting Syles */
 .headline_recruiting{
@@ -509,46 +380,19 @@ html, body{
 
 /**************************/
 /* || Industry Solutions Syles */
-.industry_solutions{
+.shipping-options{
     margin-top: 10%;
 }
 
-.industry_solutions h1{
+.shipping-options h1{
     font-size: 8vw;
 }
 
-.legal_solution div{
+.next-day-container div, .shipping-options-inner div, .same-day-container div, .zip-ship-container div, .priority-today-container div{
     font-size: 7vw;
 }
 
-.legal_solution p{
-    font-size: 4vw;
-    width: 80vw;
-}
-
-.realestate_solution div{
-    font-size: 7vw;
-}
-
-.realestate_solution p{
-    font-size: 4vw;
-    width: 80vw;
-}
-
-.pharma_solution div{
-    font-size: 7vw;
-}
-
-.pharma_solution p{
-    font-size: 4vw;
-    width: 80vw;
-}
-
-.general_solution div{
-    font-size: 7vw;
-}
-
-.general_solution p{
+.next-day-container p, .shipping-options-inner p, .same-day-container p, .zip-ship-container p, .priority-today-container p{
     font-size: 4vw;
     width: 80vw;
 }
@@ -557,7 +401,6 @@ html, body{
 .headline_recruiting{
     margin-bottom: 8vw;
 }
-
 
 .sign_up{
   top: 22vw;

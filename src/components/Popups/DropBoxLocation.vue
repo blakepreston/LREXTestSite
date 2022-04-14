@@ -1,8 +1,8 @@
 <template>
   <div class="popup">
       <div class="popup-inner">
-            <div class="CreateAccount-container">
-                <div class="closeCreateAccount" @click="CreateAccountTogglePopup()"></div>
+            <div class="DropBox-container">
+                <div class="closeDropBox" @click="DropBoxTogglePopup()"></div>
                 
                 <div class="box-schedule-table">
                     <h2>Drop Box Pickup Schedule</h2>
@@ -371,7 +371,7 @@
 import dropboxData from '/dropboxData.json'
 
 export default {
-    props: ['CreateAccountTogglePopup'],
+    props: ['DropBoxTogglePopup'],
 
     data(){
         return{
@@ -445,7 +445,7 @@ export default {
     margin-left: 2.5vw;
 }
 
-.CreateAccount-container{
+.DropBox-container{
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -459,7 +459,7 @@ export default {
   to{margin-top: 1%;}
 }
 
-.closeCreateAccount {
+.closeDropBox {
       background: rgb(196, 196, 196);
       height: 25px;
       position: relative;
@@ -470,7 +470,7 @@ export default {
       cursor: pointer;
       border-radius: 5px;
     }
-.closeCreateAccount:after {
+.closeDropBox:after {
       background: rgb(196, 196, 196);
       content: "";
       height: 5px;
