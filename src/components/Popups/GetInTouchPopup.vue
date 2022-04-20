@@ -3,8 +3,26 @@
       <div class="popup-inner">
           <div class="GetInTouch-container">
                 <div class="closeGetInTouch" @click="GetInTouchTogglePopup()"></div>
-                <slot/>
+                <!-- <slot/> -->
                 <!-- <div class="GetInTouchButton">Get in touch</div> -->
+            <div class="get-in-touch">
+                <h2>Get in touch</h2>
+                <h3>Telephone Numbers:</h3>
+                <p>Union: (908) 686-7300</p>
+                <p>Cherry Hill: (856) 428-6190</p>
+                <h3>Email:</h3>
+                <p>customerservice@lrex.com</p>
+                <h3>Address:</h3>
+                <p>
+                LRex <br>
+                2333 Route 22 West <br>
+                Union, NJ 07083 <br> <br>
+
+                LRex<br>
+                2 Keystone Avenue<br>
+                Cherry Hill, NJ 08003<br>
+                </p>
+            </div>
           </div>
           
       </div>
@@ -40,14 +58,15 @@ export default {
 .popup-inner{
     width: 25vw;
     border-radius: 15px;
-    border: #33f18a 2px solid;
+    /* border: #33f18a 2px solid; */
     background-color: white;
 
     display: flex;
     justify-content: center;
     flex-direction: column;
+    text-align: left;
 
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
 }
 
 .popup-close{
@@ -110,6 +129,10 @@ export default {
     justify-content: center;
     align-items: center;
     cursor: pointer;
+}
+
+.get-in-touch h3{
+  border-bottom: 1px solid #33f18a;
 }
 
 @media only screen and (max-width: 1000px){

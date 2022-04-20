@@ -794,17 +794,17 @@ export default {
     amplify-authenticator{
         --width: 450px;
         --height: 600px;
-        --amplify-primary-color: #308ef8;
-        --amplify-secondary-tint: #308ef8;
+        --amplify-primary-color: #32ccfe;
+        --amplify-secondary-tint: #32ccfe;
         --amplify-primary-shade: #2c82e4;
-        --amplify-primary-tint: #308ef8;
+        --amplify-primary-tint: #32ccfe;
     }
 
     amplify-sign-out{
-        --amplify-primary-color: #308ef8;
-        --amplify-secondary-tint: #308ef8;
+        --amplify-primary-color: #32ccfe;
+        --amplify-secondary-tint: #32ccfe;
         --amplify-primary-shade: #2c82e4;
-        --amplify-primary-tint: #308ef8;
+        --amplify-primary-tint: #32ccfe;
     }
 
     .container{
@@ -816,7 +816,7 @@ export default {
 
 
     .fa-times-circle{
-        color: #308ef8;
+        color: #32ccfe;
         font-size: 1.25em;
         text-align: center;
         cursor: pointer;
@@ -875,7 +875,7 @@ export default {
     .delete-confirm-inner button{
         border: none;
         margin: 1px;
-        background-color: #308ef8;
+        background-color: #32ccfe;
         padding: 12px 15px;
         color: #ffffff;
         border: 1px solid #ffffff;
@@ -956,7 +956,7 @@ export default {
     .shipmentID{
         cursor: pointer;
         text-decoration: underline;
-        color: #308ef8;
+        color: #32ccfe;
     }
 
     .shipmentID:hover{
@@ -991,7 +991,7 @@ export default {
     }
 
     /* .shipment-table thead tr{
-        background-color: #308ef8;
+        background-color: #32ccfe;
         color: #ffffff;
     } */
     .shipment-table th:first-child{
@@ -1007,7 +1007,7 @@ export default {
     }
 
     .shipment-table tbody tr:last-of-type {
-        border-bottom: 2px solid #308ef8;
+        border-bottom: 2px solid #32ccfe;
     }
 
     .shipment-table th{
@@ -1050,7 +1050,7 @@ export default {
 
     .filter-button{
         border: none;
-        background-color: #308ef8;
+        background-color: #32ccfe;
         padding: 12px 15px;
         color: #ffffff;
         border-radius: 10px;
@@ -1185,8 +1185,8 @@ export default {
 /* Print Label */
     .print-label{
         cursor: pointer;
-        text-decoration: underline 1px solid #308ef8;
-        color: #308ef8;
+        text-decoration: underline 1px solid #32ccfe;
+        color: #32ccfe;
     }
 
 /* Track Shipment */

@@ -154,7 +154,7 @@ export default {
     animation: drop .5s ease forwards;
     
     position: fixed;
-    top: 0;
+    top: 10px;
     left: 0;
     right: 0;
     z-index: 99;
@@ -166,15 +166,15 @@ export default {
 .popup-inner{
     width: 60vw;
     height: 95vh;
-    border-radius: 5px;
-    border: #33f18a 2px solid;
+    border-radius: 15px;
+    /* border: #33f18a 2px solid; */
     background-color: white;
 
     display: flex;
     flex-direction: column;
     text-align: left;
 
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
     overflow-y: auto;
 
     scrollbar-color: #33f18a;
@@ -310,8 +310,9 @@ export default {
 }
 
 .shipment_data h3{
-  padding: 5px;
+  padding: 5px 10px;
   border-bottom: 1px solid #33f18a;
+  border-radius: 50px;
   background-color: #33f18a;
   width: 100%;
 }
@@ -388,6 +389,7 @@ export default {
 
 .shipment_data h3{
   margin: 0;
+  width: 95%;
 }
 }
 </style>

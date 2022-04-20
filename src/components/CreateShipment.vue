@@ -1768,7 +1768,7 @@ export default {
     }
 
     .removePackageButton{
-        background-color: #2c82e4;
+        background-color: #32ccfe;
         border: 2px solid #2c82e494;
         box-shadow: rgba(0, 0, 0, 0.164) 0px 1px 5px;
         border-radius: 5px;
@@ -1792,7 +1792,7 @@ export default {
 
     .weightMainContainer p{
         font-weight: bold;
-        background-color: #2c82e4;
+        background-color: #32ccfe;
         border-radius: 5px;
         padding: 5px;
         margin-right: 20%;
@@ -2224,13 +2224,13 @@ export default {
         cursor: pointer;
         border: none;
         border-radius: 15px;
-        background-color: #308ef8;
+        background-color: #32ccfe;
         color: white;
         transition-duration: .5s;
     }
 
     .removeItemButton:hover{
-        background-color: #127df8;
+        background-color: #2db4e0;
         color: rgb(212, 211, 211);
         transition-duration: .5s;
     }
@@ -2262,16 +2262,16 @@ export default {
         transform: scale(.97);
         transition-duration: .4s ease;
         color: #fff;
-        background-color: #308ef8;
+        background-color: #32ccfe;
     }
 
     .saveButton:hover{
-        background-color: #2c82e4;
+        background-color: #2bb2df;
         transition-duration: .5s;
     }
 
     .shipButton:hover{
-        background-color: #2c82e4;
+        background-color: #2bb2df;
         transition-duration: .5s;
     }
 
@@ -2288,7 +2288,7 @@ export default {
         transform: scale(.97);
         transition-duration: .4s ease;
         color: #fff;
-        background-color: #308ef8;
+        background-color: #32ccfe;
     }
 
     /* Final Shipment Creation Slide */
@@ -2305,7 +2305,7 @@ export default {
 
     .refreshButton{
         color: #fff;
-        background-color: #308ef8;
+        background-color: #32ccfe;
         border: none;
         border-radius: 5px;
         padding: 5px 10px;
@@ -2317,18 +2317,18 @@ export default {
     }
 
     .refreshButton:hover{
-        background-color: #2c82e4;
+        background-color: #2bb2df;
         transition-duration: .5s;
     }
 
     .getLabelButton:hover{
-        background-color: #2c82e4;
+        background-color: #2bb2df;
         transition-duration: .5s;
     }
 
     .getLabelButton{
         color: #fff;
-        background-color: #308ef8;
+        background-color: #32ccfe;
         border: none;
         border-radius: 5px;
         padding: 10px 35px;
@@ -2364,17 +2364,17 @@ export default {
     amplify-authenticator{
         --width: 450px;
         --height: 600px;
-        --amplify-primary-color: #308ef8;
-        --amplify-secondary-tint: #308ef8;
-        --amplify-primary-shade: #2c82e4;
-        --amplify-primary-tint: #308ef8;
+        --amplify-primary-color: #32ccfe;
+        --amplify-secondary-tint: #32ccfe;
+        --amplify-primary-shade: #2bb2df;
+        --amplify-primary-tint: #32ccfe;
     }
 
     amplify-sign-out{
-        --amplify-primary-color: #308ef8;
-        --amplify-secondary-tint: #308ef8;
-        --amplify-primary-shade: #2c82e4;
-        --amplify-primary-tint: #308ef8;
+        --amplify-primary-color: #32ccfe;
+        --amplify-secondary-tint: #32ccfe;
+        --amplify-primary-shade: #2bb2df;
+        --amplify-primary-tint: #32ccfe;
     }
 
     .sign-out-container{
@@ -2526,8 +2526,8 @@ export default {
     }
 
     .inputLabel p{
-        text-decoration:underline 1px solid #308ef8;
-        color: #308ef8;
+        text-decoration:underline 1px solid #32ccfe;
+        color: #32ccfe;
         cursor: pointer;
         font-size: 12px;
         margin-left: 5px;
@@ -2583,7 +2583,7 @@ export default {
         z-index: 11;
         border: none;
         margin: 1px;
-        background-color: #308ef8;
+        background-color: #32ccfe;
         padding: 12px 15px;
         color: #ffffff;
         border-radius: 10px;
@@ -2592,13 +2592,13 @@ export default {
     }
 
     .close-terms-conditions button:hover{
-        background-color: #2877d1;
+        background-color: #2cbae9;
         transition-duration: .5s;
     }
 
     .show-terms-conditions-link{
         text-decoration: underline;
-        color: #308ef8;
+        color: #32ccfe;
         cursor: pointer;
     }
 
@@ -2702,7 +2702,7 @@ export default {
     }
 
     .address-book-table tbody tr:last-of-type {
-        border-bottom: 2px solid #308ef8;
+        border-bottom: 2px solid #32ccfe;
     }
 
     .address-book-table th{
@@ -2728,7 +2728,7 @@ export default {
         z-index: 11;
         border: none;
         margin: 1px;
-        background-color: #308ef8;
+        background-color: #32ccfe;
         padding: 12px 15px;
         color: #ffffff;
         border-radius: 10px;
@@ -2738,7 +2738,7 @@ export default {
     }
 
     .close-search-address-book button:hover{
-        background-color: #2877d1;
+        background-color: #2fbae9;
         transition-duration: .5s;
     }
 

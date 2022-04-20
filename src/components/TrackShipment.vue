@@ -144,7 +144,8 @@ export default {
 }
 
 .shipment_data h3{
-  padding: 5px;
+  padding: 5px 10px;
+  border-radius: 50px;
   background-color: #33f18a;
   border-bottom: 1px solid #33f18a;
   width: 100%;

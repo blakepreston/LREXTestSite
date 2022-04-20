@@ -2,7 +2,7 @@
 <div class="mobileNavigation">
     <header>
         <div class="logo_nav">
-            <a href="#" @click="scrollTo('#')"><img class="logo" src="./assets/LREXHeaderLogo.jpg" alt="LREX"></a>
+            <a href="https://www.lrex.com/" @click="scrollTo('#')"><img class="logo" src="./assets/LREXHeaderLogo.jpg" alt="LREX"></a>
         </div>
         <div class="create_account">
           <a v-if="!createShipmentToggleSignIn"><button class="button_signin" @click="()=> SignInTogglePopup('SignInButtonTrigger')">Sign in</button></a>
@@ -11,13 +11,13 @@
     </header>
         <nav id="mobileLinks" class="mobileLinks">
             <ul class="nav_links">
-                <li v-if="!shipmentPages"><a href="#oursolutions" @click="scrollTo('oursolutions')">Our solutions</a></li>
-                <li v-if="!shipmentPages"><a href="#aboutus" @click="scrollTo('aboutus')">About us</a></li>
+                <li v-if="!shipmentPages && !extraPages"><a href="#oursolutions" @click="scrollTo('oursolutions')">Our solutions</a></li>
+                <li v-if="!shipmentPages && !extraPages"><a href="#aboutus" @click="scrollTo('aboutus')">About us</a></li>
                 <li v-if="!shipmentPages"><a  @click="()=> DropBoxTogglePopup('DropBoxButtonTrigger')">Box Locations</a></li>
                 <li v-if="!shipmentPages"><a  @click="()=> GetInTouchTogglePopup('GetInTouchButtonTrigger')">Get in touch</a></li>
                 <li v-if="shipmentPages"><router-link to="/Ship">New Shipment</router-link></li>
                 <li v-if="shipmentPages"><router-link to="/ShipmentCenter">My Shipments</router-link></li>
-                <li><a href="https://www.stage.njls.com/clients/RegisterNewCustomer.aspx" target="_blank">Create an account</a></li>
+                <li class="create-account-mobile"><a href="https://www.stage.njls.com/clients/RegisterNewCustomer.aspx" target="_blank">Create an account</a></li>
                 <li style="border-bottom: none;">
                 <amplify-authenticator v-if="authState === 'signedin'">
                   <div class="sign-out-container">
@@ -36,11 +36,11 @@
   <div class="homepage" ref="homepage" :class="{ 'is-hidden': !showHeader }">
     <header>
         <div class="logo_nav">
-            <a href="#" @click="scrollTo('#')"><img class="logo" src="./assets/LREXHeaderLogo.jpg" alt="LREX"></a>
+            <a href="https://www.lrex.com/" @click="scrollTo('#')"><img class="logo" src="./assets/LREXHeaderLogo.jpg" alt="LREX"></a>
         <nav>
             <ul class="nav_links">
-                <li v-if="!shipmentPages"><a href="#oursolutions" @click="scrollTo('oursolutions')">Our solutions</a></li>
-                <li v-if="!shipmentPages"><a href="#aboutus" @click="scrollTo('aboutus')">About us</a></li>
+                <li v-if="!shipmentPages && !extraPages"><a href="#oursolutions" @click="scrollTo('oursolutions')">Our solutions</a></li>
+                <li v-if="!shipmentPages && !extraPages"><a href="#aboutus" @click="scrollTo('aboutus')">About us</a></li>
                 <li v-if="!shipmentPages"><a  @click="()=> GetInTouchTogglePopup('GetInTouchButtonTrigger')">Get in touch</a></li>
                 <li v-if="!shipmentPages"><a  @click="()=> DropBoxTogglePopup('DropBoxButtonTrigger')">Box Locations</a></li>
                 <li v-if="shipmentPages"><router-link to="/Ship">New Shipment</router-link></li>
@@ -83,36 +83,19 @@
       v-if="GetInTouchPopupTriggers.GetInTouchButtonTrigger" 
       :GetInTouchTogglePopup="()=> GetInTouchTogglePopup('GetInTouchButtonTrigger')"
       class="signin-popup">
-      <div class="get-in-touch">
-        <h2>Get in touch</h2>
-        <h3>Telephone Numbers:</h3>
-        <p>Union: (908) 686-7300</p>
-        <p>Cherry Hill: (856) 428-6190</p>
-        <h3>Email:</h3>
-        <p>customerservice@lrex.com</p>
-        <h3>Address:</h3>
-        <p>
-          LRex <br>
-          2333 Route 22 West <br>
-          Union, NJ 07083 <br> <br>
-
-          LRex<br>
-          2 Keystone Avenue<br>
-          Cherry Hill, NJ 08003<br>
-        </p>
-      </div>
+      
     </GetInTouchPopup>
   </div>
 
-  <div v-if="!shipmentPages" ref="homepage">
+  <div v-if="!shipmentPages && !extraPages" ref="homepage">
     <HomePage/>
   </div>
   
-  <div v-if="!shipmentPages" ref="oursolutions">
+  <div v-if="!shipmentPages && !extraPages" ref="oursolutions">
     <OurSolutions/>
   </div>
   
-  <div v-if="!shipmentPages" ref="aboutus">
+  <div v-if="!shipmentPages && !extraPages" ref="aboutus">
     <AboutUs/>
   </div>
   
@@ -122,7 +105,7 @@
     <div class="cookie-container">
     <p>
         We use cookies in this website to give you the best experience. To find out more, read our
-        <a href="#">privacy policy</a> and <a href="#">cookie policy</a>.
+        <router-link to="/PrivacyPolicy">privacy policy</router-link> and <router-link to="/CookiesPolicy">cookie policy</router-link>.
       </p>
       
       <div class="cookie-button-image">
@@ -134,6 +117,43 @@
       
     </div>
   </div>
+
+    <div class="footer">
+      <img src="./assets/LREXFooterLogo.jpg" alt="">
+      <div class="site_map">
+        <div>
+          <router-link class="router-link-footer" to="/TermsConditions"><p>Terms and Conditions</p></router-link>
+        </div>
+        
+        <div>
+          <router-link class="router-link-footer" to="/CookiesPolicy"><p>Cookie Policy</p></router-link>
+        </div>
+
+        <div>
+          <router-link class="router-link-footer" to="/PrivacyPolicy"><p>Privacy Policy</p></router-link>
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="footer_two">
+      <div class="footer_track">
+            <p>Track a package.</p>
+                <form @submit.prevent="ShipmentTrackingTogglePopup('ShipmentTrackingButtonTrigger');">
+                    <input type="text" v-model="posts.shipmentId"> <br>
+                </form>
+      </div>
+      <div class="footer_dino">
+        <img src="./assets/LREXDinoFooter.jpg" alt="">
+      </div>
+    </div>
+
+    <ShipmentTrackingPopup 
+        v-if="ShipmentTrackingPopupTriggers.ShipmentTrackingButtonTrigger" 
+        :ShipmentTrackingTogglePopup="()=> ShipmentTrackingTogglePopup('ShipmentTrackingButtonTrigger')"
+        :shipmentIdProp = "posts.shipmentId"
+        >
+    </ShipmentTrackingPopup>
   
 </template>
 
@@ -144,6 +164,7 @@ import AboutUs from './components/AboutUs.vue'
 import SignInPopup from './components/Popups/SignInPopup.vue'
 import GetInTouchPopup from './components/Popups/GetInTouchPopup.vue'
 import DropBoxLocation from './components/Popups/DropBoxLocation.vue'
+import ShipmentTrackingPopup from './components/Popups/ShipmentTrackingPopup.vue'
 import {ref} from 'vue';
 import {AuthState, onAuthUIStateChange} from "@aws-amplify/ui-components";
 import {Auth} from 'aws-amplify';
@@ -156,7 +177,11 @@ export default {
       lastScrollPosition: 0,
       scrollOffset: 40,
       url: window.location.origin,
-      authState: undefined
+      authState: undefined,
+      posts:{
+            shipmentId: null,
+            IncludeImageURL: true
+          }
     }
   },
   mounted() {
@@ -175,7 +200,8 @@ export default {
     AboutUs,
     SignInPopup,
     GetInTouchPopup,
-    DropBoxLocation
+    DropBoxLocation,
+    ShipmentTrackingPopup
   },
   methods: {
     cookieBanner(){
@@ -239,13 +265,24 @@ export default {
       GetInTouchPopupTriggers.value[trigger] = !GetInTouchPopupTriggers.value[trigger]
     }
 
+    //ShipmentTracking Popup
+    const ShipmentTrackingPopupTriggers = ref({
+      ShipmentTrackingButtonTrigger: false
+    });
+
+    const ShipmentTrackingTogglePopup = (trigger) =>{
+      ShipmentTrackingPopupTriggers.value[trigger] = !ShipmentTrackingPopupTriggers.value[trigger]
+    }
+
     return{
       SignInTogglePopup,
       SignInPopupTriggers,
       DropBoxTogglePopup,
       DropBoxPopupTriggers,
       GetInTouchTogglePopup,
-      GetInTouchPopupTriggers
+      GetInTouchPopupTriggers,
+      ShipmentTrackingTogglePopup,
+      ShipmentTrackingPopupTriggers
     }
   },
   computed:{
@@ -254,6 +291,9 @@ export default {
     },
     createShipmentToggleSignIn(){
       return this.$route.name == 'Ship' || this.$route.name == 'ShipmentCenter';
+    },
+    extraPages(){
+      return this.$route.name == 'IndependentContractor' || this.$route.name == 'CookiesPolicy' || this.$route.name == 'PrivacyPolicy' || this.$route.name == 'TermsConditions';
     }
   },
   created(){
@@ -331,9 +371,9 @@ button{
 }
 
 ::-webkit-scrollbar {
-    background-color: white;
+    background-color: #fff;
     border-radius: 10px;
-    width: 5px;
+    width: 8px;
     height: 5px;
 }
 
@@ -410,7 +450,7 @@ button{
       top: 0;
       left: 0;
       width: 100vw;
-      background-color: white;
+      background-color: #fff;
       z-index: 10;
       box-shadow: 0 6px 6px -6px rgb(218, 218, 218);
       transform: translateY(0);
@@ -516,33 +556,107 @@ button{
   margin-top: -5px;
 }
 
-.popup-container input{
-  margin-bottom: 1vw;
-  height: 25px;
-  border-radius: 5px;
-  border: rgb(151, 151, 151) 1px solid;
-  background-color: rgb(235, 235, 235);
-  width: 40%;
-}
-
-/*Get in touch*/
-.get-in-touch h3{
-  border-bottom: 1px solid #33f18a;
-}
-
 /* Sign-Out Container */
 amplify-sign-out{
-  --amplify-primary-color: #308ef8;
-  --amplify-secondary-tint: #308ef8;
+  --amplify-primary-color: #32ccfe;
+  --amplify-secondary-tint: #32ccfe;
   --amplify-primary-shade: #2c82e4;
-  --amplify-primary-tint: #308ef8;
+  --amplify-primary-tint: #32ccfe;
 }
 
 .sign-out-container{
-  background-color: #308ef8;
+  background-color: #32ccfe;
   padding: 5px;
   border-radius: 10px;
   margin-left: 10px;
+}
+
+/**************************/
+/* || Footer Syles */
+.footer{
+  margin-top: 15vw;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-top: solid black 2px;
+  padding-top: 75px;
+}
+
+.site_map{
+  column-count: 3;
+  display: flex;
+  flex-direction: row;
+  margin-left: 15%;
+}
+
+.site_map div{
+  padding-left: 5vw;
+  font-family: 'Work Sans', sans-serif;
+  color: black;
+}
+
+.site_map div p{
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 1.8vw;
+}
+
+.router-link-footer{
+  text-decoration: none;
+  color: black;
+}
+
+.footer img{
+  position: relative;
+  bottom: 2em;
+  width: 15vw;
+}
+
+.footer_two{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 5%;
+  padding-top: 1%;
+}
+
+.footer_track{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.footer_track input{
+  padding: 30px;
+  padding-right: 30vw;
+  border: 1px solid black;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease 0s;
+}
+
+.footer_track p{
+  font-family: 'Work Sans', sans-serif;
+  font-size: 2vw;
+  color: black;
+}
+
+.footer_dino{
+  margin-left: 35vw;
+}
+
+.footer_dino img{
+  width: 5vw;
+  position: relative;
+  top: 4em;
+}
+
+@media only screen and (max-width: 1250px) and (min-width: 1001px){
+  .nav_links li{
+        padding: 0px 10px;
+    }
 }
 
 @media only screen and (max-width: 1000px){
@@ -555,7 +669,7 @@ amplify-sign-out{
 
     .mobileNavigation header{
       position: relative;
-      background-color: white;
+      background-color: #fff;
       z-index: 11;
     }
 
@@ -569,12 +683,13 @@ amplify-sign-out{
       position: fixed;
       width: 100vw;
       z-index: 10;
-      background-color: white;
+      background-color: #fff;
       top: 0;
       left: 0;
       box-shadow: 0 6px 6px -6px rgb(218, 218, 218);
       transform: translateY(0);
       transition: transform 300ms linear;
+      border-bottom: 1px solid #32ccfe;
     }
 
     .mobileNavigation.is-hidden {
@@ -594,7 +709,12 @@ amplify-sign-out{
       font-size: 3vw;
     }
 
-    
+    .create-account-mobile a{
+      background-color: #32ccfe;
+      padding: 10px;
+      border-radius: 50px;
+      margin-left: -10px;
+    }
 
     .nav_links li{
       margin-bottom: 5vw;
@@ -602,8 +722,6 @@ amplify-sign-out{
       font-weight: 900;
       position: relative;
       right: 15px;
-
-      border-bottom: 1px solid #33f18a;
       width: 70%;
 
       text-align: left;
@@ -614,15 +732,32 @@ amplify-sign-out{
       margin-left: 10px;
       cursor: pointer;
     }
-}
-/**************************/
-/*****Popup */
-.popup-container input{
-  margin-bottom: 1vw;
-  height: 25px;
-  border-radius: 5px;
-  border: rgb(151, 151, 151) 1px solid;
-  background-color: rgb(235, 235, 235);
-  width: 70%;
+
+    /* || Footer Syles */
+  .footer_track input{
+    padding-right: 5vw;
+    padding: 15px;
+  }
+
+  .footer_dino{
+    margin-left: 30vw;
+  }
+
+  .footer_dino img{
+  top: 1.5em;
+  }
+
+  .footer{
+    padding-top: 50px;
+    margin-top: 20vw;
+  }
+
+  .footer_track p{
+    font-size: 3vw;
+  }
+
+  .site_map div p{
+    font-size: 3vw;
+  }
 }
 </style>

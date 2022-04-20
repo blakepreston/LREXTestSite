@@ -7,19 +7,6 @@
                     <!-- <iframe src="https://stage.njls.com/clients/MarketingHeader.aspx" frameborder="0" class="login-iframe"></iframe> -->
 
                     <iframe src="https://www.lrex.com/clients/MarketingHeader.aspx" frameborder="0" scrolling="no" class="login-iframe"></iframe>
-
-                <!-- <slot/> -->
-                <!-- <h2>Sign In</h2>
-                <input type="text" placeholder="UserName">
-                <input type="text" placeholder="Password">
-                <div class="forgot-password-container">
-                    <input type="checkbox">
-                       
-                    <p class="remember-me">Remember me</p> 
-                   
-                    <p class="forgot-password">Forgot Password</p>
-                </div> -->
-                <!-- <div class="loginButton">Log In</div> -->
           </div>
           
       </div>
@@ -61,10 +48,10 @@ export default {
 }
 
 .popup-inner{
-    width: 275px;
+    width: 295px;
     height: 220px;
     border-radius: 15px;
-    border: #33f18a 2px solid;
+    /* border: #33f18a 2px solid; */
     background-color: white;
 
     overflow-y: hidden;
@@ -73,7 +60,7 @@ export default {
     justify-content: center;
     flex-direction: column;
 
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
 }
 /* 
 @media not all and (min-resolution:.001dpcm) { 

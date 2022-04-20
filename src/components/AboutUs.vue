@@ -18,23 +18,22 @@
     </div>
   </div>
 
-  <div class="main-about-section">
+  <div class="main-about-section" style="display: none">
     <div class="about-section">
-      <h1>Our founder, Frieda</h1>
+      <h1><span>Our founder, </span>Frieda</h1>
       <div class="about-section-text">
         <img src="../assets/Owner.jpg" alt="">
-          <p>Equam reiciur, nusamus
-            esedit exere, tem este por sit
-            volor sanis sum audam, que
-            nonse illacea rundige niatem
-            quaeprorit.
+          <p>Frieda Pickman was born in 1909. She graduated NYU Law School when she was 19. She couldn’t practice 
+            law until she turned 21.  The family lore is that in her first case, she represented a Chinese 
+            launderer who was being sued by a wealthy customer. The customer’s employee gave the laundered a 
+            fur coat to clean. He washed it and ruined it. The defendant won the case.  She worked at a legal courier in NYC.
           </p>
 
-          <p>Equam reiciur, nusamus
-            esedit exere, tem este por sit
-            volor sanis sum audam, que
-            nonse illacea rundige niatem
-            quaeprorit.
+          <p>It was virtually impossible as a woman to find employment as an attorney at that time. Her future husband, 
+            Aaron Skinder worked at a competitive legal courier. The two of them, in 1929, crossed the river into NJ and 
+            started New Jersey Lawyers Service as partners, servicing the legal community in Essex, Hudson and Union counties. 
+            We don’t know whether love came first and then the business, or vice versa, but they married on June 17, 1930.  
+            Today, Frieda’s fierce ambition still inspires the LREX team to conquer new territories.
           </p>
       </div>
     </div>
@@ -42,22 +41,23 @@
 
 <div class="main-about-section">
       <div class="about-section">
-      <h1>Mary Beth Dixon</h1>
+      <h1>Mary Beth Dixon, <span>CEO & Owner</span></h1>
       <div class="about-section-text">
-        <img src="../assets/Owner.jpg" alt="">
-          <p>Equam reiciur, nusamus
-            esedit exere, tem este por sit
-            volor sanis sum audam, que
-            nonse illacea rundige niatem
-            quaeprorit.
-          </p>
+        <img src="../assets/MBbio.jpg" alt="">
+          <div class="about-section-text-container">
+            <p>Mary Beth has been in the delivery business since she was a child, going back to the days 
+              she delivered newspapers with her dad. Before joining NJLS as its President in 2019, Mary 
+              Beth earned a decade of logistic experience with UPS and i-parcel.
+            </p>
 
-          <p>Equam reiciur, nusamus
-            esedit exere, tem este por sit
-            volor sanis sum audam, que
-            nonse illacea rundige niatem
-            quaeprorit.
-          </p>
+            <p> An avid entrepreneur, 
+              she co-owned and managed a chain of Subway franchises out of college,
+              and jumped at the chance to launch LREX with her partner, Vic.
+              Mary Beth is privileged to 
+              lead the daily operations with her team of talented Rexperts. Mary Beth spends her time away 
+              from LREX at the Lake House with her husband, Kevin and her dog, Cassian.
+            </p>
+          </div>
       </div>
     </div>
 </div>
@@ -67,19 +67,45 @@
       <h1>Vic Kanwar</h1>
       <div class="about-section-text">
         <img src="../assets/Owner3.jpg" alt="">
-          <p>Equam reiciur, nusamus
-            esedit exere, tem este por sit
-            volor sanis sum audam, que
-            nonse illacea rundige niatem
-            quaeprorit.
+          <div class="about-section-text-container">
+            <p>After launching eLaw.com in 2000 and revolutionizing electronic 
+              calendar tracking in New York and New Jersey, Vic turned his 
+              attention to NJLS. A year later NJLS implemented one of the first 
+              completely online shipping platforms. Since then as CIO of Skinder 
+              Strauss Vic focused primarily on building and managing platforms for 
+              complex cross-functional processes for eLaw 
+              and PM Legal.
+            </p>
+
+            <p> He continued to lead the evolution of the NJLS platform 
+              keeping it relevant for two decades. Vic is now back spearheading the 
+              development of the LREX platform. No longer an evolutionary change but 
+              a transformation “Beyond the box”.
+            </p>
+          </div>
+          
+      </div>
+    </div>
+</div>
+
+<div class="main-about-section">
+      <div class="about-section">
+      <h1>Frank Nappi, <span>Director of Business Development</span></h1>
+      <div class="about-section-text">
+        <img src="../assets/Owner3.jpg" alt="">
+        <div class="about-section-text-container">
+          <p>Frank has been with NJLS for over 20 years, building the courier 
+            sales. Frank worked at Guaranteed Subpoena for 14 years as a vice 
+            president and at Spartan Detective Agency as an investigator.
           </p>
 
-          <p>Equam reiciur, nusamus
-            esedit exere, tem este por sit
-            volor sanis sum audam, que
-            nonse illacea rundige niatem
-            quaeprorit.
+          <p>Frank is a powerful force in the workplace and uses his positive 
+            attitude and tireless energy to encourage others to work hard and 
+            succeed. Frank is inspired daily by his wife and their dog Picasso. 
+            In his free time, Frank likes to exercise, work on his cars and long walks.
           </p>
+        </div>
+          
       </div>
     </div>
 </div>
@@ -87,144 +113,15 @@
     <div class="headline_recruiting">
       <!-- <img src="../assets/delivery-man2.jpg" alt=""> -->
       <img src="../assets/green-uniform-man.jpg" alt="">
-      <div class="sign_up"><a @click="()=> JoinTeamTogglePopup('JoinTeamButtonTrigger')">Join our team</a></div>
+      <div class="sign_up"><router-link to="/IndependentContractor">Join our network</router-link></div>
     </div>
-
-    <div class="popup-container">
-        <JoinTeamPopup 
-            v-if="JoinTeamPopupTriggers.JoinTeamButtonTrigger" 
-            :JoinTeamTogglePopup="()=> JoinTeamTogglePopup('JoinTeamButtonTrigger')"
-            class="signin-popup">
-                <h2>Join our team</h2>
-                <input type="text" placeholder="Enter userName">
-                <input type="text" placeholder="Enter password">
-                <input type="text" placeholder="Re-enter password">
-        </JoinTeamPopup>
-    </div>
-
-    <div class="footer">
-      <img src="../assets/LREXFooterLogo.jpg" alt="">
-      <div class="site_map">
-        <div>
-          <p>Site map</p>
-          <p>Site map</p>
-          <p>Site map</p>
-          <p>Site map</p>
-        </div>
-        
-        <div>
-          <p>Site map</p>
-          <p>Site map</p>
-          <p>Site map</p>
-          <p>Site map</p>
-        </div>
-
-        <div>
-          <p>Download</p>
-          <p>Download</p>
-          <p>Download</p>
-          <p>Download</p>
-        </div>
-        
-      </div>
-    </div>
-
-    <div class="footer_two">
-      <div class="footer_track">
-            <p>Track a package.</p>
-                <form @submit.prevent="ShipmentTrackingTogglePopup('ShipmentTrackingButtonTrigger');">
-                    <input type="text" v-model="posts.shipmentId"> <br>
-                </form>
-      </div>
-      <div class="footer_dino">
-        <img src="../assets/LREXDinoFooter.jpg" alt="">
-      </div>
-    </div>
-
-    <ShipmentTrackingPopup 
-        v-if="ShipmentTrackingPopupTriggers.ShipmentTrackingButtonTrigger" 
-        :ShipmentTrackingTogglePopup="()=> ShipmentTrackingTogglePopup('ShipmentTrackingButtonTrigger')"
-        :shipmentIdProp = "posts.shipmentId"
-        class="signin-popup"
-        id="shipmentTrackingContents">
-    </ShipmentTrackingPopup>
 </template>
 
 <script>
-import JoinTeamPopup from './Popups/JoinTeamPopup.vue'
-import {ref} from 'vue';
-import ShipmentTrackingPopup from './Popups/ShipmentTrackingPopup.vue'
-
-export default{
-  data(){
-    return{
-      posts:{
-            shipmentId: null,
-            IncludeImageURL: true
-          },
-          loading: false
-      }
-    },
-    components:{
-        JoinTeamPopup,
-        ShipmentTrackingPopup
-    },
-    setup(){
-    //Get in touch Popup
-    const JoinTeamPopupTriggers = ref({
-      JoinTeamButtonTrigger: false
-    });
-
-    const JoinTeamTogglePopup = (trigger) =>{
-      JoinTeamPopupTriggers.value[trigger] = !JoinTeamPopupTriggers.value[trigger]
-    }
-
-    //ShipmentTracking Popup
-    const ShipmentTrackingPopupTriggers = ref({
-      ShipmentTrackingButtonTrigger: false
-    });
-
-    const ShipmentTrackingTogglePopup = (trigger) =>{
-      ShipmentTrackingPopupTriggers.value[trigger] = !ShipmentTrackingPopupTriggers.value[trigger]
-    }
-
-    return{
-      JoinTeamTogglePopup,
-      JoinTeamPopupTriggers,
-      ShipmentTrackingTogglePopup,
-      ShipmentTrackingPopupTriggers
-    }
-  }
-}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
-/****Popup */
-
-.popup-container{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  animation: drop .5s ease forwards;
-  margin-bottom: -30px;
-}
-
-.popup-container h2{
-  margin-top: -5px;
-}
-
-.popup-container input{
-  margin-bottom: 1vw;
-  height: 25px;
-  border-radius: 5px;
-  border: rgb(151, 151, 151) 1px solid;
-  background-color: rgb(235, 235, 235);
-  width: 40%;
-}
-
 /**************************/    
 /* || Our Story Syles */
 .our_story{
@@ -269,23 +166,36 @@ export default{
   padding-bottom: 2vh;
 }
 
-.about-text h1{
+.about-section h1{
   font-size: 2vw;
+}
+
+.about-section h1 span{
+  font-weight: normal;
 }
 
 .about-section-text{
   display: flex;
   flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
 }
 
-.about-section-text p{
-  font-size: 2vw;
+.about-section-text-container{
+  display: flex;
+  flex-direction: row;
+}
+
+.about-section-text-container p{
+  font-size: 1.5vw;
+  margin-left: 2.5%;
+  width: 45%;
 }
 
 .about-section-text img{
   border-radius: 50%;
-  width: 15vw;
-  margin-right: 10vw;
+  width: 13vw;
+  margin-right: 5%;
 }
 
 /**************************/
@@ -319,6 +229,14 @@ export default{
   z-index: 5;
 }
 
+.sign_up router-link{
+  text-decoration: none;
+  font-family: 'Work Sans', sans-serif;
+  font-size: 2vw;
+  color: black;
+  width: 190px;
+}
+
 .sign_up a{
   text-decoration: none;
   font-family: 'Work Sans', sans-serif;
@@ -328,81 +246,6 @@ export default{
 }
 
 /**************************/
-/* || Footer Syles */
-.footer{
-  margin-top: 15vw;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  border-top: solid black 2px;
-  padding-top: 75px;
-}
-
-.site_map{
-  column-count: 3;
-  display: flex;
-  flex-direction: row;
-  margin-left: 15%;
-}
-
-.site_map div{
-  padding-left: 3em;
-  font-family: 'Work Sans', sans-serif;
-  font-size: 2vw;
-  color: black;
-}
-
-.site_map div p{
-  margin-top: 0;
-  margin-bottom: 10px;
-}
-
-.footer img{
-  position: relative;
-  bottom: 2em;
-  width: 15vw;
-}
-
-.footer_two{
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  padding-bottom: 5%;
-  padding-top: 3%;
-}
-
-.footer_track{
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.footer_track input{
-  padding: 30px;
-  padding-right: 30vw;
-  border: 1px solid black;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: all 0.3s ease 0s;
-}
-
-.footer_track p{
-  font-family: 'Work Sans', sans-serif;
-  font-size: 2vw;
-  color: black;
-}
-
-.footer_dino{
-  margin-left: 35vw;
-}
-
-.footer_dino img{
-  width: 5vw;
-  position: relative;
-  top: 4em;
-}
 
 @media only screen and (max-width: 1000px){
 /**************************/
@@ -411,16 +254,6 @@ export default{
         padding: 0px 10px;
         margin-right: auto;
     }
-
-  /*****Popup */
-.popup-container input{
-  margin-bottom: 1vw;
-  height: 25px;
-  border-radius: 5px;
-  border: rgb(151, 151, 151) 1px solid;
-  background-color: rgb(235, 235, 235);
-  width: 70%;
-}
 
 /**************************/
 /* || Shipment Tracking Syles */
@@ -475,10 +308,17 @@ export default{
 
 .about-section-text{
   flex-direction: column;
+  align-items: start;
 }
 
-.about-section-text p{
+.about-section-text-container{
+  flex-direction: column;
+}
+
+.about-section-text-container p{
   font-size: 4vw;
+  margin-top: 5px;
+  width: 90%;
 }
 
 .about-section-text img{
@@ -495,31 +335,12 @@ export default{
   height: 18vw;
 }
 
-.sign_up a{
+.sign_up router-link{
+  text-decoration: none;
   font-size: 4vw;
   width: 10vw;
 }
-
 /**************************/
-/* || Footer Syles */
-  .footer_track input{
-    padding-right: 5vw;
-    padding: 15px;
-  }
-
-  .footer_dino{
-    margin-left: 30vw;
-  }
-
-  .footer_dino img{
-  top: 1.5em;
-  }
-
-  .footer{
-    padding-top: 50px;
-    margin-top: 20vw;
-  }
-  
 }
 
 @media only screen and (max-width: 950px){

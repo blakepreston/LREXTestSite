@@ -17,7 +17,7 @@
         view on the future of shipping: regional, sustainable, and backed by adaptive technologies 
         and shipping expertise. That’s why we look at every shipment as part of a bigger journey, 
         from before the start to the next destination. We ask: how can we help you get closer to 
-        what’s next, for your business and for all of us?
+        what’s next, for your business?
       </p>
     </div>
 
@@ -40,8 +40,8 @@
       <div class="headline_article">
         <p>We customize a shipping solution for you, the right process, the right technology, and the right people.</p>
         <p>Our cloud-based shipping platform is designed to evolve, twenty years of technology and a century of shipping 
-          experience. Built for complex legal requirements for court and process service, a shipping partner for your 
-          last mile and a lot more.
+          experience. Built for complex businesses, legal requirements for courts, & compliance for pharmaceuticals, a 
+          shipping partner for your last mile and more.
         </p>
       </div>
       <div class="headline_bubble">
@@ -68,7 +68,7 @@
     </div>
 
     <div class="headline_recruiting">
-      <h1>Recruiting</h1>
+      <h1>Putting women behind the wheel.</h1>
       <p>Learn about working for LRex</p>
       <img src="../assets/delivery-woman.jpg" alt="">
       <!-- <img src="../assets/woman-in-car.jpg" alt=""> -->
@@ -119,11 +119,11 @@
             image5
           ],
           texts: [
-          '"This service is great!"',
-          '"I would come back again!"',
-          '"The best customer service in town."',
-          '"Terrific!"',
-          '"Fantastic"'
+          'Delivering ahead of the curve since 1929',
+          'Delivering ahead of the curve since 1929',
+          'Delivering ahead of the curve since 1929',
+          'Delivering ahead of the curve since 1929',
+          'Delivering ahead of the curve since 1929'
         ],
           visibleSlide: 0,
           visibleSlideImg: 1,
@@ -471,7 +471,7 @@
 .headline_bubble{
   margin-left: 5%;
   width: 40vw;
-  background-color: #308ef8;
+  background-color: #32ccfe;
   border-radius: 200px;
 }
 
@@ -545,8 +545,27 @@
   width: 190px;
 }
 
+/* @media only screen and (max-width: 1250px) and (min-width: 800px){
+  .track_package{
+    margin-top: 12vh;
+  }
+} */
 
+@media only screen and (max-width: 999px) and (min-width: 800px){
+  .track_package{
+    margin-top: 20vh;
+    height: 40vh;
+    overflow: hidden;
+  }
+}
 
+@media only screen and (max-width: 799px){
+  .track_package{
+    margin-top: 15vh;
+    height: 40vh;
+    overflow: hidden;
+  } 
+}
 
 
 @media only screen and (max-width: 1000px){
@@ -562,11 +581,11 @@
 
 /**************************/
 /* || Shipment Tracking Syles */
-  .track_package{
+  /* .track_package{
     margin-top: 15vh;
     height: 40vh;
     overflow: hidden;
-  }
+  } */
 
   .track_package h1{
     font-size: 8vw;
@@ -584,9 +603,9 @@
   }
 
   .form_shiptrack{
-    left: 1vw;
+      left: 1vw;
       margin-bottom: 15vw;
-    }
+  }
 
   .form_shiptrack input{
     padding-right: 15vw;
@@ -600,19 +619,6 @@
   .locationDeliveryLink, .proofDeliveryLink{
     flex-direction: column;
   }
-
-   /**Testing Input */
-    /* .userInput{
-      padding: 1vw;
-    }
-
-    .apiInput{
-      padding: 1vw;
-    }
-
-    .shipmentInput{
-      padding: 1vw;
-    } */
 
 /**************************************/
 /* || LREX Paragraph Syles */
@@ -769,7 +775,7 @@
 }
 
 .drive_with_us{
-  top: 50vw;
+  top: 58vw;
   width: 18vw;
   height: 18vw;
 }

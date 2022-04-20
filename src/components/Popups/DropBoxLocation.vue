@@ -418,24 +418,22 @@ export default {
     z-index: 99;
 
     font-family: 'Work Sans', sans-serif;
-    
 }
 
 
 .popup-inner{
     width: 60vw;
     height: 95vh;
-    border-radius: 5px;
-    border: #33f18a 2px solid;
+    border-radius: 15px;
+    /* border: #33f18a 2px solid; */
     background-color: white;
 
     display: flex;
     flex-direction: column;
     text-align: left;
 
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
     overflow-y: auto;
-
 }
 
 .popup-close{
@@ -491,7 +489,7 @@ table {
 }
 
 th{
-  background-color: #33f18a;
+  background-color: #32ccfe;
 }
 
 .closeTab{
@@ -512,7 +510,7 @@ th{
   padding-top: 15px;
   padding-bottom: 15px;
 
-  border-bottom: 1px solid #33f18a;
+  border-bottom: 1px solid #32ccfe;
 }
 
 .tabStructure h2{
@@ -568,7 +566,7 @@ th{
 }
 
 .box-schedule-table th{
-    background-color: #308ef8;
+    background-color: #32ccfe;
 }
 
 .box-schedule-table{

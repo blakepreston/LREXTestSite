@@ -1,5 +1,5 @@
 <template>
-  <div class="ship_with_us">
+  <div class="ship_with_us" style="display: none">
         <img src="../assets/box-by-door.jpg" alt="Truck">
         <div class="ship_with_us_layout">
             <h1>If your business is driving <br> we have a route for you.</h1>
@@ -57,16 +57,6 @@
     </div>
 
     <div class="popup-container">
-        <SignUpPopup 
-            v-if="SignUpPopupTriggers.SignUpButtonTrigger" 
-            :SignUpTogglePopup="()=> SignUpTogglePopup('SignUpButtonTrigger')"
-            class="signin-popup">
-                <h2>Sign up</h2>
-                <input type="text" placeholder="Enter userName">
-                <input type="text" placeholder="Enter password">
-                <input type="text" placeholder="Re-enter password">
-        </SignUpPopup>
-
         <DriveWithUsPopup 
             v-if="DriveWithUsPopupTriggers.DriveWithUsButtonTrigger" 
             :DriveWithUsTogglePopup="()=> DriveWithUsTogglePopup('DriveWithUsButtonTrigger')"
@@ -76,13 +66,11 @@
 </template>
 
 <script>
-import SignUpPopup from './Popups/SignUpPopup.vue'
 import DriveWithUsPopup from './Popups/DriveWithUsPopup.vue'
 import {ref} from 'vue';
 
 export default{
     components:{
-        SignUpPopup,
         DriveWithUsPopup
     },
     setup(){
@@ -94,18 +82,7 @@ export default{
       DriveWithUsPopupTriggers.value[trigger] = !DriveWithUsPopupTriggers.value[trigger]
     }
 
-    //Sign up Popup
-    const SignUpPopupTriggers = ref({
-      SignUpButtonTrigger: false
-    });
-
-    const SignUpTogglePopup = (trigger) =>{
-      SignUpPopupTriggers.value[trigger] = !SignUpPopupTriggers.value[trigger]
-    }
-
     return{
-      SignUpTogglePopup,
-      SignUpPopupTriggers,
       DriveWithUsTogglePopup,
       DriveWithUsPopupTriggers
     }
@@ -215,7 +192,7 @@ export default{
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        margin-top: 20%;
+        margin-top: 10%;
     }
 
     .shipping-options h1{
@@ -381,7 +358,7 @@ export default{
 /**************************/
 /* || Industry Solutions Syles */
 .shipping-options{
-    margin-top: 10%;
+    margin-top: 15%;
 }
 
 .shipping-options h1{
