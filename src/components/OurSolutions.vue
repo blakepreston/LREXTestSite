@@ -52,7 +52,7 @@
     </div>
 
     <div class="headline_recruiting">
-      <img src="../assets/woman-in-car.jpg" alt="">
+      <img loading="lazy" src="../assets/woman-in-car.jpg" alt="">
       <div class="sign_up"><a href="https://www.stage.njls.com/clients/RegisterNewCustomer.aspx" target="_blank">Sign Up</a></div>
     </div>
 

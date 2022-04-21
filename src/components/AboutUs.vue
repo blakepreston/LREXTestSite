@@ -43,7 +43,7 @@
       <div class="about-section">
       <h1>Mary Beth Dixon, <span>CEO & Owner</span></h1>
       <div class="about-section-text">
-        <img src="../assets/MBbio.jpg" alt="">
+        <img loading="lazy" src="../assets/MBbio.jpg" alt="">
           <div class="about-section-text-container">
             <p>Mary Beth has been in the delivery business since she was a child, going back to the days 
               she delivered newspapers with her dad. Before joining NJLS as its President in 2019, Mary 
@@ -66,7 +66,7 @@
       <div class="about-section">
       <h1>Vic Kanwar</h1>
       <div class="about-section-text">
-        <img src="../assets/Owner3.jpg" alt="">
+        <img loading="lazy" src="../assets/Owner3.jpg" alt="">
           <div class="about-section-text-container">
             <p>After launching eLaw.com in 2000 and revolutionizing electronic 
               calendar tracking in New York and New Jersey, Vic turned his 
@@ -92,7 +92,7 @@
       <div class="about-section">
       <h1>Frank Nappi, <span>Director of Business Development</span></h1>
       <div class="about-section-text">
-        <img src="../assets/Owner3.jpg" alt="">
+        <img loading="lazy" src="../assets/Owner3.jpg" alt="">
         <div class="about-section-text-container">
           <p>Frank has been with NJLS for over 20 years, building the courier 
             sales. Frank worked at Guaranteed Subpoena for 14 years as a vice 
@@ -112,7 +112,7 @@
 
     <div class="headline_recruiting">
       <!-- <img src="../assets/delivery-man2.jpg" alt=""> -->
-      <img src="../assets/green-uniform-man.jpg" alt="">
+      <img loading="lazy" src="../assets/green-uniform-man.jpg" alt="">
       <div class="sign_up"><router-link to="/IndependentContractor">Join our network</router-link></div>
     </div>
 </template>

@@ -795,15 +795,15 @@ export default {
         --width: 450px;
         --height: 600px;
         --amplify-primary-color: #32ccfe;
-        --amplify-secondary-tint: #32ccfe;
-        --amplify-primary-shade: #2c82e4;
+        --amplify-secondary-tint: #2cb6e4;
+        --amplify-primary-shade: #32ccfe;
         --amplify-primary-tint: #32ccfe;
     }
 
     amplify-sign-out{
         --amplify-primary-color: #32ccfe;
-        --amplify-secondary-tint: #32ccfe;
-        --amplify-primary-shade: #2c82e4;
+        --amplify-secondary-tint: #2cb6e4;
+        --amplify-primary-shade: #32ccfe;
         --amplify-primary-tint: #32ccfe;
     }
 
@@ -826,7 +826,7 @@ export default {
     }
 
     .fa-times-circle:hover{
-        color: #2c82e4;
+        color: #2cb6e4;
         cursor: pointer;
         transition-duration: .5s;
     }
@@ -885,7 +885,7 @@ export default {
     }
 
     .delete-confirm-inner button:hover{
-        background-color: #2877d1;
+        background-color: #2cb6e4;
         transition-duration: .5s;
     }
 
@@ -960,7 +960,7 @@ export default {
     }
 
     .shipmentID:hover{
-        color: #2877d1;
+        color: #2cb6e4;
     }
     .shipment-table-container{
         display: flex;
@@ -1060,7 +1060,7 @@ export default {
     }
 
     .filter-button:hover{
-        background-color: #2877d1;
+        background-color: #2cb6e4;
         cursor: pointer;
         transition-duration: .5s;
     }

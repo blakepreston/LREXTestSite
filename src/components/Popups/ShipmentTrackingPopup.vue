@@ -354,7 +354,7 @@ export default {
 .delivery-image-link{
       text-decoration: none;
       color: #ffffff;
-      background-color: #308ef8;
+      background-color: #32ccfe;
       border-radius: 50%;
       padding: 2.5px;
       transition-duration: .5s ease;

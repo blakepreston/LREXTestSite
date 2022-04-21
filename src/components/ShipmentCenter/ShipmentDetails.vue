@@ -219,10 +219,11 @@ export default {
     } 
 
     .shipment_data h3{
-      padding: 5px;
+      padding: 5px 10px;
+      border-radius: 50px;
       background-color: #33f18a;
       border-bottom: 1px solid #33f18a;
-      width: 100%;
+      width: 95%;
     }
 
 
@@ -272,7 +273,7 @@ export default {
         z-index: 11;
         border: none;
         margin: 1px;
-        background-color: #308ef8;
+        background-color: #32ccfe;
         padding: 12px 15px;
         color: #ffffff;
         border-radius: 10px;
@@ -281,14 +282,14 @@ export default {
     }
 
     .shipment-details-button:hover{
-        background-color: #2877d1;
+        background-color: #2cb3e0;
         transition-duration: .5s;
     }
 
     .delivery-image-link{
       text-decoration: none;
       color: #ffffff;
-      background-color: #308ef8;
+      background-color: #32ccfe;
       border-radius: 50%;
       padding: 2.5px;
       transition-duration: .5s ease;

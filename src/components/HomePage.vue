@@ -58,9 +58,9 @@
       @Imageprev = 'Imageprev'
       >
         <image-carousel-slide v-for="(image,index) in images" :key="image" :index="index" :visibleSlideImg ="visibleSlideImg" :direction="direction">
-          <img style="background-color: #fee354; border-radius: 150px;" :src="images[index-1]"/>
-          <img style="background-color: #ffcccc; border-radius: 150px;" :src="image"/>
-          <img style="background-color: #ff5534; border-radius: 150px;" :src="images[index+1]"/>
+          <img loading="lazy" style="background-color: #fee354; border-radius: 150px;" :src="images[index-1]"/>
+          <img loading="lazy" style="background-color: #ffcccc; border-radius: 150px;" :src="image"/>
+          <img loading="lazy" style="background-color: #ff5534; border-radius: 150px;" :src="images[index+1]"/>
         </image-carousel-slide>
       </image-carousel>
       <div class="logo_arrow_right" @click="Imagenext"></div>
@@ -70,7 +70,7 @@
     <div class="headline_recruiting">
       <h1>Putting women behind the wheel.</h1>
       <p>Learn about working for LRex</p>
-      <img src="../assets/delivery-woman.jpg" alt="">
+      <img loading="lazy" src="../assets/FinalImages/AdobeStock_WomanDriver.jpeg" alt="">
       <!-- <img src="../assets/woman-in-car.jpg" alt=""> -->
       <div class="drive_with_us"><a @click="()=> DriveWithUsTogglePopup('DriveWithUsButtonTrigger')">Drive with us</a></div>
     </div>
