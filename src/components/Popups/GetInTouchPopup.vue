@@ -2,11 +2,12 @@
   <div class="popup">
       <div class="popup-inner">
           <div class="GetInTouch-container">
-                <div class="closeGetInTouch" @click="GetInTouchTogglePopup()"></div>
-                <!-- <slot/> -->
-                <!-- <div class="GetInTouchButton">Get in touch</div> -->
+              <div class="closeGetInTouch-container">
+                <h1>Get in touch</h1>
+                <div class="close-popup-container"><i class="fa fa-times-circle" @click="GetInTouchTogglePopup()"></i></div>
+                  <!-- <div class="closeGetInTouch" @click="GetInTouchTogglePopup()"></div> -->
+              </div>
             <div class="get-in-touch">
-                <h2>Get in touch</h2>
                 <h3>Telephone Numbers:</h3>
                 <p>Union: (908) 686-7300</p>
                 <p>Cherry Hill: (856) 428-6190</p>
@@ -56,7 +57,7 @@ export default {
 }
 
 .popup-inner{
-    width: 25vw;
+    width: 22.5vw;
     border-radius: 15px;
     /* border: #33f18a 2px solid; */
     background-color: white;
@@ -81,8 +82,6 @@ export default {
     justify-content: center;
     flex-direction: column;
     align-items: center;
-    margin-left: 5%;
-    margin-right: 5%;
 }
 
 @keyframes drop {
@@ -91,12 +90,47 @@ export default {
   100%{transform: translateY(85px);}
 }
 
-.closeGetInTouch {
+.close-popup-container{
+    margin-left: auto;
+    margin-right: 5px;
+}
+
+.fa-times-circle{
+    color: #fff;
+    font-size: 1.5em;
+    cursor: pointer;
+    transition-duration: .5s;
+}
+
+.fa-times-circle:hover{
+    color: rgb(218, 218, 218);
+    cursor: pointer;
+    transition-duration: .5s;
+}
+
+.closeGetInTouch-container{
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #2cb6e4;
+    border-radius: 15px 15px 0 0;
+}
+
+.closeGetInTouch-container h1{
+    color: #fff;
+    text-align: center;
+    font-size: 1.8rem;
+    flex: 1;
+}
+
+/* .closeGetInTouch {
       background: rgb(196, 196, 196);
       height: 25px;
       position: relative;
       width: 5px;
-      margin-left: 75%;
+      margin-left: 95%;
       margin-top: 10px;
       transform: rotate(45deg);
       cursor: pointer;
@@ -111,7 +145,7 @@ export default {
       top: 10px;
       width: 25px;
       border-radius: 5px;
-    }
+    } */
 
 
 .GetInTouchButton{
@@ -132,7 +166,7 @@ export default {
 }
 
 .get-in-touch h3{
-  border-bottom: 1px solid #33f18a;
+  border-bottom: 1px solid rgb(218, 218, 218);
 }
 
 @media only screen and (max-width: 1000px){

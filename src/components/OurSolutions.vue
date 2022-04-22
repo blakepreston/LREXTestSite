@@ -52,49 +52,49 @@
     </div>
 
     <div class="headline_recruiting">
-      <img loading="lazy" src="../assets/woman-in-car.jpg" alt="">
+      <img src="../assets/FinalImages/AdobeStock_Pink_Door.jpeg" alt="">
       <div class="sign_up"><a href="https://www.stage.njls.com/clients/RegisterNewCustomer.aspx" target="_blank">Sign Up</a></div>
     </div>
 
-    <div class="popup-container">
+    <!-- <div class="popup-container">
         <DriveWithUsPopup 
             v-if="DriveWithUsPopupTriggers.DriveWithUsButtonTrigger" 
             :DriveWithUsTogglePopup="()=> DriveWithUsTogglePopup('DriveWithUsButtonTrigger')"
             class="DriveWithUs-popup">
         </DriveWithUsPopup>
-    </div>
+    </div> -->
 </template>
 
 <script>
-import DriveWithUsPopup from './Popups/DriveWithUsPopup.vue'
-import {ref} from 'vue';
+// import DriveWithUsPopup from './Popups/DriveWithUsPopup.vue'
+// import {ref} from 'vue';
 
-export default{
-    components:{
-        DriveWithUsPopup
-    },
-    setup(){
-    const DriveWithUsPopupTriggers = ref({
-      DriveWithUsButtonTrigger: false
-    });
+// export default{
+//     components:{
+//         DriveWithUsPopup
+//     },
+//     setup(){
+//     const DriveWithUsPopupTriggers = ref({
+//       DriveWithUsButtonTrigger: false
+//     });
 
-    const DriveWithUsTogglePopup = (trigger) =>{
-      DriveWithUsPopupTriggers.value[trigger] = !DriveWithUsPopupTriggers.value[trigger]
-    }
+//     const DriveWithUsTogglePopup = (trigger) =>{
+//       DriveWithUsPopupTriggers.value[trigger] = !DriveWithUsPopupTriggers.value[trigger]
+//     }
 
-    return{
-      DriveWithUsTogglePopup,
-      DriveWithUsPopupTriggers
-    }
-  }
-}
+//     return{
+//       DriveWithUsTogglePopup,
+//       DriveWithUsPopupTriggers
+//     }
+//   }
+// }
 
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 /****Popup */
-.popup-container{
+/* .popup-container{
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -114,7 +114,7 @@ export default{
   border: rgb(151, 151, 151) 1px solid;
   background-color: rgb(235, 235, 235);
   width: 40%;
-}
+} */
 
 /**************************************/
 /* || Shipment Tracking Syles */
@@ -278,6 +278,8 @@ export default{
   position: relative;
 }
 
+
+
 .sign_up{
   width: 15vw;
   height: 15vw;
@@ -304,14 +306,14 @@ export default{
 
 @media only screen and (max-width: 1000px){
     /*****Popup */
-.popup-container input{
+/* .popup-container input{
   margin-bottom: 1vw;
   height: 25px;
   border-radius: 5px;
   border: rgb(151, 151, 151) 1px solid;
   background-color: rgb(235, 235, 235);
   width: 70%;
-}
+} */
 /**************************/
 /* || Header Syles */
   .nav_links li{

@@ -1,8 +1,12 @@
 <template>
   <div class="popup">
       <div class="popup-inner">
+          <div class="closeDropBox-container">
+                    <h1>Drop Box Locations</h1>
+                    <div class="close-popup-container"><i class="fa fa-times-circle" @click="DropBoxTogglePopup()"></i></div>
+                    <!-- <div class="closeDropBox" @click="DropBoxTogglePopup()"></div> -->
+                </div>
             <div class="DropBox-container">
-                <div class="closeDropBox" @click="DropBoxTogglePopup()"></div>
                 
                 <div class="box-schedule-table">
                     <h2>Drop Box Pickup Schedule</h2>
@@ -12,12 +16,8 @@
                                 <th>Delivered</th>
                             </tr>
                             <tr>
-                                <td>Monday - Thursday</td>
+                                <td>Monday - Friday</td>
                                 <td>Next Day, excluding Legal Holidays</td>
-                            </tr>
-                            <tr>
-                                <td>Sunday (Picked up by noon)</td>
-                                <td>Monday, excluding Legal Holidays</td>
                             </tr>
                         </table>
                     <p>** unless indicated on the chart below, all drop box pick-up times are 6pm</p>
@@ -457,12 +457,47 @@ export default {
   to{margin-top: 1%;}
 }
 
-.closeDropBox {
+.close-popup-container{
+    margin-left: auto;
+    margin-right: 5px;
+}
+
+.fa-times-circle{
+    color: #fff;
+    font-size: 1.5em;
+    cursor: pointer;
+    transition-duration: .5s;
+}
+
+.fa-times-circle:hover{
+    color: rgb(218, 218, 218);
+    cursor: pointer;
+    transition-duration: .5s;
+}
+
+.closeDropBox-container{
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #2cb6e4;
+    border-radius: 15px 15px 0 0;
+}
+
+.closeDropBox-container h1{
+    color: #fff;
+    text-align: center;
+    font-size: 1.8rem;
+    flex: 1;
+}
+
+/* .closeDropBox {
       background: rgb(196, 196, 196);
       height: 25px;
       position: relative;
       top: 10px;
-      margin-left: 75%;
+      margin-left: 95%;
       width: 5px;
       transform: rotate(45deg);
       cursor: pointer;
@@ -477,7 +512,7 @@ export default {
       top: 10px;
       width: 25px;
       border-radius: 5px;
-    }
+    } */
 
 
 
@@ -572,7 +607,7 @@ th{
 .box-schedule-table{
     display: flex;
     flex-direction: column;
-    margin-top: 3vw;
+    margin-top: 1vw;
 }
 
 .locationsHeader{
@@ -597,9 +632,9 @@ table {
     width: 60vw;
 }
 
-.box-schedule-table{
+/* .box-schedule-table{
     margin-top: 10vw;
-}
+} */
 
 }
 

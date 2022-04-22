@@ -1,6 +1,7 @@
 <template>
     <div class="track_package">
-        <img src="../assets/Delivery-Truck.jpg" alt="Truck">
+        <img v-show="AlternateHeader == 1" src="../assets/Delivery-Truck.jpg" alt="Truck">
+        <img v-show="AlternateHeader == 2" src="../assets/FinalImages/Stocksy_Delivery_Driver_Back_of_Van.jpg" alt="">
         <div class="form_shiptrack">
             <h1>Your shipping partner.</h1>
             <p>Track a package</p>
@@ -67,21 +68,20 @@
     </div>
     </div>
 
-    <div class="headline_recruiting">
+    <!-- <div class="headline_recruiting">
       <h1>Putting women behind the wheel.</h1>
       <p>Learn about working for LRex</p>
       <img loading="lazy" src="../assets/FinalImages/AdobeStock_WomanDriver.jpeg" alt="">
-      <!-- <img src="../assets/woman-in-car.jpg" alt=""> -->
       <div class="drive_with_us"><a @click="()=> DriveWithUsTogglePopup('DriveWithUsButtonTrigger')">Drive with us</a></div>
-    </div>
+    </div> -->
 
     <div class="popup-container">
-      <DriveWithUsPopup 
+      <!-- <DriveWithUsPopup 
         v-if="DriveWithUsPopupTriggers.DriveWithUsButtonTrigger" 
         :DriveWithUsTogglePopup="()=> DriveWithUsTogglePopup('DriveWithUsButtonTrigger')"
         class="DriveWithUs-popup">
           
-      </DriveWithUsPopup>
+      </DriveWithUsPopup> -->
 
       <ShipmentTrackingPopup 
         v-if="ShipmentTrackingPopupTriggers.ShipmentTrackingButtonTrigger" 
@@ -99,7 +99,7 @@
   import CarouselSlide from './Carousel/CarouselSlide.vue'
   import ImageCarousel from './ImageCarousel/ImageCarousel.vue'
   import ImageCarouselSlide from './ImageCarousel/ImageCarouselSlide.vue'
-  import DriveWithUsPopup from './Popups/DriveWithUsPopup.vue'
+  // import DriveWithUsPopup from './Popups/DriveWithUsPopup.vue'
   import ShipmentTrackingPopup from './Popups/ShipmentTrackingPopup.vue'
   import {ref} from 'vue';
   import image1 from "../assets/fakecompany1.png"
@@ -131,7 +131,8 @@
           posts:{
             shipmentId: null,
             IncludeImageURL: true
-          }
+          },
+          AlternateHeader: 1
         }
     },
     methods:{
@@ -167,7 +168,16 @@
         }
         this.direction = "right";
         console.log("The buttons works");
+      },
+      AlternateHeaderValue(){
+        this.AlternateHeader++;
+        if(this.AlternateHeader > 2){
+           this.AlternateHeader = 1;
+         }
       }
+    },
+    mounted(){
+      setInterval(this.AlternateHeaderValue, 10000);
     },
     computed:{
       textsLength(){
@@ -182,18 +192,18 @@
       CarouselSlide,
       ImageCarousel,
       ImageCarouselSlide,
-      DriveWithUsPopup,
+      // DriveWithUsPopup,
       ShipmentTrackingPopup
     },
     setup(){
     //Get in touch Popup
-    const DriveWithUsPopupTriggers = ref({
-      DriveWithUsButtonTrigger: false
-    });
+    // const DriveWithUsPopupTriggers = ref({
+    //   DriveWithUsButtonTrigger: false
+    // });
 
-    const DriveWithUsTogglePopup = (trigger) =>{
-      DriveWithUsPopupTriggers.value[trigger] = !DriveWithUsPopupTriggers.value[trigger]
-    }
+    // const DriveWithUsTogglePopup = (trigger) =>{
+    //   DriveWithUsPopupTriggers.value[trigger] = !DriveWithUsPopupTriggers.value[trigger]
+    // }
     //ShipmentTracking Popup
     const ShipmentTrackingPopupTriggers = ref({
       ShipmentTrackingButtonTrigger: false
@@ -204,8 +214,8 @@
     }
 
     return{
-      DriveWithUsTogglePopup,
-      DriveWithUsPopupTriggers,
+      // DriveWithUsTogglePopup,
+      // DriveWithUsPopupTriggers,
       ShipmentTrackingTogglePopup,
       ShipmentTrackingPopupTriggers,
     }
@@ -299,6 +309,12 @@
         z-index: 1;
         width: 90vw;
         height: auto;
+        animation: animate-header-image 1s ease forwards;
+    }
+
+    @keyframes animate-header-image {
+      from{opacity: .75;}
+      to{opacity: 1;}
     }
 
     .track_package h1{
@@ -524,7 +540,7 @@
   position: relative;
 }
 
-.drive_with_us{
+/* .drive_with_us{
   width: 15vw;
   height: 15vw;
   background-color: #33f18a;
@@ -543,7 +559,7 @@
   font-size: 2vw;
   color: black;
   width: 190px;
-}
+} */
 
 /* @media only screen and (max-width: 1250px) and (min-width: 800px){
   .track_package{
@@ -774,7 +790,7 @@
   font-size: 4vw;
 }
 
-.drive_with_us{
+/* .drive_with_us{
   top: 58vw;
   width: 18vw;
   height: 18vw;
@@ -783,7 +799,7 @@
 .drive_with_us a{
   font-size: 4vw;
   width: 10vw;
-}
+} */
   
 }
 

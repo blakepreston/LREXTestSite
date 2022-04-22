@@ -8,10 +8,16 @@
       </div>
 
       <div class="popup-inner">
+        <div class="closeShipmentTracking-container">
+              <h1>Shipment Details</h1>
+              <div class="close-popup-container"><i class="fa fa-times-circle" @click="ShipmentTrackingTogglePopup()"></i></div>
+              <!-- <div class="closeShipmentTracking" @click="ShipmentTrackingTogglePopup()"></div> -->
+            </div>
           <div class="ShipmentTracking-container">
-                <div class="closeShipmentTracking" @click="ShipmentTrackingTogglePopup()"></div>
-                <slot/>
-                <div class="shipment_data" v-for="ship in shipments" v-bind:key="ship"> 
+            
+                
+                <!-- <slot/> -->
+          <div class="shipment_data" v-for="ship in shipments" v-bind:key="ship"> 
             <img class="logo" src="./../../assets/LREXHeaderLogo.jpg" alt="LREX" style="width: 80px;">
             <h3>Tracking #: {{shipments[0].shipmentId}}</h3>
             <div v-if="shipments[0].priorityService">
@@ -216,13 +222,49 @@ export default {
   100%{transform: translateY(1px);}
 }
 
-.closeShipmentTracking {
+.close-popup-container{
+    margin-left: auto;
+    margin-right: 5px;
+}
+
+.fa-times-circle{
+    color: #fff;
+    font-size: 1.5em;
+    cursor: pointer;
+    transition-duration: .5s;
+}
+
+.fa-times-circle:hover{
+    color: rgb(218, 218, 218);
+    cursor: pointer;
+    transition-duration: .5s;
+}
+
+.closeShipmentTracking-container{
+    width: 100%;
+    height: 50px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #2cb6e4;
+    border-radius: 15px 15px 0 0;
+}
+
+.closeShipmentTracking-container h1{
+    color: #fff;
+    text-align: center;
+    font-size: 1.8rem;
+    flex: 1;
+}
+
+/* .closeShipmentTracking {
       background: rgb(196, 196, 196);
       height: 25px;
-      position: fixed;
+      position: relative;
       width: 5px;
-      top: 3%;
-      right: 25%;
+      margin-top: 10px;
+      margin-left: 99%;
       transform: rotate(45deg);
       cursor: pointer;
       border-radius: 5px;
@@ -236,7 +278,7 @@ export default {
       top: 10px;
       width: 25px;
       border-radius: 5px;
-    }
+    } */
 
 
 .ShipmentTrackingButton{
@@ -376,11 +418,6 @@ export default {
     margin-bottom: 5vw;
     margin-top: 1vw;
     width: 70%;
-}
-
-.closeShipmentTracking{
-    top: 1.5%;
-    right: 20%;
 }
 
 .loading-dropdown{

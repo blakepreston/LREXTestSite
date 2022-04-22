@@ -17,7 +17,7 @@
                 <li v-if="!shipmentPages"><a  @click="()=> GetInTouchTogglePopup('GetInTouchButtonTrigger')">Get in touch</a></li>
                 <li v-if="shipmentPages"><router-link to="/Ship">New Shipment</router-link></li>
                 <li v-if="shipmentPages"><router-link to="/ShipmentCenter">My Shipments</router-link></li>
-                <li class="create-account-mobile"><a href="https://www.stage.njls.com/clients/RegisterNewCustomer.aspx" target="_blank">Create an account</a></li>
+                <li class="create-account-mobile"><a href="https://www.stage.njls.com/clients/RegisterNewCustomer.aspx" target="_blank"><strong>Create an account</strong></a></li>
                 <li style="border-bottom: none;">
                 <amplify-authenticator v-if="authState === 'signedin'">
                   <div class="sign-out-container">
@@ -50,7 +50,7 @@
         </div>
 
         <div class="create_account">
-            <li><a href="https://www.stage.njls.com/clients/RegisterNewCustomer.aspx" target="_blank">Create an account</a></li>
+            <li><a href="https://www.stage.njls.com/clients/RegisterNewCustomer.aspx" target="_blank"><strong>Create an account</strong></a></li>
             <a v-if="!createShipmentToggleSignIn"><button class="button_signin" @click="()=> SignInTogglePopup('SignInButtonTrigger')">Sign in</button></a>
         </div>
 

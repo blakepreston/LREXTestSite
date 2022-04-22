@@ -1,12 +1,20 @@
 <template>
   <div class="popup">
       <div class="popup-inner">
+          <div class="closeSignIn-container">
+                  <h1>Sign in</h1>
+                  <div class="close-popup-container"><i class="fa fa-times-circle" @click="SignInTogglePopup()"></i></div>
+                 <!-- <div class="closeSignIn" @click="SignInTogglePopup()"></div>  -->
+              </div>
           <div class="signIn-container">
-                <div class="closeSignIn" @click="SignInTogglePopup()"></div>
+              
+                
 
                     <!-- <iframe src="https://stage.njls.com/clients/MarketingHeader.aspx" frameborder="0" class="login-iframe"></iframe> -->
-
+                <div class="iframe-container">
                     <iframe src="https://www.lrex.com/clients/MarketingHeader.aspx" frameborder="0" scrolling="no" class="login-iframe"></iframe>
+                </div>
+                    
           </div>
           
       </div>
@@ -21,6 +29,10 @@ export default {
 </script>
 
 <style scoped>
+.iframe-container{
+    width: 100%;
+}
+
 .login-iframe{
     width: 1px;
     min-width: 100%;
@@ -62,23 +74,6 @@ export default {
 
     box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
 }
-/* 
-@media not all and (min-resolution:.001dpcm) { 
-     @supports (-webkit-appearance:none) {
-        .popup-inner{
-            height: 450px;
-            width: 90vw
-        }
-
-        .login-iframe{
-            height: 100%;
-        }
-
-        .closeSignIn {
-            height: 25px;
-        }
-     }
-} */
 
 .popup-close{
     position: absolute;
@@ -94,7 +89,6 @@ export default {
     align-items: center;
     margin-left: 1%;
     margin-right: 1%;
-    /* margin-top: 2vw; */
     padding-bottom: 10px;
 }
 
@@ -105,13 +99,47 @@ export default {
   100%{transform: translateY(15px);}
 }
 
-.closeSignIn {
+.close-popup-container{
+    margin-left: auto;
+    margin-right: 5px;
+}
+
+.fa-times-circle{
+    color: #fff;
+    font-size: 1.5em;
+    cursor: pointer;
+    transition-duration: .5s;
+}
+
+.fa-times-circle:hover{
+    color: rgb(218, 218, 218);
+    cursor: pointer;
+    transition-duration: .5s;
+}
+
+.closeSignIn-container{
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #2cb6e4;
+    border-radius: 15px 15px 0 0;
+}
+
+.closeSignIn-container h1{
+    color: #fff;
+    text-align: center;
+    font-size: 1.8rem;
+    flex: 1;
+}
+
+/* .closeSignIn {
       background: rgb(196, 196, 196);
-      height: 37px;
+      height: 25px;
       position: relative;
       width: 5px;
-      margin-left: 75%;
-      top: 10px;
+      margin-left: 90%;
       transform: rotate(45deg);
       cursor: pointer;
       border-radius: 5px;
@@ -125,53 +153,7 @@ export default {
       top: 10px;
       width: 25px;
       border-radius: 5px;
-    }
-
-/* 
-.loginButton{
-    background-color: #33f18a;
-    color: rgb(255, 255, 255);
-    width: 42%;
-    height: 30px;
-    margin-top: 0vw;
-    margin-bottom: 1vw;
-    text-shadow: 1px 1px 4px #696969;
-    font-weight: 600;
-    border-radius: 50px;
-    
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-}
-
-.forgot-password-container{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-}
-
-.forgot-password-container input{
-    margin: 0;
-    margin-right: 5px;
-    width: 15px;
-    cursor: pointer;
-}
-
-.forgot-password-container p{
-    font-size: 12px;
-}
-
-.forgot-password{
-    margin-left: 5%;
-    cursor: pointer;
-}
-
-.remember-me{
-    margin-right: 5%;
-} */
+    } */
 
 
 @media only screen and (max-width: 1000px){

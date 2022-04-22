@@ -111,13 +111,48 @@
 </div>
 
     <div class="headline_recruiting">
-      <!-- <img src="../assets/delivery-man2.jpg" alt=""> -->
-      <img loading="lazy" src="../assets/green-uniform-man.jpg" alt="">
-      <div class="sign_up"><router-link to="/IndependentContractor">Join our network</router-link></div>
+      <h1>Putting women behind the wheel.</h1>
+      <p>Learn about working for LRex</p>
+      <img loading="lazy" src="../assets/FinalImages/AdobeStock_WomanDriver.jpeg" alt="">
+      <!-- <img src="../assets/woman-in-car.jpg" alt=""> -->
+      <div class="drive_with_us"><a @click="()=> DriveWithUsTogglePopup('DriveWithUsButtonTrigger')">Drive with us</a></div>
+    </div>
+
+    <div class="popup-container">
+      <DriveWithUsPopup 
+        v-if="DriveWithUsPopupTriggers.DriveWithUsButtonTrigger" 
+        :DriveWithUsTogglePopup="()=> DriveWithUsTogglePopup('DriveWithUsButtonTrigger')"
+        class="DriveWithUs-popup">
+          
+      </DriveWithUsPopup>
     </div>
 </template>
 
 <script>
+import DriveWithUsPopup from './Popups/DriveWithUsPopup.vue';
+import {ref} from 'vue';
+
+export default{
+  components:{
+      DriveWithUsPopup
+    },
+    setup(){
+    //Get in touch Popup
+    const DriveWithUsPopupTriggers = ref({
+      DriveWithUsButtonTrigger: false
+    });
+
+    const DriveWithUsTogglePopup = (trigger) =>{
+      DriveWithUsPopupTriggers.value[trigger] = !DriveWithUsPopupTriggers.value[trigger]
+    }
+
+    return{
+      DriveWithUsTogglePopup,
+      DriveWithUsPopupTriggers
+    }
+    }
+}
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -214,6 +249,59 @@
   border-radius: 600px 600px 0 0;
   z-index: 1;
   position: relative;
+}
+
+/* || Recruiting Syles */
+.headline_recruiting{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5%;
+  position: relative;
+}
+
+.headline_recruiting h1{
+  font-family: 'Work Sans', sans-serif;
+  font-size: 4.5vw;
+  font-weight: bold;
+  color: black;
+  margin-bottom: 0;
+}
+
+.headline_recruiting p{
+  justify-content: flex-start;
+  font-family: 'Work Sans', sans-serif;
+  font-size: 2vw;
+  color: black;
+}
+
+.headline_recruiting img{
+  width: 60vw;
+  border-radius: 600px 600px 0 0;
+  z-index: 1;
+  position: relative;
+}
+
+.drive_with_us{
+  width: 15vw;
+  height: 15vw;
+  background-color: #33f18a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 180px;
+  position: absolute;
+  top: 38vw;
+  z-index: 5;
+}
+
+.drive_with_us a{
+  text-decoration: none;
+  font-family: 'Work Sans', sans-serif;
+  font-size: 2vw;
+  color: black;
+  width: 190px;
 }
 
 .sign_up{
@@ -327,7 +415,28 @@
 
 /**************************/
 /* || Recruiting Syles */
+.headline_recruiting{
+  margin-bottom: 5vw;
+}
 
+.headline_recruiting h1{
+  font-size: 8vw;
+}
+
+.headline_recruiting p{
+  font-size: 4vw;
+}
+
+.drive_with_us{
+  top: 58vw;
+  width: 18vw;
+  height: 18vw;
+}
+
+.drive_with_us a{
+  font-size: 4vw;
+  width: 10vw;
+}
 
 .sign_up{
   top: 22vw;

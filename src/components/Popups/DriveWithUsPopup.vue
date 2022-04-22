@@ -1,7 +1,11 @@
 <template>
   <div class="popup">
       <div class="popup-inner">
-          <div class="closeDriveWithUs" @click="DriveWithUsTogglePopup()"></div>
+          <div class="closeDriveWithUs-container">
+              <h1>Drive with us</h1>
+              <div class="close-popup-container"><i class="fa fa-times-circle" @click="DriveWithUsTogglePopup()"></i></div>
+              <!-- <div class="closeDriveWithUs" @click="DriveWithUsTogglePopup()"></div> -->
+          </div>
 
           <div class="contact-info">
               <div class="contact-info-inner">
@@ -59,13 +63,7 @@ export default {
 
 .popup-inner h3{
     margin: 0;
-}
-
-.popup-close{
-    position: absolute;
-    top: 5px;
-    justify-content: center;
-    margin-left: 2.5vw;
+    border-bottom: 1px solid rgb(218, 218, 218);
 }
 
 .contact-info{
@@ -120,27 +118,41 @@ export default {
   100%{transform: translateY(85px);}
 }
 
-.closeDriveWithUs {
-      background: rgb(196, 196, 196);
-      height: 25px;
-      position: relative;
-      width: 5px;
-      margin-left: 75%;
-      margin-top: 10px;
-      transform: rotate(45deg);
-      cursor: pointer;
-      border-radius: 5px;
-    }
-.closeDriveWithUs:after {
-      background: rgb(196, 196, 196);
-      content: "";
-      height: 5px;
-      left: -10px;
-      position: absolute;
-      top: 10px;
-      width: 25px;
-      border-radius: 5px;
-    }
+.close-popup-container{
+    margin-left: auto;
+    margin-right: 5px;
+}
+
+.fa-times-circle{
+    color: #fff;
+    font-size: 1.5em;
+    cursor: pointer;
+    transition-duration: .5s;
+}
+
+.fa-times-circle:hover{
+    color: rgb(218, 218, 218);
+    cursor: pointer;
+    transition-duration: .5s;
+}
+
+.closeDriveWithUs-container{
+    width: 100%;
+    height: 50px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #2cb6e4;
+    border-radius: 15px 15px 0 0;
+}
+
+.closeDriveWithUs-container h1{
+    color: #fff;
+    text-align: center;
+    font-size: 1.8rem;
+    flex: 1;
+}
 
 
 .DriveWithUsButton{
