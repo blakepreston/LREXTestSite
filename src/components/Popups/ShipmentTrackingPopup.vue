@@ -3,7 +3,13 @@
       <div v-if="loading" class="loading-container">
         <div class="loading-dropdown">
           <p>Getting Shipment Data</p>
-          <div class="loader"></div>
+          <!--<div class="loader"></div> -->
+          <img src="../../assets/LREXDinoFooter.jpg" alt="">
+          <div class="dot-container">
+            <div class="dot1"></div>
+            <div class="dot2"></div>
+            <div class="dot3"></div>
+          </div>
         </div>
       </div>
 
@@ -302,11 +308,65 @@ export default {
 .loading-dropdown{
   width: 20vw;
   padding: 10px;
-  border: 2px solid #33f18a;
   background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
   border-radius: 5px;
   color: black;
   text-align: center;
+}
+
+.loading-dropdown img{
+  width: 40px;
+  animation: bounce .75s infinite;
+}
+
+.dot-container{
+  padding: 0;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+.dot1{
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: black;
+  margin: 1px;
+  animation: dot-bounce .75s infinite;
+}
+
+.dot2{
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: black;
+  margin: 1px;
+  animation: dot-bounce .75s infinite;
+  animation-delay: .25s;
+}
+
+.dot3{
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: black;
+  margin: 1px;
+  animation: dot-bounce .75s infinite;
+  animation-delay: .5s;
+}
+
+@keyframes dot-bounce {
+  0%{transform: translateY(0px);}
+  50%{transform: translateY(5px);}
+  100%{transform: translateY(0px);}
+}
+
+@keyframes bounce {
+  0%{transform: translateY(0px);}
+  50%{transform: translateY(10px);}
+  100%{transform: translateY(0px);}
 }
 
 .loading-container{
@@ -330,7 +390,7 @@ export default {
   100%{transform: translateY(30px); opacity: 1;}
 }
 
-.loader{
+/* .loader{
     margin: auto;
     margin-bottom: 15px;
     border: 20px solid #EAF0F6;
@@ -344,7 +404,7 @@ export default {
 @keyframes spinner {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
-}
+} */
 
 /* Popup */
 .shipment_data{

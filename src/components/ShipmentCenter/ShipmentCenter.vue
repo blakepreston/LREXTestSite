@@ -1,33 +1,25 @@
 <template>
-    <div class="amplify-container">
-        <amplify-authenticator>
+    <!-- <div class="amplify-container">
+        <amplify-authenticator> -->
           <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
-          <amplify-sign-in slot="sign-in"
+          <!-- <amplify-sign-in slot="sign-in"
                 v-if="authState !== 'signedin'"
                 v-show="authState !== 'signup' && authState !== 'forgotpassword'  && authState !== 'confirmSignUp'"
                 header-text="Sign in to create a shipment."
-          ></amplify-sign-in>
+          ></amplify-sign-in> -->
 
 
           <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
-          <amplify-sign-up slot="sign-up"
+          <!-- <amplify-sign-up slot="sign-up"
                   v-if="authState === 'signup'"
                   headerText="Sign up to create a shipment."
                   :formFields="formFields"
           ></amplify-sign-up>
-
-          <!-- <div class="sign-out-container"> -->
-            <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
-            <!-- <amplify-sign-out slot="sign-out"
-                id="signout-button"
-                v-if="authState === 'signedin'">
-            </amplify-sign-out>
-          </div> -->
               
         </amplify-authenticator>
-    </div>
+    </div> -->
 
-    <div class="container" v-show="authState === 'signedin'">
+    <div class="container">
         <h1 v-if="showInTransit">In Transit Shipments</h1>
         <h1 v-if="showCurrent">Shipment Information Received</h1>
         <h1 v-if="showDelivered">Delivered Shipments</h1>
@@ -326,13 +318,25 @@
         
         <div v-if="gettingShipmentData">
             <h2>Getting Shipment Data</h2>
-            <div class="loader"></div>
+            <!-- <div class="loader"></div> -->
+            <img class="loader-dino" src="../../assets/LREXDinoFooter.jpg" alt="">
+            <div class="dot-container">
+                <div class="dot1"></div>
+                <div class="dot2"></div>
+                <div class="dot3"></div>
+            </div>
         </div>
 
         <div class="loader-container" v-if="gettingLabelData">
             <div class="loader-inner-container">
                 <h2>Getting Shipment Label</h2>
-                <div class="loader"></div>
+                <!-- <div class="loader"></div> -->
+                <img class="loader-dino" src="../../assets/LREXDinoFooter.jpg" alt="">
+                <div class="dot-container">
+                    <div class="dot1"></div>
+                    <div class="dot2"></div>
+                    <div class="dot3"></div>
+                </div>
             </div>
         </div>
         
@@ -341,7 +345,7 @@
 </template>
 
 <script>
-import {AuthState, onAuthUIStateChange} from "@aws-amplify/ui-components";
+//import {AuthState, onAuthUIStateChange} from "@aws-amplify/ui-components";
 import {Auth} from 'aws-amplify';
 import axios from 'axios';
 import ShipmentDetails from './ShipmentDetails.vue';
@@ -739,46 +743,16 @@ export default {
         setTimeout(() => {Auth.signOut({global: true})}, 3600000);
 
         Auth.currentAuthenticatedUser().then(user => {
-          console.log("Shipment Center Mounted SIGNED IN USER")
-          console.log(user)
+            this.user = user;
+            this.token = user.signInUserSession.accessToken.jwtToken;
+            this.cognitoUserName = user.username;
+            this.cognitoJWT = user.signInUserSession.accessToken.jwtToken;
+            this.GetTrackShipmentsByCriteriaInTransit();
+            console.log(user)
         }).catch(error => {
-          console.log("Authstate error: ")
           console.log(error)
+          this.$router.push('Login');
           Auth.signOut({global: true})
-        });
-    },
-    created(){
-        //Get Current Shipments
-        var getInTransitShipments = 0;
-        //Cognito-Amplify Login setup
-        onAuthUIStateChange((nextAuthState, authData) => {
-            this.authState = nextAuthState;
-            //console.log(nextAuthState);
-            if (nextAuthState === AuthState.SignedIn) {
-                this.signedIn = true;
-                this.user = authData;
-                this.token = authData.signInUserSession.accessToken.jwtToken;
-                this.njlsUser = authData.attributes;
-                //Send Props to shipment details child component
-                this.cognitoUserName = this.user.username;
-                this.cognitoJWT = authData.signInUserSession.accessToken.jwtToken;
-                //Call GetShipmentsByUserAndType when sign in success
-                if(getInTransitShipments <= 1){
-                    this.GetTrackShipmentsByCriteriaInTransit();
-                }
-            }
-
-            if (!authData) {
-                this.signedIn = false;
-            }
-
-            if(nextAuthState === AuthState.SignUp){
-                this.signUp = true;
-            }else if(nextAuthState === AuthState.ForgotPassword){
-                this.forgotPassword = true;
-            }else if(nextAuthState === AuthState.SignIn){
-                this.backSignIn = true;
-            }
         });
     }
 }
@@ -890,7 +864,7 @@ export default {
     }
 
     /* Loading Shipment Data */
-    .loader{
+    /* .loader{
         margin: auto;
         margin-bottom: 15px;
         border: 20px solid #EAF0F6;
@@ -904,7 +878,7 @@ export default {
     @keyframes spinner {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
-    }
+    } */
 
     .loader-container{
         width: 100%;
@@ -922,6 +896,60 @@ export default {
       z-index: 15;
       position: absolute;
       top: 2.5%;
+    }
+
+    .loader-dino{
+        width: 40px;
+        animation: bounce .75s infinite;
+    }
+
+    .dot-container{
+        padding: 0;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .dot1{
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background-color: black;
+        margin: 1px;
+        animation: dot-bounce .75s infinite;
+    }
+
+    .dot2{
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background-color: black;
+        margin: 1px;
+        animation: dot-bounce .75s infinite;
+        animation-delay: .25s;
+    }
+
+    .dot3{
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background-color: black;
+        margin: 1px;
+        animation: dot-bounce .75s infinite;
+        animation-delay: .5s;
+    }
+
+    @keyframes dot-bounce {
+        0%{transform: translateY(0px);}
+        50%{transform: translateY(5px);}
+        100%{transform: translateY(0px);}
+    }
+
+    @keyframes bounce {
+        0%{transform: translateY(0px);}
+        50%{transform: translateY(10px);}
+        100%{transform: translateY(0px);}
     }
 
     /* Shipment Details */

@@ -3,12 +3,18 @@
 <div class="main-container">
     <div class="loader-container" v-if="gettingShipmentDetails">
       <h2>Getting Shipment Details</h2>
-      <div class="loader"></div>
+      <!-- <div class="loader"></div> -->
+      <img class="loader-dino" src="../../assets/LREXDinoFooter.jpg" alt="">
+            <div class="dot-container">
+                <div class="dot1"></div>
+                <div class="dot2"></div>
+                <div class="dot3"></div>
+            </div>
     </div>
 
 <div class="container" v-if="showData">
     <div class="shipment-details-button-container">
-      <button class="shipment-details-button" v-if="showData" @click="ToggleShowData">Close</button>
+      <button class="shipment-details-button" v-if="showData && shipments.length > 0" @click="ToggleShowData">Close</button>
     </div>
     <div id="shipmentTrackingContents" class="shipment_data" v-for="ship in shipments" v-bind:key="ship"> 
                 <img class="logo" src="../../assets/LREXHeaderLogo.jpg" alt="LREX" style="width: 80px;">
@@ -55,8 +61,10 @@
                     <td>{{shipmentHistoryData[index].notes}}</td>
                     <td v-if="!shipmentHistoryData[index].imageURL"></td>
                     <td v-if="shipmentHistoryData[index].imageURL">
-                      <div>
-                        <a v-if="shipmentHistoryData[index].signatureId > 0" :href="shipmentHistoryData[index].imageURL" class="delivery-image-link" target="_blank">Go</a>
+                      <div class="delivery-image-container">
+                        <!-- <a v-if="shipmentHistoryData[index].signatureId > 0" :href="shipmentHistoryData[index].imageURL" class="delivery-image-link" target="_blank">Go</a> -->
+                        <button v-if="shipmentHistoryData[index].signatureId > 0" @click="GetDeliveryImages(shipmentHistoryData[index].imageURL, index)" class="show-delivery-image">Show Image</button>
+                        <img loading="lazy" v-if="index == indexImageURL" :src="linkImageURL" alt="">
                       </div>
                     </td>
                 </tr>
@@ -95,7 +103,9 @@ export default {
             error: {data: []},
             coldStorageData: {},
             showData: false,
-            gettingShipmentDetails: true
+            gettingShipmentDetails: true,
+            linkImageURL: '',
+            indexImageURL: ''
         }
     },
     props:{
@@ -118,6 +128,13 @@ export default {
         a.document.close();
         a.print();
     },
+        GetDeliveryImages(imageURL, indexImageURL){
+          axios.get(imageURL).then((response)=>{
+            console.log(indexImageURL);
+            this.indexImageURL = indexImageURL;
+            this.linkImageURL = response.data;
+          }).catch((err)=>{alert(err + "\n" + "Request file does not exist.")})
+        },
         GetShipmentHistoryByID() {
             axios.post('https://api.stage.njls.com/api/rest/GetShipmentHistoryByShipmentIdCognito', this.shipmentDetailsProp, 
               {headers:{
@@ -191,7 +208,61 @@ export default {
       box-shadow: 0 0 100px rgba(0, 0, 0, 0.9);
     }
 
-    .loader{
+     .loader-dino{
+        width: 40px;
+        animation: bounce .75s infinite;
+    }
+
+    .dot-container{
+        padding: 0;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .dot1{
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background-color: black;
+        margin: 1px;
+        animation: dot-bounce .75s infinite;
+    }
+
+    .dot2{
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background-color: black;
+        margin: 1px;
+        animation: dot-bounce .75s infinite;
+        animation-delay: .25s;
+    }
+
+    .dot3{
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background-color: black;
+        margin: 1px;
+        animation: dot-bounce .75s infinite;
+        animation-delay: .5s;
+    }
+
+    @keyframes dot-bounce {
+        0%{transform: translateY(0px);}
+        50%{transform: translateY(5px);}
+        100%{transform: translateY(0px);}
+    }
+
+    @keyframes bounce {
+        0%{transform: translateY(0px);}
+        50%{transform: translateY(10px);}
+        100%{transform: translateY(0px);}
+    }
+
+    /* .loader{
         margin: auto;
         margin-bottom: 15px;
         border: 20px solid #EAF0F6;
@@ -205,7 +276,7 @@ export default {
     @keyframes spinner {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
-    }
+    } */
 
   .shipment_data{
     display: block;
@@ -286,7 +357,7 @@ export default {
         transition-duration: .5s;
     }
 
-    .delivery-image-link{
+    /* .delivery-image-link{
       text-decoration: none;
       color: #ffffff;
       background-color: #32ccfe;
@@ -298,11 +369,42 @@ export default {
     .delivery-image-link:hover{
       background-color: #2877d1;
       transition-duration: .5s ease;
+    } */
+
+    .show-delivery-image{
+      cursor: pointer;
+      color: #ffffff;
+      background-color: #32ccfe;
+      border: none;
+      padding: 5px;
+      border-radius: 15px;
+      transition-duration: .5s ease;
+    }
+
+    .show-delivery-image:hover{
+      background-color: #2bb1dd;
+      transition-duration: .5s ease;
+    }
+
+    .delivery-image-container{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .delivery-image-container img{
+      width: 40%;
+      margin-top: 10px;
     }
 
     @media only screen and (max-width: 600px){
         .container{
           font-size: 10px;
+        }
+
+        .delivery-image-container img{
+          width: 80%;
         }
     }
 

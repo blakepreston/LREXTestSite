@@ -5,13 +5,13 @@
         <p>Back in 1929, fresh out of NYU Law School, our founder, Frieda Pickman, was bold and undeterred,
            when she perceived the need of New Jersey’s legal community for a reliable courier service: she 
            founded New Jersey Lawyers Service, NJLS for short. For nearly a century till today NJLS serves 
-           the legal community with quick secure local shipping. Along the way the company Frieda started
-            grew into a starting and acquiring a number of technology enabled businesses serving the legal
-             community. The influx of technology built NJLS ‘s reputation for quick and secure local shipping 
-             beyond the Legal Community.
+           the legal community with quick secure local shipping. Along the way Frieda and her family launched several 
+           tech enabled businesses serving the legal community. The influx of technology built NJLS ‘s reputation for
+           quick and secure local shipping 
+           beyond the Legal Community.
             <br>
             <br>
-            In 2018 Mary Beth Dixon revived Frieda’s tenacious spirit bringing passion for our client’s business 
+            In 2019 Mary Beth Dixon revived Frieda’s tenacious spirit bringing passion for our client’s business 
             and obsession for every delivery. LRex, Local and Regional Express was born in 2021, a partnership of
              a century worth of shipping experience and two decades of shipping technology. Our name NJLS was our
               only box, beyond New Jersey beyond Lawyers Service LRex goes the extra mile for your last-mile.</p>
@@ -22,7 +22,7 @@
     <div class="about-section">
       <h1><span>Our founder, </span>Frieda</h1>
       <div class="about-section-text">
-        <img src="../assets/Owner.jpg" alt="">
+        <img src="../assets/FinalImages/Vic_Profile.jpg" alt="">
           <p>Frieda Pickman was born in 1909. She graduated NYU Law School when she was 19. She couldn’t practice 
             law until she turned 21.  The family lore is that in her first case, she represented a Chinese 
             launderer who was being sued by a wealthy customer. The customer’s employee gave the laundered a 
@@ -64,9 +64,9 @@
 
 <div class="main-about-section">
       <div class="about-section">
-      <h1>Vic Kanwar</h1>
+      <h1>Vic Kanwar, <span>CIO & Owner</span></h1>
       <div class="about-section-text">
-        <img loading="lazy" src="../assets/Owner3.jpg" alt="">
+        <img loading="lazy" src="../assets/FinalImages/Vic_Profile.jpg" alt="">
           <div class="about-section-text-container">
             <p>After launching eLaw.com in 2000 and revolutionizing electronic 
               calendar tracking in New York and New Jersey, Vic turned his 
@@ -92,7 +92,7 @@
       <div class="about-section">
       <h1>Frank Nappi, <span>Director of Business Development</span></h1>
       <div class="about-section-text">
-        <img loading="lazy" src="../assets/Owner3.jpg" alt="">
+        <img loading="lazy" src="../assets/FinalImages/Frank_Napp.jpg" alt="">
         <div class="about-section-text-container">
           <p>Frank has been with NJLS for over 20 years, building the courier 
             sales. Frank worked at Guaranteed Subpoena for 14 years as a vice 

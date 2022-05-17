@@ -2,6 +2,7 @@
     <div class="track_package">
         <img v-show="AlternateHeader == 1" src="../assets/Delivery-Truck.jpg" alt="Truck">
         <img v-show="AlternateHeader == 2" src="../assets/FinalImages/Stocksy_Delivery_Driver_Back_of_Van.jpg" alt="">
+        <img v-show="AlternateHeader == 3" src="../assets/FinalImages/Stocksy_Delivery_signature.jpg" alt="">
         <div class="form_shiptrack">
             <h1>Your shipping partner.</h1>
             <p>Track a package</p>
@@ -51,7 +52,7 @@
     </div>
 
     <div class="imageSliderContainer">
-      <h1>Associations section</h1>
+      <h1>We Support</h1>
       <div class="imageSlider">
       <div class="logo_arrow_left" @click="Imageprev"></div>
       <image-carousel 
@@ -102,11 +103,12 @@
   // import DriveWithUsPopup from './Popups/DriveWithUsPopup.vue'
   import ShipmentTrackingPopup from './Popups/ShipmentTrackingPopup.vue'
   import {ref} from 'vue';
-  import image1 from "../assets/fakecompany1.png"
-  import image2 from "../assets/fakecompany2.jpg"
-  import image3 from "../assets/fakecompany3.jpg"
-  import image4 from "../assets/fakecompany4.jpg"
-  import image5 from "../assets/fakecompany5.png"
+  import image1 from "../assets/FinalImages/Associations/camden-county-logo-White-1.png"
+  import image2 from "../assets/FinalImages/Associations/NJAJ.jpg"
+  import image3 from "../assets/FinalImages/Associations/Chamber_of_commerce.jpg"
+  import image4 from "../assets/FinalImages/Associations/GSPO.png"
+  import image5 from "../assets/FinalImages/Associations/NJ_Court.jpg"
+  import image6 from "../assets/FinalImages/Associations/logo-IAPS.jpg"
 
   export default{
     data: function () {
@@ -116,14 +118,14 @@
             image2,
             image3,
             image4,
-            image5
+            image5,
+            image6
           ],
           texts: [
-          'Delivering ahead of the curve since 1929',
-          'Delivering ahead of the curve since 1929',
-          'Delivering ahead of the curve since 1929',
-          'Delivering ahead of the curve since 1929',
-          'Delivering ahead of the curve since 1929'
+          'Delivering ahead of the curve since 1929.',
+          'Custom shipping for businesses of all shapes and sizes.',
+          'Going the extra mile for your last mile.',
+          'Shipped, delivered, done.'
         ],
           visibleSlide: 0,
           visibleSlideImg: 1,
@@ -171,7 +173,7 @@
       },
       AlternateHeaderValue(){
         this.AlternateHeader++;
-        if(this.AlternateHeader > 2){
+        if(this.AlternateHeader > 3){
            this.AlternateHeader = 1;
          }
       }

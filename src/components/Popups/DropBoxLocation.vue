@@ -632,10 +632,12 @@ table {
     width: 60vw;
 }
 
-/* .box-schedule-table{
-    margin-top: 10vw;
-} */
+}
 
+@media only screen and (max-width: 500px){
+    .closeDropBox-container h1{
+        font-size: 1.4rem;
+    }
 }
 
 </style>

@@ -1,0 +1,56 @@
+[
+    {
+        "Holiday" : "Christmas Day",
+        "Date" : "Sunday, December 25, 2022",
+        "ExtraInfo" : "All courts, State and Federal closed",
+        "Services" : "No Next Day Service, No Office Pick-up, Drop Box Pick-up and Same Day Service Available"
+    },
+    {
+        "Holiday" : "New Years Day",
+        "Date" : "Saturday, December 31, 2022",
+        "ExtraInfo" : "All courts, State and Federal closed",
+        "Services" : "No Next Day Service, No Office Pick-up, 3pm Drop Box Pickup; Same Day Service Available"
+    },
+    {
+        "Holiday" : "Martin Luther King Day*",
+        "Date" : "Monday, January 16, 2023",
+        "ExtraInfo" : "All courts, State and Federal closed",
+        "Services" : "Limited Next Day Service, see below. 3pm Drop Box Pickup; Same Day Service Available"
+    },
+    {
+        "Holiday" : "President's Day*",
+        "Date" : "Monday, February 20, 2023",
+        "ExtraInfo" : "All courts, State and Federal closed",
+        "Services" : "Limited Next Day Service, see below. 3pm Drop Box Pickup; Same Day Service Available"
+    },
+    {
+        "Holiday" : "Good Friday*",
+        "Date" : "Friday, April 15, 2022",
+        "ExtraInfo" : "All courts, State and Federal closed",
+        "Services" : "Limited Next Day Service, see below. Same Day Service Available"
+    },
+    {
+        "Holiday" : "Memorial Day",
+        "Date" : "Monday, May 30, 2022",
+        "ExtraInfo" : "All courts, State and Federal closed",
+        "Services" : "No Next Day Service, No Office Pick-up, Drop Box Pick-up and Same Day Service Available"
+    },
+    {
+        "Holiday" : "Independence Day",
+        "Date" : "Monday, July 4, 2022",
+        "ExtraInfo" : "All courts, State and Federal closed",
+        "Services" : "Limited Next Day Service, No Office Pick-up, No Drop Box Pick-up Same Day Service Available"
+    },
+    {
+        "Holiday" : "Labor Day",
+        "Date" : "Monday, September 5, 2022",
+        "ExtraInfo" : "All courts, State and Federal closed",
+        "Services" : "No Next Day Service, No Office Pick-up, Drop Box Pick-up and Same Day Service Available"
+    },
+    {
+        "Holiday" : "Thanksgiving",
+        "Date" : "Thursday, November 24, 2022",
+        "ExtraInfo" : "All courts, State and Federal closed",
+        "Services" : "No Next Day Service, No Office Pick-up, No Drop Box Service Same Day Service Available"
+    }
+]

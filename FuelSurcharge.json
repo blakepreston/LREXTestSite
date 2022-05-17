@@ -1,0 +1,77 @@
+[
+    {
+        "AtLeast": "$3.01",
+        "LessThan": "$3.22",
+        "Surcharge": "11.00%"
+    },
+    {
+        "AtLeast": "$3.22",
+        "LessThan": "$3.43",
+        "Surcharge": "11.50%"
+    },
+    {
+        "AtLeast": "$3.43",
+        "LessThan": "$3.64",
+        "Surcharge": "12.00%"
+    },
+    {
+        "AtLeast": "$3.64",
+        "LessThan": "$3.85",
+        "Surcharge": "12.50%"
+    },
+    {
+        "AtLeast": "$3.85",
+        "LessThan": "$4.06",
+        "Surcharge": "13.00%"
+    },
+    {
+        "AtLeast": "$4.06",
+        "LessThan": "$4.27",
+        "Surcharge": "13.50%"
+    },
+    {
+        "AtLeast": "$4.27",
+        "LessThan": "$4.48",
+        "Surcharge": "14.00%"
+    },
+    {
+        "AtLeast": "$4.48",
+        "LessThan": "$4.69",
+        "Surcharge": "14.50%"
+    },
+    {
+        "AtLeast": "$4.69",
+        "LessThan": "$4.90",
+        "Surcharge": "15.00%"
+    },
+    {
+        "AtLeast": "$4.90",
+        "LessThan": "$5.11",
+        "Surcharge": "15.50%"
+    },
+    {
+        "AtLeast": "$5.11",
+        "LessThan": "$5.32",
+        "Surcharge": "16.00%"
+    },
+    {
+        "AtLeast": "$5.32",
+        "LessThan": "$5.53",
+        "Surcharge": "16.50%"
+    },
+    {
+        "AtLeast": "$5.53",
+        "LessThan": "$5.74",
+        "Surcharge": "17.00%"
+    },
+    {
+        "AtLeast": "$5.74",
+        "LessThan": "$5.95",
+        "Surcharge": "17.50%"
+    },
+    {
+        "AtLeast": "$5.95",
+        "LessThan": "$6.16",
+        "Surcharge": "18.00%"
+    }
+]

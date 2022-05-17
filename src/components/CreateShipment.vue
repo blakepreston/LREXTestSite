@@ -1,33 +1,25 @@
 <template>
-    <div class="amplify-container">
-        <amplify-authenticator>
+    <!-- <div class="amplify-container">
+        <amplify-authenticator> -->
           <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
-          <amplify-sign-in slot="sign-in"
+          <!-- <amplify-sign-in slot="sign-in"
                 v-if="authState !== 'signedin'"
                 v-show="authState !== 'signup' && authState !== 'forgotpassword'  && authState !== 'confirmSignUp'"
                 header-text="Sign in to create a shipment."
-          ></amplify-sign-in>
+          ></amplify-sign-in> -->
 
 
           <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
-          <amplify-sign-up slot="sign-up"
+          <!-- <amplify-sign-up slot="sign-up"
                   v-if="authState === 'signup'"
                   headerText="Sign up to create a shipment."
                   :formFields="formFields"
           ></amplify-sign-up>
-
-          <!-- <div class="sign-out-container"> -->
-            <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
-            <!-- <amplify-sign-out slot="sign-out"
-                id="signout-button"
-                v-if="authState === 'signedin'">
-            </amplify-sign-out>
-          </div> -->
               
         </amplify-authenticator>
-    </div>
+    </div> -->
 
-    <div class="container" v-show="authState === 'signedin'">
+    <div class="container">
       <div class="progress-container">
         <div class="progress" id="progress"></div>
             <div class="circle active"><p class="where">Where</p></div>
@@ -515,9 +507,15 @@
         <div class="finalContainer" v-show="currentActive === 5">
             <h1>Thank you for choosing LRex!</h1>
             
-            <div v-if="creatingLabels">
+            <div class="loader-container" v-if="creatingLabels">
                 <h2>Creating Shipment</h2>
-                <div class="loader"></div>
+                <img class="loader-dino" src="../assets/LREXDinoFooter.jpg" alt="">
+                <div class="dot-container">
+                    <div class="dot1"></div>
+                    <div class="dot2"></div>
+                    <div class="dot3"></div>
+                </div>
+                <!-- <div class="loader"></div> -->
             </div>
 
             <embed v-if="showPDF" class="pdfViewer" id="pdfViewer" src="" width="100%" height="500">
@@ -633,16 +631,22 @@
             </table>
         </div>
     </div>
-  
+
+    <AlertUser v-if="toggleAlertBox" @closeAlertBox="closeAlertBox($event)" :message="alertMessage"/>
+    <!-- {{toggleAlertBox}} -->
 </template>
 
 
 <script>
-import {AuthState, onAuthUIStateChange} from "@aws-amplify/ui-components";
+//import {AuthState, onAuthUIStateChange} from "@aws-amplify/ui-components";
 import {Auth} from 'aws-amplify';
 import axios from 'axios';
+import AlertUser from '../components/Popups/AlertUser.vue' //src\components\Popups\AlertUser.vue
 
 export default {
+    components:{
+        AlertUser
+    },
     data(){
         return{
             showTermsConditions: false,
@@ -876,7 +880,9 @@ export default {
             addressBookToggle: false,
             searchAddressBook: [],
             searchAddressBookResult: [],
-            searchAddressToggle: false
+            searchAddressToggle: false,
+            toggleAlertBox: false,
+            alertMessage: 'Error Message'
         }
     },
     mounted(){
@@ -884,11 +890,13 @@ export default {
         setTimeout(() => {Auth.signOut({global: true})}, 3600000);
 
         Auth.currentAuthenticatedUser().then(user => {
-          console.log("Create Shipment Mounted SIGNED IN USER")
-          console.log(user)
+            this.user = user;
+            this.token = user.signInUserSession.accessToken.jwtToken;
+            this.GetUserPreferences();
+            console.log(user)
         }).catch(error => {
-          console.log("Authstate error: ")
           console.log(error)
+          this.$router.push('Login');
           Auth.signOut({global: true})
         });
         //Step Progress Bar
@@ -951,6 +959,9 @@ export default {
         });
     },
     methods:{
+        closeAlertBox(toggleAlertBox){
+            this.toggleAlertBox = toggleAlertBox;
+        },
         refreshPage(){
             window.location.reload();
         },
@@ -968,7 +979,9 @@ export default {
                 }else if(this.shipmentData.notify[0].delivery[0].email.length > 0 || this.shipmentData.notify[0].delivery[0].phone.length > 0){
                     //this.stepNext();
                 }else{
-                    alert("Please Add Delivery Notification Email/Phone")
+                    //alert("Please Add Delivery Notification Email/Phone")
+                    this.alertMessage = "Please Add Delivery Notification Email/Phone";
+                    this.toggleAlertBox = true;
                 }
 
                 //Check Non-Delivery Input
@@ -978,7 +991,9 @@ export default {
                 }else if(this.shipmentData.notify[0].nonDelivery[0].email.length > 0 || this.shipmentData.notify[0].nonDelivery[0].phone.length > 0){
                     //this.stepNext();
                 }else{
-                    alert("Please Add Non-Delivery Notification Email/Phone")
+                    // alert("Please Add Non-Delivery Notification Email/Phone")
+                    this.alertMessage = "Please Add Non-Delivery Notification Email/Phone";
+                    this.toggleAlertBox = true;
                 }
 
                 //Check/Add Reference Input
@@ -989,7 +1004,9 @@ export default {
 
                 //Check that user added shipment weight
                 if(this.weight.length < this.count){
-                    alert("Please enter a valid weight.")
+                    // alert("Please enter a valid weight.")
+                    this.alertMessage = "Please enter a valid weight.";
+                    this.toggleAlertBox = true;
                 }else{
                     this.stepNext();
                 }
@@ -1001,21 +1018,33 @@ export default {
                 let zipCodeInput = document.getElementById("postcode").value;
                 let companyName = document.getElementById("compName").value;
                 if(addressInput == ""){
-                    alert("Please enter an address")
+                    // alert("Please enter an address")
+                    this.alertMessage = "Please enter an address";
+                    this.toggleAlertBox = true;
                 }else if(cityInput == ""){
-                    alert("Please enter a city")
+                    // alert("Please enter a city")
+                    this.alertMessage = "Please enter a city";
+                    this.toggleAlertBox = true;
                 }else if(stateInput == ""){
-                    alert("Please enter a state")
+                    // alert("Please enter a state")
+                    this.alertMessage = "Please enter a state";
+                    this.toggleAlertBox = true;
                 }else if(zipCodeInput == ""){
-                    alert("Please enter a zip code")
+                    // alert("Please enter a zip code")
+                    this.alertMessage = "Please enter a zip code";
+                    this.toggleAlertBox = true;
                 }else if(companyName == ""){
-                    alert("Please enter a company name")
+                    // alert("Please enter a company name")
+                    this.alertMessage = "Please enter a company name";
+                    this.toggleAlertBox = true;
                 }else{
                    this.stepNext(); 
                 }
             }else if(this.currentActive === 2){
                 if(this.shipmentData.Service === ''){
-                    alert("Please select a shipment service")
+                    // alert("Please select a shipment service")
+                    this.alertMessage = "Please select a shipment service";
+                    this.toggleAlertBox = true;
                 }else{
                     this.stepNext(); 
                 }
@@ -1054,7 +1083,9 @@ export default {
                 this.activePhoneBox = true;
             }
             else{
-                alert("Please enter a valid email or phone number.")
+                this.alertMessage = "Please enter a valid email or phone number.";
+                this.toggleAlertBox = true;
+                // alert("Please enter a valid email or phone number.")
             }
         },
         inputIsValidNonDelivery(){
@@ -1068,7 +1099,9 @@ export default {
                 this.activeNonDelivPhoneBox = true;
             }
             else{
-                alert("Please enter a valid email or phone number.")
+                this.alertMessage = "Please enter a valid email or phone number.";
+                this.toggleAlertBox = true;
+                // alert("Please enter a valid email or phone number.")
             }
         },
         //Step Progress Bar
@@ -1355,7 +1388,10 @@ export default {
                 let errorMessage = this.dataReturn.shipmentInfo.error[0].errMsg;
                 this.shipmentLabel.shipmentID.push(this.dataReturn.shipmentInfo.shipment[0].shipmentID);
                 this.shipmentLabelTiff.shipmentID.push(this.dataReturn.shipmentInfo.shipment[0].shipmentID);
-                alert( "Shipment " + (this.shipmentDataArray.indexOf(this.shipmentDataArray[i]) + 1) + ": " + errorMessage.slice(12))
+                //alert( "Shipment " + (this.shipmentDataArray.indexOf(this.shipmentDataArray[i]) + 1) + ": " + errorMessage.slice(12))
+                this.alertMessage = "Shipment " + (this.shipmentDataArray.indexOf(this.shipmentDataArray[i]) + 1) + ": " + errorMessage.slice(12);
+                this.toggleAlertBox = true;
+
                 if(this.shipmentData.secretKey == ''){
                     this.GetShipmentLabels();
                 }else{
@@ -1364,13 +1400,19 @@ export default {
             })
             .catch(function(error){
                     if(error.response.data.title){
-                        alert(error.response.data.title)
+                        //alert(error.response.data.title)
+                        this.alertMessage = error.response.data.title;
+                        this.toggleAlertBox = true;
                         this.currentActive = 1;
                     }else if(error.response){
-                        alert(error.response)
+                        //alert(error.response)
+                        this.alertMessage = error.response;
+                        this.toggleAlertBox = true;
                         this.currentActive = 1;
                     }else{
-                        alert("Error with creating shipment.")
+                        // alert("Error with creating shipment.")
+                        this.alertMessage = "Error with creating shipment.";
+                        this.toggleAlertBox = true;
                         this.currentActive = 1;
                     }
                 })
@@ -1586,43 +1628,6 @@ export default {
             this.searchAddressToggle = false;
             document.getElementById('searchAddressBook').value = '';
         }
-    },
-    created(){
-        //Prevents mulitple calls to GetUserPreferences()
-        var userPreferenceCount = 0;
-        //Cognito-Amplify Login setup
-        onAuthUIStateChange((nextAuthState, authData) => {
-            if (nextAuthState === AuthState.SignedIn) {
-                this.authState = nextAuthState;
-                this.signedIn = true;
-                // JWT = authData.signInUserSession.accessToken.jwtToken)
-                this.user = authData;
-                this.token = authData.signInUserSession.accessToken.jwtToken;
-                this.njlsUser = authData.attributes;
-                console.log(this.token);
-
-                //Call UserPreferences when sign in success
-                userPreferenceCount++;
-                if(this.signedIn == true && userPreferenceCount == 1){
-                    this.GetUserPreferences();
-                }
-            }
-           
-            if (!authData) {
-                this.signedIn = false;
-            }
-
-            if(nextAuthState === AuthState.SignUp){
-                this.authState = nextAuthState;
-                this.signUp = true;
-            }else if(nextAuthState === AuthState.ForgotPassword){
-                this.authState = nextAuthState;
-                this.forgotPassword = true;
-            }else if(nextAuthState === AuthState.SignIn){
-                this.authState = nextAuthState;
-                this.backSignIn = true;
-            }
-        });
     }
 }
 </script>
@@ -2338,7 +2343,69 @@ export default {
         cursor: pointer;
     }
 
-    .loader{
+    .loader-container{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      margin-bottom: 30px;
+    }
+
+     .loader-dino{
+        width: 40px;
+        animation: bounce .75s infinite;
+    }
+
+    .dot-container{
+        padding: 0;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .dot1{
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background-color: black;
+        margin: 1px;
+        animation: dot-bounce .75s infinite;
+    }
+
+    .dot2{
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background-color: black;
+        margin: 1px;
+        animation: dot-bounce .75s infinite;
+        animation-delay: .25s;
+    }
+
+    .dot3{
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background-color: black;
+        margin: 1px;
+        animation: dot-bounce .75s infinite;
+        animation-delay: .5s;
+    }
+
+    @keyframes dot-bounce {
+        0%{transform: translateY(0px);}
+        50%{transform: translateY(5px);}
+        100%{transform: translateY(0px);}
+    }
+
+    @keyframes bounce {
+        0%{transform: translateY(0px);}
+        50%{transform: translateY(10px);}
+        100%{transform: translateY(0px);}
+    }
+
+    /* .loader{
         margin: auto;
         margin-bottom: 15px;
         border: 20px solid #EAF0F6;
@@ -2352,7 +2419,7 @@ export default {
     @keyframes spinner {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
-    }
+    } */
 
     .pdfViewer{
         border-radius: 15px;

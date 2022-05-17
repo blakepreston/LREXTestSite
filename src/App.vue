@@ -17,7 +17,7 @@
                 <li v-if="!shipmentPages"><a  @click="()=> GetInTouchTogglePopup('GetInTouchButtonTrigger')">Get in touch</a></li>
                 <li v-if="shipmentPages"><router-link to="/Ship">New Shipment</router-link></li>
                 <li v-if="shipmentPages"><router-link to="/ShipmentCenter">My Shipments</router-link></li>
-                <li class="create-account-mobile"><a href="https://www.stage.njls.com/clients/RegisterNewCustomer.aspx" target="_blank"><strong>Create an account</strong></a></li>
+                <li class="create-account-mobile"><a href="https://www.stage.njls.com/clients/RegisterNewCustomer.aspx" target="_blank"><strong style="color: #fff">Create an account</strong></a></li>
                 <li style="border-bottom: none;">
                 <amplify-authenticator v-if="authState === 'signedin'">
                   <div class="sign-out-container">
@@ -50,7 +50,7 @@
         </div>
 
         <div class="create_account">
-            <li><a href="https://www.stage.njls.com/clients/RegisterNewCustomer.aspx" target="_blank"><strong>Create an account</strong></a></li>
+            <li><a href="https://www.stage.njls.com/clients/RegisterNewCustomer.aspx" target="_blank"><strong style="color: #32ccfe">Create an account</strong></a></li>
             <a v-if="!createShipmentToggleSignIn"><button class="button_signin" @click="()=> SignInTogglePopup('SignInButtonTrigger')">Sign in</button></a>
         </div>
 
@@ -121,15 +121,25 @@
     <div class="footer">
       <img src="./assets/LREXFooterLogo.jpg" alt="">
       <div class="site_map">
-        <div>
+        <div class="inner-site_map">
+          <p @click="showHelpfulLinks = !showHelpfulLinks" style="cursor: pointer">Helpful Links</p>
+          <div v-if="showHelpfulLinks" class="helpful-link-container">
+            <router-link class="helpful-link" style="border-bottom: 1px solid #dfdfdf;" to="/CriticalMotionDates"><p>Critical Motion Dates</p><i class="fa fa-angle-right"></i></router-link>
+            <router-link class="helpful-link" style="border-bottom: 1px solid #dfdfdf;" to="/FuelSurcharge"><p>Fuel Surcharge</p><i class="fa fa-angle-right"></i></router-link>
+            <router-link class="helpful-link" to="/HolidaySchedule"><p>Holiday Schedule</p><i class="fa fa-angle-right"></i></router-link>
+          </div>
+          
+        </div>
+
+        <div class="inner-site_map">
           <router-link class="router-link-footer" to="/TermsConditions"><p>Terms and Conditions</p></router-link>
         </div>
         
-        <div>
+        <div class="inner-site_map">
           <router-link class="router-link-footer" to="/CookiesPolicy"><p>Cookie Policy</p></router-link>
         </div>
 
-        <div>
+        <div class="inner-site_map">
           <router-link class="router-link-footer" to="/PrivacyPolicy"><p>Privacy Policy</p></router-link>
         </div>
         
@@ -166,7 +176,7 @@ import GetInTouchPopup from './components/Popups/GetInTouchPopup.vue'
 import DropBoxLocation from './components/Popups/DropBoxLocation.vue'
 import ShipmentTrackingPopup from './components/Popups/ShipmentTrackingPopup.vue'
 import {ref} from 'vue';
-import {AuthState, onAuthUIStateChange} from "@aws-amplify/ui-components";
+import {onAuthUIStateChange} from "@aws-amplify/ui-components";
 import {Auth} from 'aws-amplify';
 
 export default {
@@ -181,12 +191,34 @@ export default {
       posts:{
             shipmentId: null,
             IncludeImageURL: true
-          }
+      },
+      showHelpfulLinks: false
     }
   },
   mounted() {
     this.lastScrollPosition = window.pageYOffset
     window.addEventListener('scroll', this.onScroll)
+
+    Auth.currentAuthenticatedUser().then(user => {
+          console.log("SETUP SIGNED IN USER")
+          localStorage.setItem('userAuthenticated', true);
+          this.authState = 'signedin';
+          console.log(user)
+        }).catch(error => {
+          console.log("SetUp Authstate error: ")
+          console.log(error)
+          localStorage.setItem('userAuthenticated', false);
+          Auth.signOut({global: true})
+        });
+
+    onAuthUIStateChange((nextAuthState, authData) => {
+            this.authState = nextAuthState;
+            //console.log(nextAuthState);
+            if (!authData) {
+                this.signedIn = false;
+                this.$router.push('Login')
+            }
+        });
 
     //Sign user out when JWT expires
     setTimeout(() => {Auth.signOut({global: true})}, 3600000);
@@ -237,7 +269,6 @@ export default {
       },
   },
   setup(){
-
     //Sign In Popup
     const SignInPopupTriggers = ref({
       SignInButtonTrigger: false
@@ -293,21 +324,10 @@ export default {
       return this.$route.name == 'Ship' || this.$route.name == 'ShipmentCenter';
     },
     extraPages(){
-      return this.$route.name == 'IndependentContractor' || this.$route.name == 'CookiesPolicy' || this.$route.name == 'PrivacyPolicy' || this.$route.name == 'TermsConditions';
+      return this.$route.name == 'Login' || this.$route.name == 'ContractorServices' || this.$route.name == 'HolidaySchedule' || this.$route.name == 'FuelSurcharge' || this.$route.name == 'IndependentContractor' || this.$route.name == 'CookiesPolicy' || this.$route.name == 'PrivacyPolicy' || this.$route.name == 'TermsConditions' || this.$route.name == 'CriticalMotionDates';
     }
   },
   created(){
-        console.log("Current State: ")
-        //console.log(Auth.currentAuthenticatedUser());
-        
-        Auth.currentAuthenticatedUser().then(user => {
-          console.log("SIGNED IN USER")
-          console.log(user)
-        }).catch(error => {
-          console.log("Authstate error: ")
-          console.log(error)
-          Auth.signOut({global: true})
-        });
         //Toggle Cookie Banner
         setTimeout(() => {
           const cookieContainer = document.querySelector(".cookie-container-main");
@@ -315,38 +335,6 @@ export default {
             cookieContainer.classList.add("active");
           }
         }, 2000);
-        //Cognito-Amplify Login setup
-        onAuthUIStateChange((nextAuthState, authData) => {
-            this.authState = nextAuthState;
-            console.log(nextAuthState);
-            if (nextAuthState === AuthState.SignedIn) {
-            this.signedIn = true;
-            setTimeout(() => {
-              const cookieContainer = document.querySelector(".cookie-container-main");
-              if (!localStorage.getItem("cookieBannerDisplayed")) {
-                cookieContainer.classList.add("active");
-              }
-            }, 2000);
-            // console.log("user successfully signed in!");
-            // console.log("user data: ", authData);
-            // console.log(authData.signInUserSession.accessToken.jwtToken)
-            this.user = authData;
-            this.token = authData.signInUserSession.accessToken.jwtToken;
-            this.njlsUser = authData.attributes;
-            }
-            if (!authData) {
-                console.log("user is not signed in...");
-                this.signedIn = false;
-            }
-
-            if(nextAuthState === AuthState.SignUp){
-                this.signUp = true;
-            }else if(nextAuthState === AuthState.ForgotPassword){
-                this.forgotPassword = true;
-            }else if(nextAuthState === AuthState.SignIn){
-                this.backSignIn = true;
-            }
-        });
   }
 }
 </script>
@@ -496,13 +484,13 @@ button{
     }
 
     .nav_links li a:hover{
-      border-bottom: 2px solid #33f18a;
+      border-bottom: 1px solid #ffcccc;
     }
 
     .nav_links li a{
       text-decoration: none;
       color: black;
-      transition: all .5s ease;
+      transition: all .35s ease;
     }
 
     .create_account{
@@ -517,13 +505,13 @@ button{
     }
 
     .create_account li a:hover{
-      border-bottom: 2px solid #33f18a;
+      border-bottom: 1px solid #ffcccc;
     }
 
     .create_account li a{
       text-decoration: none;
       color: black;
-      transition: all .5s ease;
+      transition: all .35s ease;
     }
 
     .button_signin:hover{
@@ -584,27 +572,58 @@ amplify-sign-out{
 }
 
 .site_map{
-  column-count: 3;
+  column-count: 4;
   display: flex;
   flex-direction: row;
-  margin-left: 15%;
-}
-
-.site_map div{
-  padding-left: 5vw;
-  font-family: 'Work Sans', sans-serif;
+  justify-content: space-between;
+  margin-left: 10%;
   color: black;
+  width: 70%;
 }
 
 .site_map div p{
-  margin-top: 0;
-  margin-bottom: 10px;
-  font-size: 1.8vw;
+  font-size: 1.4vw;
+  text-align: left;
+  margin: 5px;
+  
+}
+
+.fa-angle-right{
+  margin: 5px;
+  margin-left: 10px;
+  font-size: 1.4vw;
+}
+
+.helpful-link{
+  text-decoration: none;
+  color: black;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  transition-duration: .5s;
+}
+
+.helpful-link:hover{
+  background-color: #dfdfdf69;
+  transition-duration: .5s;
+  border-radius: 5px;
+}
+
+.helpful-link-container{
+  border: 1px solid #dfdfdf;
+  border-radius: 5px;
+  animation: animateHelpfulLink .5s ease;
+}
+
+@keyframes animateHelpfulLink{
+  from{margin-top: -10%;}
+  to{margin-top: 0;}
 }
 
 .router-link-footer{
   text-decoration: none;
   color: black;
+  text-align: left;
 }
 
 .footer img{
@@ -757,7 +776,7 @@ amplify-sign-out{
   }
 
   .site_map div p{
-    font-size: 3vw;
+    font-size: 2.5vw;
   }
 }
 </style>
