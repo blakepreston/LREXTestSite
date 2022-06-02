@@ -347,7 +347,7 @@ export default {
         background-color: #32ccfe;
         padding: 12px 15px;
         color: #ffffff;
-        border-radius: 10px;
+        border-radius: 50px;
         cursor: pointer;
         transition-duration: .5s;
     }

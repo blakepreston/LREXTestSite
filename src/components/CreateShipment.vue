@@ -37,8 +37,17 @@
                         
                         <div class="address-book-input">
                             <input name="googleAPI" type="text" id="placesAPI" class="googlePlaces">
-                            <button @click="GetAddressBookData">My Addresses</button>
+                            <button @click="addressBookToggle = true">My Addresses</button>
                         </div>
+                    </div>
+
+                    <div class="inputLabel">
+                        <label for="awsAddress">AWS Find Address</label>
+                        <input id="awsAddress" type="text" v-model="searchAddress.userInput">
+                        <div class="autocomplete-result" v-if="searchAddress.userInput.length > 0">
+                            <p @click="SelectAddress(index)" v-for="(autoCompleteResult, index) in autoCompleteData" :key="autoCompleteResult"><i class="fa fa-map-pin"></i>{{autoCompleteResult.Place.Label}}</p>
+                        </div>
+                        <p>{{selectedAddress}}</p>
                     </div>
                     
                     <div class="inputLabel">
@@ -496,7 +505,7 @@
                 </div>
             </div>
                 <div>
-                    <p>By clicking Ship I agree to the <i class="show-terms-conditions-link" @click="showTermsConditions = !showTermsConditions">Terms and Conditions</i></p>
+                    <p>By clicking Ship I agree to the <i class="show-terms-conditions-link" @click="showTermsConditions = !showTermsConditions; scrollToTop();">Terms and Conditions</i></p>
                 </div>
                 <div class="buttonContainer">
                     <button class="saveButton" @click="shipmentData.secretKey = 'secretKey', createShipment()">Save</button>
@@ -640,6 +649,7 @@
 <script>
 //import {AuthState, onAuthUIStateChange} from "@aws-amplify/ui-components";
 import {Auth} from 'aws-amplify';
+import Location from "aws-sdk/clients/location";
 import axios from 'axios';
 import AlertUser from '../components/Popups/AlertUser.vue' //src\components\Popups\AlertUser.vue
 
@@ -882,23 +892,59 @@ export default {
             searchAddressBookResult: [],
             searchAddressToggle: false,
             toggleAlertBox: false,
-            alertMessage: 'Error Message'
+            alertMessage: 'Error Message',
+            searchAddress:{
+                userInput: ""
+            },
+            autoCompleteData: {},
+            selectedAddress: ""
         }
     },
-    mounted(){
-        //Sign user out when JWT expires
-        setTimeout(() => {Auth.signOut({global: true})}, 3600000);
-
+    beforeMount(){
         Auth.currentAuthenticatedUser().then(user => {
             this.user = user;
             this.token = user.signInUserSession.accessToken.jwtToken;
             this.GetUserPreferences();
+            this.GetAddressBookData();
             console.log(user)
         }).catch(error => {
           console.log(error)
           this.$router.push('Login');
           Auth.signOut({global: true})
         });
+    },
+    mounted(){
+        //AWS Location Services Autocomplete
+        // const getClient = async ()=>{
+        // const credentials = await Auth.currentCredentials();
+
+        // const locationClient = new Location({
+        //     credentials,
+        //     region: 'us-east-1'
+        // });
+
+        // const params = {
+        //     IndexName: "lrex-place",
+        //     Text: this.searchAddress.userInput,
+        //     FilterCountries: ["USA"],
+        //     BiasPosition: [-74.261398, 40.702503]
+        //     };
+
+        // locationClient.searchPlaceIndexForText(params,(err,data)=>{
+        //     if(err){
+        //         console.log(err)
+        //         console.log(credentials)
+        //         }
+        //     if(data){
+        //         console.log(data);
+        //         this.autoCompleteData = data.Results;
+        //     }
+        //     })
+        // }
+
+        this.getClient();
+        //Sign user out when JWT expires
+        setTimeout(() => {Auth.signOut({global: true})}, 3600000);
         //Step Progress Bar
         this.circles = document.querySelectorAll(".circle");
 
@@ -958,7 +1004,64 @@ export default {
         }
         });
     },
+    watch:{
+        'searchAddress.userInput': function(){
+        console.log("Value has changed.")
+        //if(this.searchAddress.userInput.length > 3){
+            this.getClient();
+       // }
+        
+        } 
+    },
     methods:{
+        //AWS Location Service
+        SelectAddress(index){
+            this.selectedAddress = this.autoCompleteData[index].Place.Label;
+        },
+        async getClient(){
+        const credentials = await Auth.currentCredentials();
+
+        const locationClient = new Location({
+            credentials,
+            region: 'us-east-1'
+        });
+
+        const params = {
+            IndexName: "lrex-place",
+            Text: this.searchAddress.userInput,
+            //Text: "233 Washington St, Newark, NJ, 07102, USA",
+            FilterCountries: ["USA"],
+            BiasPosition: [-74.1724, 40.7357],
+            MaxResults: 5
+        };
+
+        locationClient.searchPlaceIndexForSuggestions(params,(err,data)=>{
+            if(err){
+                console.log(err)
+                console.log(credentials)
+                }
+            if(data){
+                console.log("Suggestion Data:")
+                console.log(data);
+            }
+        })
+
+        locationClient.searchPlaceIndexForText(params,(err,data)=>{
+            if(err){
+                console.log(err)
+                console.log(credentials)
+                }
+            if(data){
+                console.log("Text Data:")
+                console.log(data);
+                this.autoCompleteData = data.Results;
+            }
+            })
+        },
+        //Scroll Method
+        scrollToTop(){
+            window.scrollTo(0,0);
+        },
         closeAlertBox(toggleAlertBox){
             this.toggleAlertBox = toggleAlertBox;
         },
@@ -1054,22 +1157,50 @@ export default {
         addReference(){
             this.showRefCount++
 
-            if(this.showRefCount === 1){
-                document.getElementById("reference1").value = this.referenceValue;
-                this.shipmentData.Ref1 = this.referenceValue;
-            }else if(this.showRefCount === 2){
-                document.getElementById("reference2").value = this.referenceValue;
-                this.shipmentData.Ref2 = this.referenceValue;
-            }else if(this.showRefCount === 3){
-                document.getElementById("reference3").value = this.referenceValue;
-                this.shipmentData.Ref3 = this.referenceValue;
-            }else if(this.showRefCount === 4){
-                document.getElementById("reference4").value = this.referenceValue;
-                this.shipmentData.Ref4 = this.referenceValue;
-            }else if(this.showRefCount === 5){
-                document.getElementById("reference5").value = this.referenceValue;
-                this.shipmentData.Ref5 = this.referenceValue;
+            switch(this.showRefCount){
+                case 1:{
+                    document.getElementById("reference1").value = this.referenceValue;
+                    this.shipmentData.Ref1 = this.referenceValue;
+                    break;
+                }
+                case 2:{
+                    document.getElementById("reference2").value = this.referenceValue;
+                    this.shipmentData.Ref2 = this.referenceValue;
+                    break;
+                }
+                case 3:{
+                    document.getElementById("reference3").value = this.referenceValue;
+                    this.shipmentData.Ref3 = this.referenceValue;
+                    break;
+                }
+                case 4:{
+                    document.getElementById("reference4").value = this.referenceValue;
+                    this.shipmentData.Ref4 = this.referenceValue;
+                    break;
+                }
+                case 5:{
+                    document.getElementById("reference5").value = this.referenceValue;
+                    this.shipmentData.Ref5 = this.referenceValue;
+                    break;
+                }
             }
+
+            // if(this.showRefCount === 1){
+            //     document.getElementById("reference1").value = this.referenceValue;
+            //     this.shipmentData.Ref1 = this.referenceValue;
+            // }else if(this.showRefCount === 2){
+            //     document.getElementById("reference2").value = this.referenceValue;
+            //     this.shipmentData.Ref2 = this.referenceValue;
+            // }else if(this.showRefCount === 3){
+            //     document.getElementById("reference3").value = this.referenceValue;
+            //     this.shipmentData.Ref3 = this.referenceValue;
+            // }else if(this.showRefCount === 4){
+            //     document.getElementById("reference4").value = this.referenceValue;
+            //     this.shipmentData.Ref4 = this.referenceValue;
+            // }else if(this.showRefCount === 5){
+            //     document.getElementById("reference5").value = this.referenceValue;
+            //     this.shipmentData.Ref5 = this.referenceValue;
+            // }
         },
         //Validate Notification Input
         inputIsValid(){
@@ -1149,6 +1280,7 @@ export default {
                 this.createFinalArray();
             }
             this.stepUpdate();
+            this.scrollToTop();
         },
         //Adding Shipment Weight
         removeShipment(){
@@ -1158,80 +1290,80 @@ export default {
             this.shipmentDataArray = [{
                 secretKey: '',
                 Service: '',
-            serviceAddress: {
-                type: 'Address',
-                location: '',
-                address: {
-                CompanyName: '',
-                Attention: '',
-                Address1: '',
-                Address2: '',
-                City: '',
-                State: '',
-                ZipCode: '',
-                Phone: '',
-                PhoneExt: '',
-                AddressbookAdd: true
-                }
-            },
-            deliveryPickup: {
-                //Must be address-location not supported
-                type: 'Address',
-                location: '',
-                address: {
-                CompanyName: '',
-                Attention: '',
-                Address1: '',
-                Address2: '',
-                City: '',
-                State: '',
-                ZipCode: '',
-                Phone: '',
-                PhoneExt: '',
-                AddressbookAdd: true
-                }
-            },
-            shipmentID: 0,
-            Ref1: '',
-            Ref2: '',
-            Ref3: '',
-            Ref4: '',
-            Ref5: '',
-            AddRefs: true,
-            Description: '',
-            DeliveryInstructions: '',
-            weight: 1.0,
-            packageCount: 1,
-            ValidateAddress: false,
-            IgnoreMinorError: true,
-            additionalServices: [
-                ''
-            ],
-            timeWindow: '',
-            notify: [
-                {
-                delivery: 
-                [
+                serviceAddress: {
+                    type: 'Address',
+                    location: '',
+                    address: {
+                    CompanyName: '',
+                    Attention: '',
+                    Address1: '',
+                    Address2: '',
+                    City: '',
+                    State: '',
+                    ZipCode: '',
+                    Phone: '',
+                    PhoneExt: '',
+                    AddressbookAdd: true
+                    }
+                },
+                deliveryPickup: {
+                    //Must be address-location not supported
+                    type: 'Address',
+                    location: '',
+                    address: {
+                    CompanyName: '',
+                    Attention: '',
+                    Address1: '',
+                    Address2: '',
+                    City: '',
+                    State: '',
+                    ZipCode: '',
+                    Phone: '',
+                    PhoneExt: '',
+                    AddressbookAdd: true
+                    }
+                },
+                shipmentID: 0,
+                Ref1: '',
+                Ref2: '',
+                Ref3: '',
+                Ref4: '',
+                Ref5: '',
+                AddRefs: true,
+                Description: '',
+                DeliveryInstructions: '',
+                weight: 1.0,
+                packageCount: 1,
+                ValidateAddress: false,
+                IgnoreMinorError: true,
+                additionalServices: [
+                    ''
+                ],
+                timeWindow: '',
+                notify: [
                     {
+                    delivery: 
+                    [
+                        {
+                            email: [
+                                ''
+                            ],
+                            phone: [
+                                ''
+                            ]
+                        }
+                    ],
+                    nonDelivery: [
+                        {
                         email: [
                             ''
                         ],
                         phone: [
                             ''
                         ]
-                    }
-                ],
-                nonDelivery: [
-                    {
-                    email: [
-                        ''
-                    ],
-                    phone: [
-                        ''
+                        }
                     ]
                     }
-                ]
-                }
             ],
             AppCode: ''
             }]
@@ -1321,30 +1453,30 @@ export default {
         },
         createFinalArray(){
             for(let i = 0; i < this.count; i++){
-            this.shipmentDataArray[i].weight = this.weight[i];
-            this.shipmentDataArray[i].secretKey = this.shipmentData.secretKey;
-            this.shipmentDataArray[i].Service = this.shipmentData.Service;
-            this.shipmentDataArray[i].serviceAddress.address.CompanyName = this.shipmentData.serviceAddress.address.CompanyName;
-            this.shipmentDataArray[i].serviceAddress.address.Attention = this.shipmentData.serviceAddress.address.Attention;
-            this.shipmentDataArray[i].serviceAddress.address.Address1 = this.shipmentData.serviceAddress.address.Address1;
-            this.shipmentDataArray[i].serviceAddress.address.Address2 = this.shipmentData.serviceAddress.address.Address2;
-            this.shipmentDataArray[i].serviceAddress.address.City = this.shipmentData.serviceAddress.address.City;
-            this.shipmentDataArray[i].serviceAddress.address.State = this.shipmentData.serviceAddress.address.State;
-            this.shipmentDataArray[i].serviceAddress.address.ZipCode = this.shipmentData.serviceAddress.address.ZipCode;
-            this.shipmentDataArray[i].serviceAddress.address.Phone = this.shipmentData.serviceAddress.address.Phone;
-            this.shipmentDataArray[i].serviceAddress.address.PhoneExt = this.shipmentData.serviceAddress.address.PhoneExt;
-            this.shipmentDataArray[i].DeliveryInstructions = this.shipmentData.DeliveryInstructions;
-            this.shipmentDataArray[i].additionalServices = this.shipmentData.additionalServices;
-            this.shipmentDataArray[i].notify[0].delivery[0].email = this.shipmentData.notify[0].delivery[0].email;
-            this.shipmentDataArray[i].notify[0].delivery[0].phone = this.shipmentData.notify[0].delivery[0].phone;
-            this.shipmentDataArray[i].notify[0].nonDelivery[0].email = this.shipmentData.notify[0].nonDelivery[0].email;
-            this.shipmentDataArray[i].notify[0].nonDelivery[0].phone = this.shipmentData.notify[0].nonDelivery[0].phone;
-            this.shipmentDataArray[i].Ref1 = this.shipmentData.Ref1;
-            this.shipmentDataArray[i].Ref2 = this.shipmentData.Ref2;
-            this.shipmentDataArray[i].Ref3 = this.shipmentData.Ref3;
-            this.shipmentDataArray[i].Ref4 = this.shipmentData.Ref4;
-            this.shipmentDataArray[i].Ref5 = this.shipmentData.Ref5;
-            this.shipmentDataArray[i].Description = this.shipmentData.Description;
+                this.shipmentDataArray[i].weight = this.weight[i];
+                this.shipmentDataArray[i].secretKey = this.shipmentData.secretKey;
+                this.shipmentDataArray[i].Service = this.shipmentData.Service;
+                this.shipmentDataArray[i].serviceAddress.address.CompanyName = this.shipmentData.serviceAddress.address.CompanyName;
+                this.shipmentDataArray[i].serviceAddress.address.Attention = this.shipmentData.serviceAddress.address.Attention;
+                this.shipmentDataArray[i].serviceAddress.address.Address1 = this.shipmentData.serviceAddress.address.Address1;
+                this.shipmentDataArray[i].serviceAddress.address.Address2 = this.shipmentData.serviceAddress.address.Address2;
+                this.shipmentDataArray[i].serviceAddress.address.City = this.shipmentData.serviceAddress.address.City;
+                this.shipmentDataArray[i].serviceAddress.address.State = this.shipmentData.serviceAddress.address.State;
+                this.shipmentDataArray[i].serviceAddress.address.ZipCode = this.shipmentData.serviceAddress.address.ZipCode;
+                this.shipmentDataArray[i].serviceAddress.address.Phone = this.shipmentData.serviceAddress.address.Phone;
+                this.shipmentDataArray[i].serviceAddress.address.PhoneExt = this.shipmentData.serviceAddress.address.PhoneExt;
+                this.shipmentDataArray[i].DeliveryInstructions = this.shipmentData.DeliveryInstructions;
+                this.shipmentDataArray[i].additionalServices = this.shipmentData.additionalServices;
+                this.shipmentDataArray[i].notify[0].delivery[0].email = this.shipmentData.notify[0].delivery[0].email;
+                this.shipmentDataArray[i].notify[0].delivery[0].phone = this.shipmentData.notify[0].delivery[0].phone;
+                this.shipmentDataArray[i].notify[0].nonDelivery[0].email = this.shipmentData.notify[0].nonDelivery[0].email;
+                this.shipmentDataArray[i].notify[0].nonDelivery[0].phone = this.shipmentData.notify[0].nonDelivery[0].phone;
+                this.shipmentDataArray[i].Ref1 = this.shipmentData.Ref1;
+                this.shipmentDataArray[i].Ref2 = this.shipmentData.Ref2;
+                this.shipmentDataArray[i].Ref3 = this.shipmentData.Ref3;
+                this.shipmentDataArray[i].Ref4 = this.shipmentData.Ref4;
+                this.shipmentDataArray[i].Ref5 = this.shipmentData.Ref5;
+                this.shipmentDataArray[i].Description = this.shipmentData.Description;
             }
         },
         //Email-Phone Array Creation 
@@ -1388,9 +1520,9 @@ export default {
                 let errorMessage = this.dataReturn.shipmentInfo.error[0].errMsg;
                 this.shipmentLabel.shipmentID.push(this.dataReturn.shipmentInfo.shipment[0].shipmentID);
                 this.shipmentLabelTiff.shipmentID.push(this.dataReturn.shipmentInfo.shipment[0].shipmentID);
-                //alert( "Shipment " + (this.shipmentDataArray.indexOf(this.shipmentDataArray[i]) + 1) + ": " + errorMessage.slice(12))
-                this.alertMessage = "Shipment " + (this.shipmentDataArray.indexOf(this.shipmentDataArray[i]) + 1) + ": " + errorMessage.slice(12);
-                this.toggleAlertBox = true;
+                alert( "Shipment " + (this.shipmentDataArray.indexOf(this.shipmentDataArray[i]) + 1) + ": " + errorMessage.slice(12))
+                // this.alertMessage = "Shipment " + (this.shipmentDataArray.indexOf(this.shipmentDataArray[i]) + 1) + ": " + errorMessage.slice(12);
+                // this.toggleAlertBox = true;
 
                 if(this.shipmentData.secretKey == ''){
                     this.GetShipmentLabels();
@@ -1418,6 +1550,7 @@ export default {
                 })
             }
             this.currentActive = 5;
+            this.scrollToTop();
         },
         GetShipmentLabels(){
             this.creatingLabels = true;
@@ -1519,7 +1652,7 @@ export default {
             ).catch(error => alert(error))
         },
         GetAddressBookData(){
-            this.addressBookToggle = true;
+            //this.addressBookToggle = true;
             axios.get('https://api.stage.njls.com/api/Rest/GetAddressesByUserName', {
                 headers: {
                     'User': this.user.username,
@@ -1529,6 +1662,7 @@ export default {
             }).then((response)=>{
                     this.addressBook = [];
                     this.addressBook.push(response.data[0].A);
+                    console.log(this.addressBook)
                 }
             ).catch(error => alert(error))
         },
@@ -1633,6 +1767,40 @@ export default {
 </script>
 
 <style scoped>
+/* AWS Location Service */
+.fa-map-pin{
+    color: #999;
+    margin-right: 5px;
+    font-size: 1em;
+}
+.autocomplete-result{
+  background-color: #fff;
+  width: 75%;
+  border-radius: 5px;
+  text-align: left;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.062);
+}
+
+@keyframes animate-result {
+  from{margin-top: -5px;}
+  to{margin-top: 0;}
+}
+
+.autocomplete-result p{
+  cursor: pointer;
+  transition-duration: .5s;
+  margin: 0;
+  padding: 10px;
+  font-size: 12px;
+  animation: animate-result .5s ease;
+  border-bottom: 1px solid rgb(235, 235, 235);
+}
+
+.autocomplete-result p:hover{
+  background-color: rgb(235, 235, 235);
+  transition-duration: .5s;
+}
+
     body{
         overflow-x: hidden;
         margin: 0;
@@ -1774,7 +1942,7 @@ export default {
 
     .removePackageButton{
         background-color: #32ccfe;
-        border: 2px solid #2c82e494;
+        border: 2px solid #32ccfe;
         box-shadow: rgba(0, 0, 0, 0.164) 0px 1px 5px;
         border-radius: 5px;
         cursor: pointer;
@@ -1831,10 +1999,10 @@ export default {
         animation: containerAnimateLeft .4s;
     }
 
-    .address-container-1 p{
+    /* .address-container-1 p{
         padding: 0;
         margin: 0;
-    }
+    } */
 
     .address-book-input{
         display: flex;
@@ -2427,7 +2595,7 @@ export default {
     }
 
     /* Amplify Authenticator */
-
+/* 
     amplify-authenticator{
         --width: 450px;
         --height: 600px;
@@ -2448,7 +2616,7 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
-    }
+    } */
 
     /* Shipment Input Forms */
     .shipmentInputContainer{
@@ -2592,13 +2760,13 @@ export default {
         outline: none;
     }
 
-    .inputLabel p{
+    /* .inputLabel p{
         text-decoration:underline 1px solid #32ccfe;
         color: #32ccfe;
         cursor: pointer;
         font-size: 12px;
         margin-left: 5px;
-    }
+    } */
 
     .pdfSupportMessage{
         display: none;

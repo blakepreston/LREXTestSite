@@ -45,6 +45,14 @@
             </div>
         </div>
 
+        <div v-if="selectedShipments.shipmentIdArray.length > 0" class="print-delete-selected-container">
+            <div class="print-delete-selected">
+                <p>You have selected shipments.</p>
+                <button class="print-selected-button" @click="PrintSelectedShipments()">Print Labels</button>
+                <button class="delete-selected-button" @click="DeleteSelectedShipments()">Delete Shipments</button>
+            </div>
+        </div>
+
         <div v-show="toggleFilters == true" class="filter-container-main">
             <div class="filter-container">
                 <div class="main-date-container">
@@ -183,6 +191,7 @@
                         <th>Status</th>
                         <th>Print Label</th>
                         <th>Delete</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -197,6 +206,7 @@
                         <td class="print-label" @click="GetShipmentLabelsPDF(index)" v-if="currentShipments[index].p[0].ShipmentStatus[0].ShipmentStatus == 'Saved Shipment'">Print</td>
                         <td v-else></td>
                         <td class="delete-shipment"><i class="fa fa-times-circle" @click="deleteShipment.ShipmentId = currentShipments[index].ShipmentId, DeleteShipmentPopUp(index)"></i></td>
+                        <td class="select-shipment"><input @click="SelectedShipment(index)" type="checkbox" :name="currentShipments[index].ShipmentId" :id="`select-shipment-${index}`"></td>
                     </tr>
                 </tbody>
             </table>
@@ -419,10 +429,27 @@ export default {
             },
             deleteShipment:{
                 ShipmentId: 0
-            }
+            },
+            selectedShipments:{shipmentIdArray:[]}
         }
     },
     methods:{
+        SelectedShipment(index){
+            if(document.getElementById('select-shipment-'+index).checked == true){
+                console.log(index)
+                this.selectedShipments.shipmentIdArray.push(this.currentShipments[index].ShipmentId)
+            }
+
+            if(document.getElementById('select-shipment-'+index).checked == false){
+                console.log(index)
+                const newShipmentArr = this.selectedShipments.shipmentIdArray.filter(object => {
+                        console.log(document.getElementById('select-shipment-'+index).name)
+                        return object != document.getElementById('select-shipment-'+index).name;
+                    })
+                    this.selectedShipments.shipmentIdArray = newShipmentArr;
+            }
+            console.log(this.selectedShipments.shipmentIdArray)
+        },
         SetShipmentId(shipmentID){
             this.shipmentDetailsProp.shipmentId = shipmentID;
         },
@@ -542,6 +569,50 @@ export default {
                 this.GetShipmentsByUserAndType();
             })
             .catch(error => alert(error))
+        },
+        DeleteSelectedShipments(){
+            for(let i = 0; i < this.selectedShipments.shipmentIdArray.length; i++){
+                console.log("Shipment " + this.selectedShipments.shipmentIdArray[i] + " Deleted")
+                axios.post('https://api.stage.njls.com/api/Rest/DeleteShipmentByShipmentId', { ShipmentId: this.selectedShipments.shipmentIdArray[i] },{
+                    headers: {
+                        'User': this.user.username,
+                        // get the user's JWT token given by AWS cognito 
+                        'Authorization': `Bearer ${this.user.signInUserSession.accessToken.jwtToken}`
+                    }
+                }).then((response)=>{
+                    console.log(response)
+                    alert("Shipment " + (i+1) + " Deleted.")
+                    //alert("Shipment " + this.selectedShipments.shipmentIdArray[i] + " Deleted.")
+                    this.GetShipmentsByUserAndType();
+                })
+                .catch(error => alert(error))
+            }
+            this.selectedShipments.shipmentIdArray = []
+        },
+        PrintSelectedShipments(){
+            this.gettingLabelData = true;
+            this.scrollToTop();
+            axios.post('https://api.stage.njls.com/api/Rest/GetShipmentLabelsCognito', 
+                {shipmentID: this.selectedShipments.shipmentIdArray,
+                labelFormat: "PDF",
+                multipleLabelPerSheet: false},{
+                headers: {
+                    'User': this.user.username,
+                    // get the user's JWT token given by AWS cognito 
+                    'Authorization': `Bearer ${this.user.signInUserSession.accessToken.jwtToken}`
+                },
+                responseType: 'blob'
+            }).then((response)=>{
+                this.pdfDataReturn = response.data;
+                var newBlob = new Blob([this.pdfDataReturn], {type: "application/pdf"})
+                var href = URL.createObjectURL(newBlob)
+                window.open(href)
+                this.GetShipmentsByUserAndType();
+            })
+            .catch(error => alert(error)).finally(()=> {
+                this.gettingLabelData = false;
+                this.selectedShipments.shipmentIdArray = [];
+                })
         },
         //Filter Methods
         filterServiceName(){
@@ -742,6 +813,20 @@ export default {
         //Sign user out when JWT expires
         setTimeout(() => {Auth.signOut({global: true})}, 3600000);
 
+        // Auth.currentAuthenticatedUser().then(user => {
+        //     this.user = user;
+        //     this.token = user.signInUserSession.accessToken.jwtToken;
+        //     this.cognitoUserName = user.username;
+        //     this.cognitoJWT = user.signInUserSession.accessToken.jwtToken;
+        //     this.GetTrackShipmentsByCriteriaInTransit();
+        //     console.log(user)
+        // }).catch(error => {
+        //   console.log(error)
+        //   this.$router.push('Login');
+        //   Auth.signOut({global: true})
+        // });
+    },
+    beforeMount(){
         Auth.currentAuthenticatedUser().then(user => {
             this.user = user;
             this.token = user.signInUserSession.accessToken.jwtToken;
@@ -765,7 +850,7 @@ export default {
     }
 /* Amplify Authenticator */
 
-    amplify-authenticator{
+    /* amplify-authenticator{
         --width: 450px;
         --height: 600px;
         --amplify-primary-color: #32ccfe;
@@ -779,13 +864,25 @@ export default {
         --amplify-secondary-tint: #2cb6e4;
         --amplify-primary-shade: #32ccfe;
         --amplify-primary-tint: #32ccfe;
+        --amplify-components-button-border-radius: 50px;
+        --border-radius: 50px;
     }
+
+    amplify-button{
+        --amplify-components-button-border-radius: 50px;
+        --border-radius: 50px;
+    } */
 
     .container{
         font-family: 'Work Sans', sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         margin-top: 10%;
+    }
+
+    .select-shipment input{
+        margin-left: 50%;
+        cursor: pointer;
     }
 
 
@@ -834,6 +931,15 @@ export default {
 
     }
 
+    .delete-confirm-inner h2{
+        margin: 0;
+        width: 100%;
+        background-color: #32ccfe;
+        border-radius: 10px 10px 0px 0px;
+        padding: 10px;
+        color: #fff;
+    }
+
     .delete-confirm-inner{
         display: flex;
         justify-content: center;
@@ -843,7 +949,7 @@ export default {
         background-color: #ffffff;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
         border-radius: 10px;
-        padding: 10px;
+        padding: 0 10px 10px 10px;
     }
 
     .delete-confirm-inner button{
@@ -853,7 +959,7 @@ export default {
         padding: 12px 15px;
         color: #ffffff;
         border: 1px solid #ffffff;
-        border-radius: 10px;
+        border-radius: 50px;
         cursor: pointer;
         transition-duration: .5s;
     }
@@ -1081,7 +1187,7 @@ export default {
         background-color: #32ccfe;
         padding: 12px 15px;
         color: #ffffff;
-        border-radius: 10px;
+        border-radius: 50px;
         cursor: pointer;
         transition-duration: .5s;
         margin: 10px;
@@ -1131,6 +1237,7 @@ export default {
         border: 1px solid rgba(0, 0, 0, 0.336);
         border-radius: 5px;
         outline: none;
+        width: 100%;
     }
 
     .filter-container button{
@@ -1162,11 +1269,49 @@ export default {
     .filter-input-container{
         display: flex;
         align-items: center;
+        width: 100%;
+        justify-content: space-between;
     }
 
     .filter-search-container{
         flex-direction: column;
         text-align: left;
+    }
+
+    .print-delete-selected-container{
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        animation: filter-animate .5s ease;
+    }
+
+    .print-delete-selected{
+        background-color: #f8f8f8;
+        padding: 15px;
+        border-radius: 15px;
+        width: 50%;
+    }
+
+    .print-selected-button{
+        border: none;
+        background-color: #33f18a;
+        padding: 5px 7px;
+        color: #ffffff;
+        border-radius: 10px;
+        cursor: pointer;
+        transition-duration: .5s;
+        margin: 5px;
+    }
+
+    .delete-selected-button{
+        border: none;
+        background-color: #fe804d;
+        padding: 5px 7px;
+        color: #ffffff;
+        border-radius: 10px;
+        cursor: pointer;
+        transition-duration: .5s;
+        margin: 5px;
     }
 
     /* Date Container */
@@ -1185,6 +1330,7 @@ export default {
         border: 1px solid rgba(0, 0, 0, 0.336);
         border-radius: 5px;
         outline: none;
+        width: 50%;
     }
 
     .main-date-container button{
@@ -1208,6 +1354,7 @@ export default {
         justify-content: row;
         align-items: center;
         padding: 5px;
+        width: 100%;
     }
 
 /* Print Label */

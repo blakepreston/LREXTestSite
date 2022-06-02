@@ -40,7 +40,7 @@
                 </div>
               
                 <div class="input-container">
-                    <label for="file">Attach File</label>
+                    <label for="file">Attach File <small>(.pdf or .docx)</small> </label>
                     <input id="fileInput" class="fileInput" name="file" type="file">
                 </div>
               
@@ -63,7 +63,9 @@ export default {
                 name: '',
                 email: '',
                 message: '',
-                base64File: ''
+                base64File: '',
+                isPDF: false,
+                isDOCX: false
             },
             submittingInfo: false,
             inquirySent: false
@@ -71,6 +73,25 @@ export default {
     },
     methods:{
             getBase64(file, callback) {
+                var filePath = document.getElementById("fileInput").value.toLowerCase();
+                console.log(filePath)
+                var fileExt = filePath.split('.');
+                var fileExtType = fileExt[fileExt.length - 1];
+
+                switch(fileExtType){
+                    case "docx":
+                        this.contractorInput.isDOCX = true;
+                        this.contractorInput.isPDF = false;
+                        break;
+                    case "pdf":
+                        this.contractorInput.isPDF = true;
+                        this.contractorInput.isDOCX = false;
+                        break;
+                    default:
+                        alert("Incorrect file type added.");
+                        break;
+                }
+
                 const reader = new FileReader();
                 reader.onloadend= () =>{
                     const base64String = reader.result.replace('data:', '').replace(/^.+,/, '');
@@ -81,15 +102,22 @@ export default {
                 reader.readAsDataURL(file);
             },
             SendInfo(){
-                this.submittingInfo = true;
-                axios.post('https://localhost:44368/api/Rest/SendEmail', this.contractorInput,{})
-                .then((response)=>{
-                    console.log(response.data)
-                    if(response.data == 'Success'){
-                        this.inquirySent = true;
-                    }
-                })
-                .catch(error => alert(error)).finally(()=>{this.submittingInfo = false})
+                if(this.contractorInput.isPDF || this.contractorInput.isDOCX){
+                    this.submittingInfo = true;
+                    axios.post('https://localhost:44368/api/Rest/SendEmail', this.contractorInput,{})
+                        .then((response)=>{
+                            console.log(response.data)
+                            if(response.data == 'Success'){
+                                this.inquirySent = true;
+                            }else{
+                                alert("Error submitting information.")
+                            }
+                        })
+                        .catch(error => {alert(error);}).finally(()=>{this.submittingInfo = false})
+                }else{
+                    alert("Please add the correct file type.")
+                }
+                
             },
             SubmitInfo(){
                 var fileInput = document.getElementById("fileInput").files[0];
@@ -100,6 +128,10 @@ export default {
 </script>
 
 <style scoped>
+    textarea, input{
+        font-family: 'Work Sans', sans-serif;;
+    }
+
     .container{
         width: 100%;
         margin-top: 10%;
@@ -111,6 +143,7 @@ export default {
         display: flex;
         flex-direction: column;
         align-items: center;
+        width: 50%;
     }
 
     .text-container{
@@ -132,7 +165,7 @@ export default {
         padding: 10px;
         font-size: 20px;
         border-radius: 50px;
-        background-color: #33f1a8;
+        background-color: #33f18a;
         transition: 1s;
         color: #fff;
         cursor: pointer;
@@ -149,7 +182,7 @@ export default {
 
     .contractor-input{
         padding: 10px;
-        width: 90%;
+        width: 100%;
         font-size: 15px;
         border: 1px solid rgba(0, 0, 0, 0.336);
         border-radius: 5px;
@@ -248,7 +281,7 @@ export default {
 
     /* Check Mark Animation */
     .check {
-        /* border: 7px solid #33f1a8; */
+        /* border: 7px solid #33f18a; */
         height: 25px;
         width: 12.5px;
         border-width: 7px;
@@ -263,7 +296,7 @@ export default {
     @keyframes rotate-check {
         0%{
             transform: rotate(0deg) scale(10%);
-            border-color: #33f1a8;
+            border-color: #33f18a;
         }
         100%{
             transform: rotate(360deg) scale(100%);
@@ -313,8 +346,8 @@ export default {
     .check-container{
         width: 50px;
         height: 50px;
-        border: 5px solid #33f1a8;
-        background-color: #33f1a8;
+        border: 5px solid #33f18a;
+        background-color: #33f18a;
         border-radius: 50%;
         display: flex;
         justify-content: center;

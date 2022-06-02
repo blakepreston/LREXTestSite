@@ -59,11 +59,4 @@ export default {
         --amplify-primary-shade: #32ccfe;
         --amplify-primary-tint: #32ccfe;
     }
-
-    amplify-sign-out{
-        --amplify-primary-color: #32ccfe;
-        --amplify-secondary-tint: #2cb6e4;
-        --amplify-primary-shade: #32ccfe;
-        --amplify-primary-tint: #32ccfe;
-    }
 </style>

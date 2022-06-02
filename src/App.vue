@@ -19,7 +19,7 @@
                 <li v-if="shipmentPages"><router-link to="/ShipmentCenter">My Shipments</router-link></li>
                 <li class="create-account-mobile"><a href="https://www.stage.njls.com/clients/RegisterNewCustomer.aspx" target="_blank"><strong style="color: #fff">Create an account</strong></a></li>
                 <li style="border-bottom: none;">
-                <amplify-authenticator v-if="authState === 'signedin'">
+                <amplify-authenticator v-if="authState === 'signedin' && shipmentPages">
                   <div class="sign-out-container">
                       <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
                       <amplify-sign-out slot="sign-out"
@@ -54,7 +54,7 @@
             <a v-if="!createShipmentToggleSignIn"><button class="button_signin" @click="()=> SignInTogglePopup('SignInButtonTrigger')">Sign in</button></a>
         </div>
 
-        <amplify-authenticator v-if="authState === 'signedin'">
+        <amplify-authenticator v-if="authState === 'signedin' && shipmentPages">
           <div class="sign-out-container">
               <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
               <amplify-sign-out slot="sign-out"
@@ -341,6 +341,21 @@ export default {
 
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Work+Sans&display=swap");
+/* Amplify Authenticator */
+
+    amplify-sign-out{
+        --amplify-primary-color: #32ccfe;
+        --amplify-secondary-tint: #2cb6e4;
+        --amplify-primary-shade: #32ccfe;
+        --amplify-primary-tint: #32ccfe;
+    }
+
+    .sign-out-container{
+      background-color: #32ccfe;
+      padding: 10px;
+      border-radius: 50px;
+      margin-left: 10px;
+    }
 
 #app {
   font-family: 'Work Sans', sans-serif;
@@ -348,6 +363,10 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   margin-top: 40px;
+}
+
+input{
+  font-family: 'Work Sans', sans-serif;;
 }
 
 a{
@@ -545,7 +564,7 @@ button{
 }
 
 /* Sign-Out Container */
-amplify-sign-out{
+/* amplify-sign-out{
   --amplify-primary-color: #32ccfe;
   --amplify-secondary-tint: #32ccfe;
   --amplify-primary-shade: #2c82e4;
@@ -557,7 +576,7 @@ amplify-sign-out{
   padding: 5px;
   border-radius: 10px;
   margin-left: 10px;
-}
+} */
 
 /**************************/
 /* || Footer Syles */
@@ -729,7 +748,7 @@ amplify-sign-out{
     }
 
     .create-account-mobile a{
-      background-color: #32ccfe;
+      background-color: #33f18a;
       padding: 10px;
       border-radius: 50px;
       margin-left: -10px;
