@@ -20,15 +20,21 @@
     </div> -->
 
     <div class="container">
-        <h1 v-if="showInTransit">In Transit Shipments</h1>
-        <h1 v-if="showCurrent">Shipment Information Received</h1>
-        <h1 v-if="showDelivered">Delivered Shipments</h1>
+        <div class="header-container">
+            <div class="header-container-inner">
+                <h1 v-if="showInTransit">In Transit Shipments</h1>
+                <h1 v-if="showCurrent">Shipment Information Received</h1>
+                <h1 v-if="showDelivered">Delivered Shipments</h1>
+            </div>
+            
+        </div>
+        
         
         <div class="track-shipment-container">
             <div class="track-shipment">
-                <label for="shipmentID">Tracking #: </label>
+                <!-- <label for="shipmentID">Tracking #: </label> -->
                 <!-- shipmentDetailsProp.shipmentId = $event.target.value || SetShipmentId($event.target.value)-->
-                <input name="shipmentID" @input="shipmentDetailsProp.shipmentId = $event.target.value" type="text">
+                <input placeholder="Enter Tracking Number" name="shipmentID" @input="shipmentDetailsProp.shipmentId = $event.target.value" type="text">
                 <button type="submit" @click="showData = !showData, scrollToTop()">Get Shipment</button>
             </div>
         </div>
@@ -47,7 +53,12 @@
 
         <div v-if="selectedShipments.shipmentIdArray.length > 0" class="print-delete-selected-container">
             <div class="print-delete-selected">
-                <p>You have selected shipments.</p>
+                <p>Print or Delete selected shipments.</p>
+                <div class="selected-shipment-id-container">
+                    <p class="shipment-id-display"><strong>Selected Shipments</strong></p>
+                    <p v-for="(items, index) in selectedShipments.shipmentIdArray" :key="items" class="shipment-id-display">{{selectedShipments.shipmentIdArray[index]}}</p>
+                </div>
+                
                 <button class="print-selected-button" @click="PrintSelectedShipments()">Print Labels</button>
                 <button class="delete-selected-button" @click="DeleteSelectedShipments()">Delete Shipments</button>
             </div>
@@ -106,10 +117,10 @@
                     <tr>
                         <th>Tracking Number</th>
                         <th>Service Name</th>
-                        <th>Company or Name</th>
-                        <th>Contact Name</th>
-                        <th>Location</th>
-                        <th>Status</th>
+                        <th class="table-column-toggle">Company or Name</th>
+                        <th class="table-column-toggle">Contact Name</th>
+                        <th class="location-column">Location</th>
+                        <th class="table-column-toggle">Status</th>
                         <th>Print Label</th>
                         <th>Delete</th>
                     </tr>
@@ -120,10 +131,10 @@
                         <td class="shipmentID" id="shipmentID" v-if="filterArray[index].p[0].ShipmentStatus[0].ShipmentStatus != 'Saved Shipment'" @click="shipmentDetailsProp.shipmentId = $event.target.textContent, showData = !showData, scrollToTop()">{{filterArray[index].ShipmentId}}</td>
                         <td v-if="filterArray[index].p[0].ShipmentStatus[0].ShipmentStatus == 'Saved Shipment'">{{filterArray[index].ShipmentId}}</td>
                         <td>{{filterArray[index].p[0].ServiceName}}</td>
-                        <td>{{filterArray[index].DeliveryCompanyName}}</td>
-                        <td>{{filterArray[index].DeliveryAttention}}</td>
-                        <td>{{filterArray[index].p[0].AddressLocation}}</td>
-                        <td>{{filterArray[index].p[0].ShipmentStatus[0].ShipmentStatus}}</td>
+                        <td class="table-column-toggle">{{filterArray[index].DeliveryCompanyName}}</td>
+                        <td class="table-column-toggle">{{filterArray[index].DeliveryAttention}}</td>
+                        <td class="location-column">{{filterArray[index].p[0].AddressLocation}}</td>
+                        <td class="table-column-toggle">{{filterArray[index].p[0].ShipmentStatus[0].ShipmentStatus}}</td>
                         <td class="print-label" @click="GetShipmentLabelsPDF(index)" v-if="filterArray[index].p[0].ShipmentStatus[0].ShipmentStatus == 'Saved Shipment'">Print</td>
                         <td v-if="filterArray[index].p[0].ShipmentStatus[0].ShipmentStatus != 'Saved Shipment'"></td>
                         <td><i class="fa fa-times-circle"></i></td>
@@ -185,13 +196,13 @@
                     <tr>
                         <th>Tracking Number</th>
                         <th>Service Name</th>
-                        <th>Company or Name</th>
-                        <th>Contact Name</th>
-                        <th>Location</th>
-                        <th>Status</th>
+                        <th class="table-column-toggle">Company or Name</th>
+                        <th class="table-column-toggle">Contact Name</th>
+                        <th class="location-column">Location</th>
+                        <th class="table-column-toggle">Status</th>
                         <th>Print Label</th>
                         <th>Delete</th>
-                        <th></th>
+                        <th class="select-shipment"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -199,10 +210,10 @@
                         <td class="shipmentID" id="shipmentID" v-if="currentShipments[index].p[0].ShipmentStatus[0].ShipmentStatus != 'Saved Shipment'" @click="shipmentDetailsProp.shipmentId = $event.target.textContent, showData = !showData, scrollToTop()">{{currentShipments[index].ShipmentId}}</td>
                         <td v-if="currentShipments[index].p[0].ShipmentStatus[0].ShipmentStatus == 'Saved Shipment'">{{currentShipments[index].ShipmentId}}</td>
                         <td>{{currentShipments[index].p[0].ServiceName}}</td>
-                        <td>{{currentShipments[index].DeliveryCompanyName}}</td>
-                        <td>{{currentShipments[index].DeliveryAttention}}</td>
-                        <td>{{currentShipments[index].p[0].AddressLocation}}</td>
-                        <td>{{currentShipments[index].p[0].ShipmentStatus[0].ShipmentStatus}}</td>
+                        <td class="table-column-toggle">{{currentShipments[index].DeliveryCompanyName}}</td>
+                        <td class="table-column-toggle">{{currentShipments[index].DeliveryAttention}}</td>
+                        <td class="location-column">{{currentShipments[index].p[0].AddressLocation}}</td>
+                        <td class="table-column-toggle">{{currentShipments[index].p[0].ShipmentStatus[0].ShipmentStatus}}</td>
                         <td class="print-label" @click="GetShipmentLabelsPDF(index)" v-if="currentShipments[index].p[0].ShipmentStatus[0].ShipmentStatus == 'Saved Shipment'">Print</td>
                         <td v-else></td>
                         <td class="delete-shipment"><i class="fa fa-times-circle" @click="deleteShipment.ShipmentId = currentShipments[index].ShipmentId, DeleteShipmentPopUp(index)"></i></td>
@@ -397,7 +408,7 @@ export default {
             currentShipments: [],
             inTransitShipments: [],
             deliveredShipments: [],
-            savedShipments: [],
+            //savedShipments: [],
             filterArray: [],
             deleteShipmentArray: [],
             toggleFilters: false,
@@ -434,21 +445,18 @@ export default {
         }
     },
     methods:{
+        //Methods used for selection boxes (Print/Delete Shipments)
         SelectedShipment(index){
             if(document.getElementById('select-shipment-'+index).checked == true){
-                console.log(index)
                 this.selectedShipments.shipmentIdArray.push(this.currentShipments[index].ShipmentId)
             }
 
             if(document.getElementById('select-shipment-'+index).checked == false){
-                console.log(index)
                 const newShipmentArr = this.selectedShipments.shipmentIdArray.filter(object => {
-                        console.log(document.getElementById('select-shipment-'+index).name)
                         return object != document.getElementById('select-shipment-'+index).name;
                     })
                     this.selectedShipments.shipmentIdArray = newShipmentArr;
             }
-            console.log(this.selectedShipments.shipmentIdArray)
         },
         SetShipmentId(shipmentID){
             this.shipmentDetailsProp.shipmentId = shipmentID;
@@ -473,10 +481,7 @@ export default {
                 this.currentShipments = [];
                 for(let i = 0; i < response.data.length; i++){
                     this.currentShipments.push(response.data[i]);
-                }
-                    //this.CheckLabelPrinted();
-
-                    //console.log(response.data);
+                    }
                 }
             ).catch(error => alert(error)).finally(()=> this.gettingShipmentData = false)
         },
@@ -495,9 +500,7 @@ export default {
                 this.inTransitShipments = [];
                 for(let i = 0; i < response.data.length; i++){
                     this.inTransitShipments.push(response.data[i]);
-                }
-                    //console.log(this.inTransitShipments)
-                    //console.log(response.data);
+                    }
                 }
             ).catch(error => alert(error)).finally(()=> this.gettingShipmentData = false)
         },
@@ -516,9 +519,7 @@ export default {
                 this.deliveredShipments = [];
                 for(let i = 0; i < response.data.length; i++){
                     this.deliveredShipments.push(response.data[i]);
-                }
-                    //console.log(this.deliveredShipments)
-                    //console.log(response.data);
+                    }
                 }
             ).catch(error => alert(error)).finally(()=> this.gettingShipmentData = false)
         },
@@ -526,7 +527,6 @@ export default {
             this.gettingLabelData = true;
             this.shipmentLabel.shipmentID.push(this.currentShipments[index].ShipmentId);
             this.scrollToTop();
-            //console.log(this.shipmentLabel);
             axios.post('https://api.stage.njls.com/api/Rest/GetShipmentLabelsCognito', this.shipmentLabel,{
                 headers: {
                     'User': this.user.username,
@@ -543,8 +543,8 @@ export default {
             })
             .catch(error => alert(error)).finally(()=> this.gettingLabelData = false)
         },
+        //Trigger Popup (Delete Shipment)
         DeleteShipmentPopUp(index){
-            //alert(this.deleteShipment.ShipmentId)
             this.showDeleteConfirm = true;
             this.deleteShipmentArray = [];
             this.scrollToTop();
@@ -582,13 +582,13 @@ export default {
                 }).then((response)=>{
                     console.log(response)
                     alert("Shipment " + (i+1) + " Deleted.")
-                    //alert("Shipment " + this.selectedShipments.shipmentIdArray[i] + " Deleted.")
                     this.GetShipmentsByUserAndType();
                 })
                 .catch(error => alert(error))
             }
             this.selectedShipments.shipmentIdArray = []
         },
+        //Print the shipments that are selected with selection boxes
         PrintSelectedShipments(){
             this.gettingLabelData = true;
             this.scrollToTop();
@@ -621,7 +621,6 @@ export default {
             var filterValue = document.getElementById("serviceName").value;
             document.getElementById("companyName").value = '';
             document.getElementById("contactName").value = '';
-            //console.log(filterValue)
             if(this.showInTransit == true){
                 for(let i = 0; i < this.inTransitShipments.length; i++){
                 if(this.inTransitShipments[i].p[0].ServiceName == filterValue){
@@ -648,7 +647,6 @@ export default {
             var filterValue = document.getElementById("companyName").value;
             document.getElementById("contactName").value = '';
             document.getElementById("serviceName").value ='';
-            //console.log(filterValue)
             if(this.showInTransit == true){
                 for(let i = 0; i < this.inTransitShipments.length; i++){
                     if(this.inTransitShipments[i].DeliveryCompanyName == filterValue){
@@ -675,7 +673,6 @@ export default {
             var filterValue = document.getElementById("contactName").value;
             document.getElementById("serviceName").value = '';
             document.getElementById("companyName").value = '';
-            //console.log(filterValue)
             if(this.showInTransit == true){
                 for(let i = 0; i < this.inTransitShipments.length; i++){
                     if(this.inTransitShipments[i].DeliveryAttention == filterValue){
@@ -708,9 +705,6 @@ export default {
         getDateRange(){
             this.dateTo = document.getElementById('dateTo').value;
             this.dateFrom = document.getElementById('dateFrom').value;
-
-            //console.log(this.dateTo)
-            //console.log(this.dateFrom)
         },
         //Scroll Method
         scrollToTop(){
@@ -734,7 +728,6 @@ export default {
         setDateRange(){
             this.postDelivered.DateTo = document.getElementById('dateTo').value;
             this.postDelivered.DateFrom = document.getElementById('dateFrom').value;
-            //console.log(this.postDelivered)
             this.GetTrackShipmentsByCriteriaDelivered();
         },
         GetInTransitDateRange(){
@@ -743,13 +736,10 @@ export default {
             let dateFrom = document.getElementById('dateFrom').value;
             let convertDateTo = new Date(dateTo);
             let convertDateFrom = new Date(dateFrom);
-            //console.log("Date From: " + dateFrom)
-            //console.log("Date To: " + dateTo)
             for(let i = 0; i < this.inTransitShipments.length; i++){
                 //Get Shipment Created Date From In Transit
                 let shipmentCreateDate = this.inTransitShipments[i].CreatedDate.substr(0,10);
                 let convertShipmentCreateDate = new Date(shipmentCreateDate);
-                //console.log("Shipment Date Create: " + shipmentCreateDate)
                     if(convertShipmentCreateDate <= convertDateTo && convertShipmentCreateDate >= convertDateFrom){
                         this.filterArray.push(this.inTransitShipments[i]);
                     }
@@ -761,18 +751,17 @@ export default {
             let dateFrom = document.getElementById('dateFrom').value;
             let convertDateTo = new Date(dateTo);
             let convertDateFrom = new Date(dateFrom);
-            //console.log("Date From: " + dateFrom)
-            //console.log("Date To: " + dateTo)
+
             for(let i = 0; i < this.currentShipments.length; i++){
                 //Get Shipment Created Date From In Transit
                 let shipmentCreateDate = this.currentShipments[i].CreatedDate.substr(0,10);
                 let convertShipmentCreateDate = new Date(shipmentCreateDate);
-                //console.log("Shipment Date Create: " + shipmentCreateDate)
                     if(convertShipmentCreateDate <= convertDateTo && convertShipmentCreateDate >= convertDateFrom){
                         this.filterArray.push(this.currentShipments[i]);
                     }
                 }
         },
+        //Download table data (CSV)
         TableToCSV(){
             var dataCSV = [];
             var rows = document.getElementsByTagName('tr');
@@ -800,7 +789,6 @@ export default {
             downloadLink.download = "ShipmentData.csv";
             let url = window.URL.createObjectURL(fileCSV);
             downloadLink.href = url;
-            //window.open(url)
 
             downloadLink.display = "none";
             document.body.appendChild(downloadLink);
@@ -812,21 +800,9 @@ export default {
     mounted(){
         //Sign user out when JWT expires
         setTimeout(() => {Auth.signOut({global: true})}, 3600000);
-
-        // Auth.currentAuthenticatedUser().then(user => {
-        //     this.user = user;
-        //     this.token = user.signInUserSession.accessToken.jwtToken;
-        //     this.cognitoUserName = user.username;
-        //     this.cognitoJWT = user.signInUserSession.accessToken.jwtToken;
-        //     this.GetTrackShipmentsByCriteriaInTransit();
-        //     console.log(user)
-        // }).catch(error => {
-        //   console.log(error)
-        //   this.$router.push('Login');
-        //   Auth.signOut({global: true})
-        // });
     },
     beforeMount(){
+        //Verify user is authenticated and get user data
         Auth.currentAuthenticatedUser().then(user => {
             this.user = user;
             this.token = user.signInUserSession.accessToken.jwtToken;
@@ -848,36 +824,23 @@ export default {
         overflow-x: hidden;
         margin: 0;
     }
-/* Amplify Authenticator */
-
-    /* amplify-authenticator{
-        --width: 450px;
-        --height: 600px;
-        --amplify-primary-color: #32ccfe;
-        --amplify-secondary-tint: #2cb6e4;
-        --amplify-primary-shade: #32ccfe;
-        --amplify-primary-tint: #32ccfe;
-    }
-
-    amplify-sign-out{
-        --amplify-primary-color: #32ccfe;
-        --amplify-secondary-tint: #2cb6e4;
-        --amplify-primary-shade: #32ccfe;
-        --amplify-primary-tint: #32ccfe;
-        --amplify-components-button-border-radius: 50px;
-        --border-radius: 50px;
-    }
-
-    amplify-button{
-        --amplify-components-button-border-radius: 50px;
-        --border-radius: 50px;
-    } */
 
     .container{
         font-family: 'Work Sans', sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         margin-top: 10%;
+    }
+
+    .header-container{
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .header-container-inner{
+        width: 80%;
+        text-align: left;
     }
 
     .select-shipment input{
@@ -1278,6 +1241,8 @@ export default {
         text-align: left;
     }
 
+    /* Selected Shipment Styles */
+
     .print-delete-selected-container{
         display: flex;
         justify-content: center;
@@ -1292,6 +1257,15 @@ export default {
         width: 50%;
     }
 
+    .shipment-id-display{
+        animation: filter-animate .5s ease;
+        margin: 0;
+    }
+
+    .selected-shipment-id-container{
+        margin-bottom: 10px;
+    }
+
     .print-selected-button{
         border: none;
         background-color: #33f18a;
@@ -1303,6 +1277,11 @@ export default {
         margin: 5px;
     }
 
+    .print-selected-button:hover{
+        background-color: #2fdf7e;
+        transition-duration: .5s;
+    }
+
     .delete-selected-button{
         border: none;
         background-color: #fe804d;
@@ -1312,6 +1291,11 @@ export default {
         cursor: pointer;
         transition-duration: .5s;
         margin: 5px;
+    }
+
+    .delete-selected-button:hover{
+        background-color: #ee7749;
+        transition-duration: .5s;
     }
 
     /* Date Container */
@@ -1388,12 +1372,13 @@ export default {
         border-radius: 5px;
         transition: all 0.3s ease 0s;
         margin-left: 5px;
+        width: 30%;
     }
 
-    .track-shipment label{
+    /* .track-shipment label{
         font-weight: bold;
         margin-left: 5px;
-    }
+    } */
 
     .track-shipment button{
         border: none;
@@ -1414,6 +1399,11 @@ export default {
     @media only screen and (max-width: 800px){
         .container{
             margin-top: 20vh;
+        }
+
+        .header-container-inner{
+            width: 80%;
+            font-size: 12px;
         }
 
         .filter-button-container{
@@ -1447,9 +1437,33 @@ export default {
             margin-top: 5%;
         }
 
+        /* Selected Shipments Styles */
+
+        .print-delete-selected{
+            margin-top: 10px;
+            width: 80%;
+        }
+
+        /* Shipment Tables Styles */
+        .location-column{
+            width: 30%;
+        }
+
+        .select-shipment{
+            width: 10%;
+        }
+
+        .select-shipment input{
+            width: 10px;
+        }
+
+        .table-column-toggle{
+            display: none;
+        }
+
         .shipment-table{
             font-size: 8px;
-            width: 80%;
+            width: 90%;
         }
 
         .shipment-table-container{
@@ -1464,6 +1478,8 @@ export default {
             padding: 3px 0px 0px 1px;
         }
 
+        /* Track Shipment Styles */
+
         .track-shipment-container{
             width: 100%;
         }
@@ -1476,20 +1492,22 @@ export default {
 
         .track-shipment button{
             padding: 10px 5px 10px 5px;
-            font-size: 12px;
+            font-size: 8px;
             margin: 2.5px;
+            width: 30%;
         }
 
         .track-shipment input{
             padding: 10px 5px 10px 5px;
             font-size: 12px;
             margin: 2.5px;
+            width: 65%;
         }
 
-        .track-shipment label{
+        /* .track-shipment label{
             font-size: 12px;
             margin: 2.5px;
-        }
+        } */
 
         .delete-confirm-inner{
             width: 80%;

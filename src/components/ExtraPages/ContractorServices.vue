@@ -8,46 +8,65 @@
           <p>Thank you for your interest in LREX. Our team will get back to you as soon as they can.</p>
           <router-link class="router-link" to="/">Back to main page</router-link>
       </div>
-      
-      <div v-if="!inquirySent" class="inner-container">
-            <div class="loader-container" v-if="submittingInfo">
+
+      <div class="loader-container" v-if="submittingInfo">
                 <h2>Submitting Information</h2>
                 <img class="loader-dino" src="../../assets/LREXDinoFooter.jpg" alt="">
-                <div class="dot-container">
-                    <div class="dot1"></div>
-                    <div class="dot2"></div>
-                    <div class="dot3"></div>
-                </div>
-                <!-- <div class="loader"></div> -->
+            <div class="dot-container">
+                <div class="dot1"></div>
+                <div class="dot2"></div>
+                <div class="dot3"></div>
             </div>
-
-
-          <h1>Contractor Information</h1>
+          <!-- <div class="loader"></div> -->
+      </div>
+      
+      <div v-if="!inquirySent" class="inner-container">
+            
           <div class="text-container">
+                <h1>Contractor Information</h1>
                 <div class="input-container">
                     <label for="name">Full Name</label>
-                    <input class="contractor-input" v-model="contractorInput.name" name="name" type="text">
+                    <input class="contractor-input" v-model="ContractorInput.name" name="name" type="text">
                 </div>
               
                 <div class="input-container">
                     <label for="email">Email</label>
-                    <input class="contractor-input" v-model="contractorInput.email" name="email" type="text">
+                    <input class="contractor-input" v-model="ContractorInput.email" name="email" type="text">
                 </div>
-              
+
                 <div class="input-container">
                     <label for="message">Message</label>
-                    <textarea class="contractor-input" v-model="contractorInput.message" name="message" type="text"></textarea>
+                    <textarea class="contractor-input" v-model="ContractorInput.message" name="message" type="text"></textarea>
+                </div>
+
+                <div class="input-container">
+                    <label for="download">Sign the NVR Consent Form</label>
+                    <a href="/dummy.pdf" style="color: #32ccfe" name="download" download="NVRConsentForm">Click here to download</a>
                 </div>
               
                 <div class="input-container">
-                    <label for="file">Attach File <small>(.pdf or .docx)</small> </label>
-                    <input id="fileInput" class="fileInput" name="file" type="file">
+                    <label for="file">Attach Files <small>(.pdf or .docx)</small> </label>
+                    <input id="fileInput" class="fileInput" name="file" type="file" multiple>
                 </div>
               
                 <div class="input-container">
                     <!-- <button @click="InputStructure">Update Info</button> -->
                     <button @click="SubmitInfo">Submit</button>
                 </div>
+          </div>
+            <!-- src\assets\FinalImages\AdobeStock_WomanDriver.jpeg -->
+          <div class="image-container">
+              <div class="image-text-info">
+                <h1>More Information?</h1>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean cursus eros tellus, a imperdiet neque facilisis 
+                    vitae. Donec porta dui a lorem dapibus vestibulum. Fusce maximus molestie sem, at facilisis risus. Suspendisse 
+                    aliquam risus at leo facilisis, sit amet faucibus nisi varius. Donec cursus libero eu arcu imperdiet sodales. 
+                    Integer non nibh sit amet felis accumsan rhoncus at rutrum massa.
+                </p> 
+              </div>
+              
+              <img src="../../assets/FinalImages/AdobeStock_WomanDriver.jpeg" alt="">
+              <div class="image-text"><div class="image-text-inner"><p>Join our team.</p></div></div>
           </div>
           <!-- {{contractorInput}} -->
       </div>
@@ -59,52 +78,62 @@ import axios from 'axios';
 export default {
     data(){
         return{
-            contractorInput: {
+            ContractorInput: {
                 name: '',
                 email: '',
                 message: '',
-                base64File: '',
-                isPDF: false,
-                isDOCX: false
+                base64FileArray: []
             },
             submittingInfo: false,
-            inquirySent: false
+            inquirySent: false,
+            base64Array: [],
+            fileType: false
         }
     },
+    mounted(){
+        document.getElementById("fileInput").addEventListener('change', () =>{
+            var files = document.getElementById("fileInput").files;
+            for(let i = 0; i < files.length; i++){
+                this.setupReader(files[i])
+            }
+        })
+    },
     methods:{
-            getBase64(file, callback) {
-                var filePath = document.getElementById("fileInput").value.toLowerCase();
-                console.log(filePath)
-                var fileExt = filePath.split('.');
-                var fileExtType = fileExt[fileExt.length - 1];
+            async getBase64(){
+                var fileInput = document.getElementById("fileInput");
+                var fileList = [];
 
-                switch(fileExtType){
-                    case "docx":
-                        this.contractorInput.isDOCX = true;
-                        this.contractorInput.isPDF = false;
-                        break;
-                    case "pdf":
-                        this.contractorInput.isPDF = true;
-                        this.contractorInput.isDOCX = false;
-                        break;
-                    default:
-                        alert("Incorrect file type added.");
-                        break;
-                }
+                for(var i = 0; i < fileInput.files.length; i++){
+                    var fileArrayInput = {base64File: "", isPDF: false, isDOCX: false}
+                    fileList.push(fileInput.files[i].name)
+                    var filePathName = fileInput.files[i].name;
+                    var fileExtension = filePathName.split('.');
+                    var fileExtensionType = fileExtension[fileExtension.length - 1];
 
-                const reader = new FileReader();
-                reader.onloadend= () =>{
-                    const base64String = reader.result.replace('data:', '').replace(/^.+,/, '');
-                    //console.log(base64String);
-                    this.contractorInput.base64File = base64String;
-                    callback();
+                    switch(fileExtensionType){
+                        case "docx":
+                            fileArrayInput.isDOCX = true;
+                            fileArrayInput.isPDF = false;
+                            this.fileType = true;
+                            break;
+                        case "pdf":
+                            fileArrayInput.isPDF = true;
+                            fileArrayInput.isDOCX = false;
+                            this.fileType = true;
+                            break;
+                        default:
+                            alert("Incorrect file type added.");
+                            this.fileType = false;
+                            break;
+                    }
+                    this.ContractorInput.base64FileArray.push(fileArrayInput)
+                    this.ContractorInput.base64FileArray[i].base64File = this.base64Array[i];
                 }
-                reader.readAsDataURL(file);
             },
-            SendInfo(){
-                if(this.contractorInput.isPDF || this.contractorInput.isDOCX){
-                    this.submittingInfo = true;
-                    axios.post('https://localhost:44368/api/Rest/SendEmail', this.contractorInput,{})
+            SendInfo(){ 
+                if(this.fileType == true){
+                this.submittingInfo = true;
+                    axios.post('https://localhost:44368/api/Rest/SendEmail', this.ContractorInput,{})
                         .then((response)=>{
                             console.log(response.data)
                             if(response.data == 'Success'){
@@ -117,11 +146,20 @@ export default {
                 }else{
                     alert("Please add the correct file type.")
                 }
-                
             },
-            SubmitInfo(){
-                var fileInput = document.getElementById("fileInput").files[0];
-                this.getBase64(fileInput, this.SendInfo);
+            async SubmitInfo(){
+                await this.getBase64();
+                this.SendInfo();
+                console.log(this.ContractorInput)
+            },
+            setupReader(file){
+                var reader = new FileReader();
+                    reader.onloadend= () => {
+                    var base64String = reader.result.replace('data:', '').replace(/^.+,/, '');
+                    this.base64Array.push(base64String);
+                    console.log(base64String.length)
+                    }
+                reader.readAsDataURL(file);
             }
     }
 }
@@ -141,15 +179,53 @@ export default {
 
     .inner-container{
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         align-items: center;
-        width: 50%;
+        justify-content: space-between;
+        width: 80%;
     }
 
     .text-container{
-        width: 100%;
+        width: 50%;
         flex-direction: column;
         text-align: left;
+    }
+
+    .image-container{
+        width: 50%;
+        margin-left: 5%;
+    }
+
+    .image-text-info{
+        text-align: left;
+    }
+
+    .image-container img{
+        width: 90%;
+        border-radius: 500px 500px 0px 0px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .image-text{
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .image-text-inner{
+        position: relative;
+        z-index: 99;
+        margin-top: -8.5%;
+        display: flex;
+        background-color: #32ccfe;
+        color: #fff;
+        width: 130px;
+        height: 130px;
+        border-radius: 200px;
+        align-items: center;
+        justify-content: center;
     }
 
     .input-container{
@@ -376,6 +452,20 @@ export default {
 
         .inner-container{
             flex-direction: column;
+        }
+
+        .text-container{
+            width: 90%;
+        }
+
+        .image-container{
+            margin-left: 0;
+            width: 90%;
+        }
+
+        .image-text-inner{
+            width: 85px;
+            height: 85px;
         }
     }
 </style>

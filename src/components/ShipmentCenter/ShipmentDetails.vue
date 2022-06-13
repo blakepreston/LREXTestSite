@@ -410,7 +410,7 @@ export default {
 
     @media only screen and (max-width: 1000px){
         .shipment_data{
-            width: 85%;
+            width: 75%;
         }
     }
 </style>

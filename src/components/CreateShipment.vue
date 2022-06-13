@@ -44,6 +44,7 @@
                     <div class="inputLabel">
                         <label for="awsAddress">AWS Find Address</label>
                         <input id="awsAddress" type="text" v-model="searchAddress.userInput">
+                        
                         <div class="autocomplete-result" v-if="searchAddress.userInput.length > 0">
                             <p @click="SelectAddress(index)" v-for="(autoCompleteResult, index) in autoCompleteData" :key="autoCompleteResult"><i class="fa fa-map-pin"></i>{{autoCompleteResult.Place.Label}}</p>
                         </div>
@@ -591,10 +592,13 @@
             </div>
             
             <div class="search-address-book">
-                <input type="text" id="searchAddressBook">
-                <button @click="searchAddressBookArray()">Search</button>
-                <button @click="clearSearchResults()" v-if="searchAddressToggle">Clear Results</button>
+                <input placeholder="Search Addresses" type="text" id="searchAddressBook" v-model="searchAddressBookValue">
+                <input placeholder="Search AWS Addresses" type="text" v-model="searchAWSAddress">
+                <!-- <button @click="searchAddressBookArray()">Search</button>
+                <button @click="clearSearchResults()" v-if="searchAddressToggle">Clear Results</button> -->
             </div>
+
+            <p v-for="(items, index) in searchAWSArray" v-bind:key="items"><strong>{{searchAWSArray[index].fields.companyname}}</strong> {{searchAWSArray[index].fields.address}}</p>
 
             <table class="address-book-table" id="address-book-table" v-if="searchAddressToggle">
                 <thead>
@@ -897,7 +901,10 @@ export default {
                 userInput: ""
             },
             autoCompleteData: {},
-            selectedAddress: ""
+            selectedAddress: "",
+            searchAddressBookValue: "",
+            searchAWSAddress: "",
+            searchAWSArray: []
         }
     },
     beforeMount(){
@@ -914,34 +921,6 @@ export default {
         });
     },
     mounted(){
-        //AWS Location Services Autocomplete
-        // const getClient = async ()=>{
-        // const credentials = await Auth.currentCredentials();
-
-        // const locationClient = new Location({
-        //     credentials,
-        //     region: 'us-east-1'
-        // });
-
-        // const params = {
-        //     IndexName: "lrex-place",
-        //     Text: this.searchAddress.userInput,
-        //     FilterCountries: ["USA"],
-        //     BiasPosition: [-74.261398, 40.702503]
-        //     };
-
-        // locationClient.searchPlaceIndexForText(params,(err,data)=>{
-        //     if(err){
-        //         console.log(err)
-        //         console.log(credentials)
-        //         }
-        //     if(data){
-        //         console.log(data);
-        //         this.autoCompleteData = data.Results;
-        //     }
-        //     })
-        // }
-
         this.getClient();
         //Sign user out when JWT expires
         setTimeout(() => {Auth.signOut({global: true})}, 3600000);
@@ -960,6 +939,10 @@ export default {
 
         googlePlaces.addListener("place_changed", ()=>{
             this.addressComponents = googlePlaces.getPlace();
+            console.log(this.addressComponents)
+            console.log("Google Places API (lat/long)")
+            console.log(this.addressComponents.geometry.location.lat())
+            console.log(this.addressComponents.geometry.location.lng())
         });
 
         googlePlaces.addListener("place_changed", ()=>{
@@ -1006,57 +989,80 @@ export default {
     },
     watch:{
         'searchAddress.userInput': function(){
-        console.log("Value has changed.")
-        //if(this.searchAddress.userInput.length > 3){
             this.getClient();
-       // }
-        
-        } 
+        },
+
+        'searchAddressBookValue': function(){
+            if(this.searchAddressBookValue.length >= 1){
+                this.searchAddressBookArray();
+            }else{
+                console.log("Less than 1 letter")
+                this.clearSearchResults();
+            }
+        },
+
+        'searchAWSAddress': function(){
+            this.GetAWSCloudSearchAddress();
+        }
     },
     methods:{
+        //AWS Cloud Search
+        GetAWSCloudSearchAddress(){
+            this.searchAWSArray = [];
+            axios.get('https://4xoqyjqp6i.execute-api.us-west-1.amazonaws.com/prod/addressbook', { params: { q: this.searchAWSAddress } })
+            .then((response)=>{
+                //console.log(response.data.hits.hit);
+                this.searchAWSArray = response.data.hits.hit;
+                console.log(this.searchAWSArray[0].fields.address + " " + this.searchAWSArray[0].fields.location)
+            }).catch((err)=>{console.log(err)});
+        },
         //AWS Location Service
         SelectAddress(index){
             this.selectedAddress = this.autoCompleteData[index].Place.Label;
         },
         async getClient(){
-        const credentials = await Auth.currentCredentials();
+            const credentials = await Auth.currentCredentials();
 
-        const locationClient = new Location({
-            credentials,
-            region: 'us-east-1'
-        });
+            const locationClient = new Location({
+                credentials,
+                region: 'us-east-1'
+            });
 
-        const params = {
-            IndexName: "lrex-place",
-            Text: this.searchAddress.userInput,
-            //Text: "233 Washington St, Newark, NJ, 07102, USA",
-            FilterCountries: ["USA"],
-            BiasPosition: [-74.1724, 40.7357],
-            MaxResults: 5
-        };
+            const params = {
+                IndexName: "lrex-place",
+                Text: this.searchAddress.userInput,
+                //Text: "233 Washington St, Newark, NJ, 07102, USA",
+                FilterCountries: ["USA"],
+                BiasPosition: [-74.1724, 40.7357],
+                MaxResults: 5
+            };
 
-        locationClient.searchPlaceIndexForSuggestions(params,(err,data)=>{
-            if(err){
-                console.log(err)
-                console.log(credentials)
-                }
-            if(data){
-                console.log("Suggestion Data:")
-                console.log(data);
+            if(this.searchAddress.userInput.length > 1){
+                locationClient.searchPlaceIndexForSuggestions(params,(err,data)=>{
+                    if(err){
+                        console.log(err)
+                        console.log(credentials)
+                        }
+                    if(data){
+                        console.log("Suggestion Data:")
+                        console.log(data);
+                    }
+                })
+
+                locationClient.searchPlaceIndexForText(params,(err,data)=>{
+                    if(err){
+                        console.log(err)
+                        console.log(credentials)
+                        }
+                    if(data){
+                        console.log("Text Data:")
+                        console.log(data);
+                        this.autoCompleteData = data.Results;
+                    }
+                })
             }
-        })
 
-        locationClient.searchPlaceIndexForText(params,(err,data)=>{
-            if(err){
-                console.log(err)
-                console.log(credentials)
-                }
-            if(data){
-                console.log("Text Data:")
-                console.log(data);
-                this.autoCompleteData = data.Results;
-            }
-            })
+            
         },
         //Scroll Method
         scrollToTop(){
@@ -1082,7 +1088,6 @@ export default {
                 }else if(this.shipmentData.notify[0].delivery[0].email.length > 0 || this.shipmentData.notify[0].delivery[0].phone.length > 0){
                     //this.stepNext();
                 }else{
-                    //alert("Please Add Delivery Notification Email/Phone")
                     this.alertMessage = "Please Add Delivery Notification Email/Phone";
                     this.toggleAlertBox = true;
                 }
@@ -1094,7 +1099,6 @@ export default {
                 }else if(this.shipmentData.notify[0].nonDelivery[0].email.length > 0 || this.shipmentData.notify[0].nonDelivery[0].phone.length > 0){
                     //this.stepNext();
                 }else{
-                    // alert("Please Add Non-Delivery Notification Email/Phone")
                     this.alertMessage = "Please Add Non-Delivery Notification Email/Phone";
                     this.toggleAlertBox = true;
                 }
@@ -1107,7 +1111,6 @@ export default {
 
                 //Check that user added shipment weight
                 if(this.weight.length < this.count){
-                    // alert("Please enter a valid weight.")
                     this.alertMessage = "Please enter a valid weight.";
                     this.toggleAlertBox = true;
                 }else{
@@ -1121,23 +1124,18 @@ export default {
                 let zipCodeInput = document.getElementById("postcode").value;
                 let companyName = document.getElementById("compName").value;
                 if(addressInput == ""){
-                    // alert("Please enter an address")
                     this.alertMessage = "Please enter an address";
                     this.toggleAlertBox = true;
                 }else if(cityInput == ""){
-                    // alert("Please enter a city")
                     this.alertMessage = "Please enter a city";
                     this.toggleAlertBox = true;
                 }else if(stateInput == ""){
-                    // alert("Please enter a state")
                     this.alertMessage = "Please enter a state";
                     this.toggleAlertBox = true;
                 }else if(zipCodeInput == ""){
-                    // alert("Please enter a zip code")
                     this.alertMessage = "Please enter a zip code";
                     this.toggleAlertBox = true;
                 }else if(companyName == ""){
-                    // alert("Please enter a company name")
                     this.alertMessage = "Please enter a company name";
                     this.toggleAlertBox = true;
                 }else{
@@ -1145,7 +1143,6 @@ export default {
                 }
             }else if(this.currentActive === 2){
                 if(this.shipmentData.Service === ''){
-                    // alert("Please select a shipment service")
                     this.alertMessage = "Please select a shipment service";
                     this.toggleAlertBox = true;
                 }else{
@@ -1184,23 +1181,6 @@ export default {
                     break;
                 }
             }
-
-            // if(this.showRefCount === 1){
-            //     document.getElementById("reference1").value = this.referenceValue;
-            //     this.shipmentData.Ref1 = this.referenceValue;
-            // }else if(this.showRefCount === 2){
-            //     document.getElementById("reference2").value = this.referenceValue;
-            //     this.shipmentData.Ref2 = this.referenceValue;
-            // }else if(this.showRefCount === 3){
-            //     document.getElementById("reference3").value = this.referenceValue;
-            //     this.shipmentData.Ref3 = this.referenceValue;
-            // }else if(this.showRefCount === 4){
-            //     document.getElementById("reference4").value = this.referenceValue;
-            //     this.shipmentData.Ref4 = this.referenceValue;
-            // }else if(this.showRefCount === 5){
-            //     document.getElementById("reference5").value = this.referenceValue;
-            //     this.shipmentData.Ref5 = this.referenceValue;
-            // }
         },
         //Validate Notification Input
         inputIsValid(){
@@ -1216,7 +1196,6 @@ export default {
             else{
                 this.alertMessage = "Please enter a valid email or phone number.";
                 this.toggleAlertBox = true;
-                // alert("Please enter a valid email or phone number.")
             }
         },
         inputIsValidNonDelivery(){
@@ -1232,7 +1211,6 @@ export default {
             else{
                 this.alertMessage = "Please enter a valid email or phone number.";
                 this.toggleAlertBox = true;
-                // alert("Please enter a valid email or phone number.")
             }
         },
         //Step Progress Bar
@@ -1520,9 +1498,13 @@ export default {
                 let errorMessage = this.dataReturn.shipmentInfo.error[0].errMsg;
                 this.shipmentLabel.shipmentID.push(this.dataReturn.shipmentInfo.shipment[0].shipmentID);
                 this.shipmentLabelTiff.shipmentID.push(this.dataReturn.shipmentInfo.shipment[0].shipmentID);
-                alert( "Shipment " + (this.shipmentDataArray.indexOf(this.shipmentDataArray[i]) + 1) + ": " + errorMessage.slice(12))
+                //alert( "Shipment " + (this.shipmentDataArray.indexOf(this.shipmentDataArray[i]) + 1) + ": " + errorMessage.slice(12))
                 // this.alertMessage = "Shipment " + (this.shipmentDataArray.indexOf(this.shipmentDataArray[i]) + 1) + ": " + errorMessage.slice(12);
                 // this.toggleAlertBox = true;
+
+                this.alertMessage = "Shipment Creation Status" + ": " + errorMessage.slice(12); //+ (this.shipmentDataArray.indexOf(this.shipmentDataArray[i]) + 1) + ": " + errorMessage.slice(12);
+                this.toggleAlertBox = true;
+                
 
                 if(this.shipmentData.secretKey == ''){
                     this.GetShipmentLabels();
@@ -1749,7 +1731,8 @@ export default {
                 
             }
 
-            let searchValue = document.getElementById('searchAddressBook').value;
+            let searchValue = this.searchAddressBookValue;
+            //let searchValue = document.getElementById('searchAddressBook').value;
             for(let j = 0; j < this.searchAddressBook.length; j++){
                 if(this.searchAddressBook[j].includes(searchValue)){
                     this.searchAddressBookResult.push(this.addressBook[0][j]);
@@ -2007,20 +1990,24 @@ export default {
     .address-book-input{
         display: flex;
         flex-direction: row;
-        justify-content: flex-start;
+        justify-content: center;
         align-items: center;
-        width: 74%;
+        width: 100%;
+    }
+
+    .address-book-input input{
+        width: 45%;
     }
 
     .address-book-input button{
         background-color: #33f18a;
-        box-shadow: rgba(0, 0, 0, 0.164) 0px 1px 5px;
-        border-radius: 5px;
+        box-shadow: rgba(0, 0, 0, 0.068) 0px 1px 5px;
+        border-radius: 50px;
         cursor: pointer;
         transition-duration: .5s;
         border: none;
         color: #ffffff;
-        width: 25%;
+        width: 24%;
         margin-left: 1%;
         padding: 5px 0px 5px 0px;
     }
@@ -3058,11 +3045,11 @@ export default {
     }
 
     .inputLabel p{
-        text-decoration:underline 1px solid #4244b9;
-        color: #4442b9;
+        /* text-decoration:underline 1px solid #4244b9;
+        color: #4442b9; */
         cursor: pointer;
         font-size: 12px;
-        margin-left: 5px;
+        /* margin-left: 5px; */
     }
 
     .inputLabel{
@@ -3159,7 +3146,7 @@ export default {
 
     .address-book-table{
             font-size: 10px;
-            width: 90%;
+            width: 100%;
         }
 
     .address-book-table-container{

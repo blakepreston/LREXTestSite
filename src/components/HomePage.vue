@@ -1,6 +1,6 @@
 <template>
     <div class="track_package">
-        <img v-show="AlternateHeader == 1" src="../assets/Delivery-Truck.jpg" alt="Truck">
+        <img class="delivery-truck-img" v-show="AlternateHeader == 1" src="../assets/Delivery-Truck.jpg" alt="Truck">
         <img v-show="AlternateHeader == 2" src="../assets/FinalImages/Stocksy_Delivery_Driver_Back_of_Van.jpg" alt="">
         <img v-show="AlternateHeader == 3" src="../assets/FinalImages/Stocksy_Delivery_signature.jpg" alt="">
         <div class="form_shiptrack">
@@ -107,7 +107,7 @@
   import image2 from "../assets/FinalImages/Associations/NJAJ.jpg"
   import image3 from "../assets/FinalImages/Associations/Chamber_of_commerce.jpg"
   import image4 from "../assets/FinalImages/Associations/GSPO.png"
-  import image5 from "../assets/FinalImages/Associations/NJ_Court.jpg"
+  //import image5 from "../assets/FinalImages/Associations/NJ_Court.jpg"
   import image6 from "../assets/FinalImages/Associations/logo-IAPS.jpg"
 
   export default{
@@ -118,7 +118,7 @@
             image2,
             image3,
             image4,
-            image5,
+            //image5,
             image6
           ],
           texts: [
@@ -617,7 +617,12 @@
 
   .track_package img{
     object-fit: cover;
+    /* object-position: 72.5% 50%; */
     height: 40vh;
+  }
+
+  .delivery-truck-img{
+    object-position: 72.5% 50%;
   }
 
   .form_shiptrack{
