@@ -1,6 +1,7 @@
 import shipmentTrack from '../components/TrackShipment.vue'
 import createShipment from '../components/CreateShipment.vue'
 import shipmentCenter from '../components/ShipmentCenter/ShipmentCenter.vue'
+import AddressBook from '../components/ShipmentCenter/AddressBook.vue'
 import ContractorPage from '../components/ExtraPages/ContractorPage.vue'
 import TermsConditions from '../components/ExtraPages/TermsConditions.vue'
 import PrivacyPolicy from '../components/ExtraPages/PrivacyPolicy.vue'
@@ -71,6 +72,11 @@ const routes = [
         path: '/ContractorServices',
         name: 'ContractorServices',
         component: ContractorServices
+    },
+    {
+        path: '/AddressBook',
+        name: 'AddressBook',
+        component: AddressBook
     },
     {
         path: '/Login',

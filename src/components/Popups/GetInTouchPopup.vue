@@ -9,13 +9,13 @@
               </div>
             <div class="get-in-touch">
                 <h3>Telephone Numbers:</h3>
-                <p>LRex: (908) 686-7300</p>
+                <p>LREX: (908) 686-7300</p>
                 <!-- <p>Cherry Hill: (856) 428-6190</p> -->
                 <h3>Email:</h3>
                 <p>customerservice@lrex.com</p>
                 <h3>Address:</h3>
                 <p>
-                LRex <br>
+                LREX <br>
                 2333 Route 22 West <br>
                 Union, NJ 07083 <br> 
                 <!-- <br>

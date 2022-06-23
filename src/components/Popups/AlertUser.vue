@@ -46,17 +46,17 @@ export default {
 
     .text-container{
         background-color: #fff;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.35);
         border-radius: 15px;
         width: 40%;
-        /* z-index: 99;
+        z-index: 99;
         position: absolute;
-        top: 15%; */
+        top: 15%;
     }
 
     .text-container h2{
         margin-top: 0;
-        background-color: #32ccfe;
+        background-color: #fe804d;
         color: #fff;
         border-radius: 15px 15px 0 0;
     }

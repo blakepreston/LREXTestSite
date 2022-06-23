@@ -207,8 +207,9 @@
                 </thead>
                 <tbody>
                     <tr v-for="(items, index) in currentShipments" v-bind:key="items">
-                        <td class="shipmentID" id="shipmentID" v-if="currentShipments[index].p[0].ShipmentStatus[0].ShipmentStatus != 'Saved Shipment'" @click="shipmentDetailsProp.shipmentId = $event.target.textContent, showData = !showData, scrollToTop()">{{currentShipments[index].ShipmentId}}</td>
-                        <td v-if="currentShipments[index].p[0].ShipmentStatus[0].ShipmentStatus == 'Saved Shipment'">{{currentShipments[index].ShipmentId}}</td>
+                        <td class="shipmentID" id="shipmentID" @click="shipmentDetailsProp.shipmentId = $event.target.textContent, showData = !showData, scrollToTop()">{{currentShipments[index].ShipmentId}}</td>
+                        <!-- <td class="shipmentID" id="shipmentID" v-if="currentShipments[index].p[0].ShipmentStatus[0].ShipmentStatus != 'Saved Shipment'" @click="shipmentDetailsProp.shipmentId = $event.target.textContent, showData = !showData, scrollToTop()">{{currentShipments[index].ShipmentId}}</td>
+                        <td v-if="currentShipments[index].p[0].ShipmentStatus[0].ShipmentStatus == 'Saved Shipment'">{{currentShipments[index].ShipmentId}}</td> -->
                         <td>{{currentShipments[index].p[0].ServiceName}}</td>
                         <td class="table-column-toggle">{{currentShipments[index].DeliveryCompanyName}}</td>
                         <td class="table-column-toggle">{{currentShipments[index].DeliveryAttention}}</td>
@@ -442,6 +443,13 @@ export default {
                 ShipmentId: 0
             },
             selectedShipments:{shipmentIdArray:[]}
+        }
+    },
+    watch:{
+        'showData': function(){
+            if(this.showCurrent == true){
+                this.GetShipmentsByUserAndType();
+            }
         }
     },
     methods:{

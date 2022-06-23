@@ -17,6 +17,14 @@
                 <li v-if="!shipmentPages"><a  @click="()=> GetInTouchTogglePopup('GetInTouchButtonTrigger')">Get in touch</a></li>
                 <li v-if="shipmentPages"><router-link to="/Ship">New Shipment</router-link></li>
                 <li v-if="shipmentPages"><router-link to="/ShipmentCenter">My Shipments</router-link></li>
+                <li v-if="shipmentPages">
+                  <a v-on:click="showDropDown = !showDropDown">My LREX</a>
+                  <div v-show="showDropDown" class="dropdown-container">
+                    <router-link to="/ShipmentCenter">Profile</router-link>
+                    <router-link to="/ShipmentCenter">Billing</router-link>
+                    <router-link to="/AddressBook">Address Book</router-link>
+                  </div>
+                </li>
                 <li class="create-account-mobile"><a href="https://www.stage.njls.com/clients/RegisterNewCustomer.aspx" target="_blank"><strong style="color: #fff">Create an account</strong></a></li>
                 <li style="border-bottom: none;">
                 <amplify-authenticator v-if="authState === 'signedin' && shipmentPages">
@@ -39,12 +47,20 @@
             <a href="https://www.lrex.com/" @click="scrollTo('#')"><img class="logo" src="./assets/LREXHeaderLogo.jpg" alt="LREX"></a>
         <nav>
             <ul class="nav_links">
-                <li v-if="!shipmentPages && !extraPages"><a href="#oursolutions" @click="scrollTo('oursolutions')">Our solutions</a></li>
-                <li v-if="!shipmentPages && !extraPages"><a href="#aboutus" @click="scrollTo('aboutus')">About us</a></li>
-                <li v-if="!shipmentPages"><a  @click="()=> GetInTouchTogglePopup('GetInTouchButtonTrigger')">Get in touch</a></li>
-                <li v-if="!shipmentPages"><a  @click="()=> DropBoxTogglePopup('DropBoxButtonTrigger')">Box Locations</a></li>
-                <li v-if="shipmentPages"><router-link to="/Ship">New Shipment</router-link></li>
-                <li v-if="shipmentPages"><router-link to="/ShipmentCenter">My Shipments</router-link></li>
+                <li class="nav-item" v-if="!shipmentPages && !extraPages"><a href="#oursolutions" @click="scrollTo('oursolutions')">Our solutions</a></li>
+                <li class="nav-item" v-if="!shipmentPages && !extraPages"><a href="#aboutus" @click="scrollTo('aboutus')">About us</a></li>
+                <li class="nav-item" v-if="!shipmentPages"><a  @click="()=> GetInTouchTogglePopup('GetInTouchButtonTrigger')">Get in touch</a></li>
+                <li class="nav-item" v-if="!shipmentPages"><a  @click="()=> DropBoxTogglePopup('DropBoxButtonTrigger')">Box Locations</a></li>
+                <li class="nav-item" v-if="shipmentPages"><router-link to="/Ship">New Shipment</router-link></li>
+                <li class="nav-item" v-if="shipmentPages"><router-link to="/ShipmentCenter">My Shipments</router-link></li>
+                <li class="my-lrex-nav" v-if="shipmentPages">
+                  <a v-on:mouseover="showDropDown = true" v-on:mouseleave="showDropDown = false">My LREX</a>
+                  <div v-on:mouseover="showDropDown = true" v-on:mouseleave="showDropDown = false" v-show="showDropDown" class="dropdown-container">
+                    <router-link class="dropdown-link" to="/ShipmentCenter">Profile</router-link>
+                    <router-link class="dropdown-link" to="/ShipmentCenter">Billing</router-link>
+                    <router-link class="dropdown-link-address-book" to="/AddressBook">Address Book</router-link>
+                  </div>
+                </li>
             </ul>
         </nav>
         </div>
@@ -183,6 +199,7 @@ export default {
   name: 'App',
   data(){
     return{
+      showDropDown: false,
       showHeader: true,
       lastScrollPosition: 0,
       scrollOffset: 40,
@@ -318,10 +335,10 @@ export default {
   },
   computed:{
     shipmentPages(){
-      return this.$route.name == 'Track' || this.$route.name == 'Ship' || this.$route.name == 'ShipmentCenter';
+      return this.$route.name == 'Track' || this.$route.name == 'Ship' || this.$route.name == 'ShipmentCenter' || this.$route.name == 'AddressBook';
     },
     createShipmentToggleSignIn(){
-      return this.$route.name == 'Ship' || this.$route.name == 'ShipmentCenter';
+      return this.$route.name == 'Ship' || this.$route.name == 'ShipmentCenter' || this.$route.name == 'AddressBook';
     },
     extraPages(){
       return this.$route.name == 'Login' || this.$route.name == 'ContractorServices' || this.$route.name == 'HolidaySchedule' || this.$route.name == 'FuelSurcharge' || this.$route.name == 'IndependentContractor' || this.$route.name == 'CookiesPolicy' || this.$route.name == 'PrivacyPolicy' || this.$route.name == 'TermsConditions' || this.$route.name == 'CriticalMotionDates';
@@ -367,6 +384,10 @@ export default {
 
 input{
   font-family: 'Work Sans', sans-serif;;
+}
+
+textarea{
+  font-family: 'Work Sans', sans-serif;
 }
 
 a{
@@ -489,6 +510,24 @@ button{
       width: 15vw;
     }
 
+    .dropdown-container{
+      position: absolute;
+      background-color: #fff;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      border-radius: 0 0 15px 15px;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      /* padding: 0px 5px 10px 2.5px; */
+      animation: drop-down-animate 1s ease;
+      z-index: 5;
+    }
+
+    @keyframes drop-down-animate {
+      from{margin-top: -20px;}
+      to{margin-top: 0;}
+    }
+
     .nav_links{
         list-style: none;
         display: flex;
@@ -502,14 +541,47 @@ button{
         margin-right: auto;
     }
 
-    .nav_links li a:hover{
+    /* .nav_links li a:hover{
       border-bottom: 1px solid #ffcccc;
+    } */
+
+    .nav-item a:hover{
+      border-bottom: 1px solid #ececec;
+    }
+
+    .my-lrex-nav:hover{
+      border-bottom: transparent;
+    }
+
+    .dropdown-link{
+      padding: 0;
+      margin: 0;
+      padding: 2.5px 5px  2.5px 5px;
+    }
+
+    .dropdown-link:hover{
+      background-color: #ececec;
+      transition-duration: .5s ease;
+    }
+
+    .dropdown-link-address-book:hover{
+      background-color: #ececec;
+      transition-duration: .5s ease;
+    }
+
+    .dropdown-link-address-book{
+      padding: 0;
+      margin: 0;
+      padding: 2.5px 5px  2.5px 5px;
+      border-radius: 0 0 15px 15px;
     }
 
     .nav_links li a{
       text-decoration: none;
       color: black;
       transition: all .35s ease;
+      position: relative;
+      z-index: 99;
     }
 
     .create_account{
@@ -752,6 +824,17 @@ button{
       padding: 10px;
       border-radius: 50px;
       margin-left: -10px;
+    }
+
+    .dropdown-container{
+      background-color: #fff;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      border-radius: 0 0 15px 15px;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      /* padding: 0px 5px 10px 2.5px; */
+      animation: drop-down-animate 1s ease;
     }
 
     .nav_links li{

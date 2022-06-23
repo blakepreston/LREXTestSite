@@ -239,14 +239,17 @@
 
                     <div class="additionServicesInputs">
                         <h2>Additional Services</h2>
-                        <div class="signatureInputLabel">
-                            <label for="additionalservices">Signature Required</label>
-                            <input id="additionalservices" type="checkbox" value="SignatureRequired" class="checkBox" v-model="shipmentData.additionalServices">
+                        <div class="additional-services-container">
+                            <div class="signatureInputLabel">
+                                <label for="additionalservices">Signature Required</label>
+                                <input id="additionalservices" type="checkbox" value="SignatureRequired" class="checkBox" v-model="shipmentData.additionalServices">
+                            </div>
+                            <div class="signatureInputLabel">
+                                <label for="additionalservices">Cold Storage</label>
+                                <input id="additionalservices" type="checkbox" value="ColdStorage" class="checkBox" v-model="shipmentData.additionalServices">
+                            </div> 
                         </div>
-                        <div class="signatureInputLabel">
-                            <label for="additionalservices">Cold Storage</label>
-                            <input id="additionalservices" type="checkbox" value="ColdStorage" class="checkBox" v-model="shipmentData.additionalServices">
-                        </div>
+                        
                         <!-- <div class="signatureInputLabel">
                             <label for="additionalservices">Extra Insurance</label>
                             <input id="additionalservices" type="checkbox" value="ExtraInsurance" class="checkBox" v-model="shipmentData.additionalServices">
@@ -423,10 +426,102 @@
         </div>
 
         <div class="confirmContainer" v-show="currentActive === 4">
-            <h1>Confirm Shipment Details</h1>
-            <div class="confirmContainerInner" v-for="(shipment, index) in shipmentDataArray" :key="index">
+            <!-- <h1>Confirm Shipment Details</h1> -->
+        <div class="confirm-container-main">
+            <div class="confirm-header-container">
+                <h1 class="package-details-header">Package Details</h1>
+                <img src="../assets/LREXDinoFooter.jpg" alt="">
+            </div>
+            <div class="confirmContainerInner">
+                <!-- <h1 class="package-details-header">Confirm Package Details</h1> -->
                 <div class="confirmContainerInner1">
-                    <h1>Shipment {{index + 1}}</h1>
+                    <!-- <h1 class="package-details-header">Confirm Package Details</h1> -->
+                    <h2>Address</h2>
+                    <div class="confirmLabelContainer">
+                        <label for="companyName">Company Name:</label>
+                        <p name="companyName">{{shipmentDataArray[0].serviceAddress.address.CompanyName}}</p>
+                    </div>
+
+                    <div v-if="shipmentDataArray[0].serviceAddress.address.Attention" class="confirmLabelContainer">
+                        <label for="contactName">Contact Name:</label>
+                        <p name="contactName">{{shipmentDataArray[0].serviceAddress.address.Attention}}</p>
+                    </div>
+                    
+                    <div class="confirmLabelContainer">
+                        <label for="address1">Address:</label>
+                        <p name="address1">{{shipmentDataArray[0].serviceAddress.address.Address1}}</p>
+                    </div>
+                    
+                    <div v-if="shipmentDataArray[0].serviceAddress.address.Address2" class="confirmLabelContainer">
+                        <label for="address2">Suite/Floor/Building:</label>
+                        <p name="address2">{{shipmentDataArray[0].serviceAddress.address.Address2}}</p>
+                    </div>
+                    
+                    <div class="confirmLabelContainer">
+                        <label for="city">City:</label>
+                        <p name="city">{{shipmentDataArray[0].serviceAddress.address.City}}</p>
+                    </div>
+                    
+                    <div class="confirmLabelContainer">
+                        <label for="state">State:</label>
+                        <p name="state">{{shipmentDataArray[0].serviceAddress.address.State}}</p>
+                    </div>
+                    
+                    <div class="confirmLabelContainer">
+                        <label for="zipcode">ZipCode:</label>
+                        <p name="zipcode">{{shipmentDataArray[0].serviceAddress.address.ZipCode}}</p>
+                    </div>
+                </div>
+                <div class="confirmContainerInner2">
+                    <h2>Notifications</h2>
+                    <div v-if="shipmentDataArray[0].notify[0].delivery[0].email[0]" class="confirmLabelContainer2">
+                        <label for="deliveryemail">Delivery Email:</label>
+                        <div class="notificationArray" name="deliveryemail" v-for="(email, index) in shipmentDataArray[0].notify[0].delivery[0].email" :key="index">
+                                <p>{{shipmentDataArray[0].notify[0].delivery[0].email[index]}}</p>
+                        </div>
+                    </div>
+
+                    <div v-if="shipmentDataArray[0].notify[0].delivery[0].phone[0]" class="confirmLabelContainer2">
+                        <label for="deliveryphone">Delivery Phone:</label>
+                        <div class="notificationArray" name="deliveryphone" v-for="(email, index) in shipmentDataArray[0].notify[0].delivery[0].phone" :key="index">
+                                <p>{{shipmentDataArray[0].notify[0].delivery[0].phone[index]}}</p>
+                        </div>
+                    </div>
+
+                    <div v-if="shipmentDataArray[0].notify[0].nonDelivery[0].email[0]" class="confirmLabelContainer2">
+                        <label for="nonDeliveryemail">Non Delivery Email:</label>
+                        <div class="notificationArray" name="nonDeliveryemail" v-for="(email, index) in shipmentDataArray[0].notify[0].nonDelivery[0].email" :key="index">
+                                <p>{{shipmentDataArray[0].notify[0].nonDelivery[0].email[index]}}</p>
+                        </div>
+                    </div>
+
+                    <div v-if="shipmentDataArray[0].notify[0].nonDelivery[0].phone[0]" class="confirmLabelContainer2">
+                        <label for="nonDeliveryphone">Non Delivery Phone:</label>
+                        <div class="notificationArray" name="nonDeliveryphone" v-for="(email, index) in shipmentDataArray[0].notify[0].nonDelivery[0].phone" :key="index">
+                                <p>{{shipmentDataArray[0].notify[0].nonDelivery[0].phone[index]}}</p>
+                        </div>
+                    </div>
+                    
+                    <div v-if="shipmentDataArray[0].DeliveryInstructions" class="confirmLabelContainer">
+                        <label for="DeliveryInstructions">Delivery Instructions:</label>
+                        <p name="DeliveryInstructions">{{shipmentDataArray[0].DeliveryInstructions}}</p>
+                    </div>
+                </div>
+            </div>
+
+                <div class="weight-container">
+                    <div class="confirmLabelContainer" v-for="(shipment, index) in shipmentDataArray" :key="index">
+                        <label for="weight">Package {{index + 1}} Weight:</label>
+                        <p name="weight" v-if="shipment.weight == 1">Less than 16(lbs)</p>
+                        <p v-else name="weight">{{shipment.weight}} (lbs)</p>
+                    </div>
+                </div>
+        </div>
+            
+
+            <div class="confirmContainerInner" v-for="(shipment, index) in shipmentDataArray" :key="index" style="display: none">
+                <div class="confirmContainerInner1">
+                    <h1>Package {{index + 1}}</h1>
                     <div class="confirmLabelContainer">
                         <label for="companyName">Company Name:</label>
                         <p name="companyName">{{shipment.serviceAddress.address.CompanyName}}</p>
@@ -655,7 +750,7 @@
 import {Auth} from 'aws-amplify';
 import Location from "aws-sdk/clients/location";
 import axios from 'axios';
-import AlertUser from '../components/Popups/AlertUser.vue' //src\components\Popups\AlertUser.vue
+import AlertUser from '../components/Popups/AlertUser.vue'; //src\components\Popups\AlertUser.vue
 
 export default {
     components:{
@@ -2108,28 +2203,74 @@ export default {
     }
 
     /* Confirm Package Information */
-    .confirmContainerInner{
+    .confirm-container-main{
+        margin-top: 15px;
         display: flex;
-        flex-direction: row;
-        justify-content: space-between;
+        flex-direction: column;
+        justify-content: center;
         width: 100%;
-        text-align: left;
-        margin-top: 35px;
-        padding: 15px;
         box-shadow: rgba(0, 0, 0, 0.164) 0px 1px 10px;
         background-color: #fff;
         border-radius: 5px;
         animation: containerAnimateLeft .4s;
     }
 
+    .confirm-header-container{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 15px 15px 0 15px;
+        justify-content: space-between;
+    }
+
+    .confirm-header-container img{
+        width: 40px;
+        margin-right: 15px;
+    }
+
+    .weight-container{
+        padding: 0 0 15px 15px;
+    }
+
+    .weight-container label{
+        margin-right: 5px;
+        font-weight: bold;
+    }
+
+    .confirmContainerInner{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        /* align-items: center; */
+        width: 95%;
+        text-align: left;
+        padding: 0 15px 15px 15px;
+        /* box-shadow: rgba(0, 0, 0, 0.164) 0px 1px 10px;
+        background-color: #fff;
+        border-radius: 5px;
+        animation: containerAnimateLeft .4s; */
+    }
+
     .confirmContainerInner1{
-        margin-left: 10%;
         width: 100%;
     }
 
+    .confirmContainerInner1 h2{
+        margin: 0;
+        text-align: left;
+    }
+
+    .package-details-header{
+        background-color: #32ccfe;
+        color: #fff;
+        padding: 10px;
+        border-radius: 50px;
+        width: fit-content;
+    }
+
     .confirmContainerInner2{
-        margin-right: 10%;
-        width: 80%;
+        width: 100%;
+        margin-top: 0;
     }
 
     .confirmContainerInner label{
@@ -2146,6 +2287,7 @@ export default {
         align-items: center;
         width: 100%;
         height: 25px;
+        margin-top: 10px;
     }
 
     .confirmLabelContainer2{
@@ -2158,6 +2300,7 @@ export default {
 
     .confirmContainerInner2 h2{
         text-align: left;
+        margin-top: 0;
     }
 
     .notificationArray p{
@@ -3021,27 +3164,41 @@ export default {
     }
 
     .inputButtonContainer{
-        justify-content: center;
+        justify-content: flex-start;
+        width: 80%;
     }
 
     /* Shipment Details */
     .confirmContainerInner{
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        /* justify-content: space-between; */
         width: 90%;
         margin: 0;
     }
 
     .confirmContainerInner1{
         margin-left: 0;
-        width: 100%;
+        /* width: fit-content; */
     }
 
     .confirmContainerInner2{
         margin-right: 0;
-        width: 80%;
+        /* width: fit-content; */
         animation: containerAnimateLeft .4s;
+    }
+
+    .confirm-container-main{
+        justify-content: flex-start;
+    }
+
+    .confirmLabelContainer{
+        margin-top: 15px;
+    }
+
+    .weight-container{
+        text-align: left;
+        width: 60vw;
     }
 
     .inputLabel p{
@@ -3105,9 +3262,24 @@ export default {
         width: 55%;
     }
 
+    .additional-services-container{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        width: 100%;
+    }
+
     .signatureInputLabel{
-        width: 90%;
-        margin-left: 10%;
+        width: 50%;
+    }
+
+    .signatureInputLabel input{
+        margin-left: auto;
+    }
+
+    .additionServicesInputs{
+        justify-content: center;
     }
 
     .circle{
@@ -3156,6 +3328,15 @@ export default {
     .address-book-table th,
     .address-book-table td{
         padding: 3px 0px 0px 1px;
+    }
+
+    .weight-container{
+        text-align: left;
+        width: 90vw;
+    }
+
+    .signatureInputLabel{
+        width: 60%;
     }
 }
 </style>
