@@ -514,12 +514,12 @@ button{
       position: absolute;
       background-color: #fff;
       box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-      border-radius: 0 0 15px 15px;
+      border-radius: 0 0 5px 5px;
       text-align: left;
       display: flex;
       flex-direction: column;
       /* padding: 0px 5px 10px 2.5px; */
-      animation: drop-down-animate 1s ease;
+      animation: drop-down-animate .5s ease;
       z-index: 5;
     }
 
@@ -573,7 +573,7 @@ button{
       padding: 0;
       margin: 0;
       padding: 2.5px 5px  2.5px 5px;
-      border-radius: 0 0 15px 15px;
+      border-radius: 0 0 5px 5px;
     }
 
     .nav_links li a{

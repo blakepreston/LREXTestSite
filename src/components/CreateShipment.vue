@@ -32,23 +32,28 @@
             <h2 class="address-header">Address</h2>
             <div class="address-container">
                 <div class="address-container-1">
-                    <div class="inputLabel">
+                    <!-- <div class="inputLabel">
                         <label for="googleAPI">Find Address</label>
                         
                         <div class="address-book-input">
                             <input name="googleAPI" type="text" id="placesAPI" class="googlePlaces">
                             <button @click="addressBookToggle = true">My Addresses</button>
                         </div>
-                    </div>
+                    </div> -->
 
                     <div class="inputLabel">
-                        <label for="awsAddress">AWS Find Address</label>
-                        <input id="awsAddress" type="text" v-model="searchAddress.userInput">
+                        <label for="awsAddress">Find Address</label>
+
+                        <div class="address-book-input">
+                            <input id="awsAddress" type="text" v-model="searchAddress.userInput" placeholder="Enter a location">
+                            <button @click="addressBookToggle = true">My Addresses</button>
+                        </div>
+                        
                         
                         <div class="autocomplete-result" v-if="searchAddress.userInput.length > 0">
                             <p @click="SelectAddress(index)" v-for="(autoCompleteResult, index) in autoCompleteData" :key="autoCompleteResult"><i class="fa fa-map-pin"></i>{{autoCompleteResult.Place.Label}}</p>
                         </div>
-                        <p>{{selectedAddress}}</p>
+                        <!-- <p>{{selectedAddress}}</p> -->
                     </div>
                     
                     <div class="inputLabel">
@@ -814,6 +819,8 @@ export default {
             ],
             shipmentDataArray:[
                 {
+                    latitude: '',
+                    longitude: '',
                     secretKey: '',
                     Service: '',
                     serviceAddress: {
@@ -895,6 +902,8 @@ export default {
                     }
             ],
             shipmentData:{
+                latitude: '',
+                longitude: '',
                 secretKey: '',
                 Service: '',
                 serviceAddress: {
@@ -1008,7 +1017,7 @@ export default {
             this.token = user.signInUserSession.accessToken.jwtToken;
             this.GetUserPreferences();
             this.GetAddressBookData();
-            console.log(user)
+            //console.log(user)
         }).catch(error => {
           console.log(error)
           this.$router.push('Login');
@@ -1023,64 +1032,64 @@ export default {
         this.circles = document.querySelectorAll(".circle");
 
         //Google Places API 
-        const googlePlaces = new window.google.maps.places.Autocomplete(
-            document.getElementById("placesAPI"),
-            {
-                bounds: new window.google.maps.LatLngBounds(
-                new window.google.maps.LatLng(40.6976,-74.2632)
-                )
-            }
-        );
+        // const googlePlaces = new window.google.maps.places.Autocomplete(
+        //     document.getElementById("placesAPI"),
+        //     {
+        //         bounds: new window.google.maps.LatLngBounds(
+        //         new window.google.maps.LatLng(40.6976,-74.2632)
+        //         )
+        //     }
+        // );
 
-        googlePlaces.addListener("place_changed", ()=>{
-            this.addressComponents = googlePlaces.getPlace();
-            console.log(this.addressComponents)
-            console.log("Google Places API (lat/long)")
-            console.log(this.addressComponents.geometry.location.lat())
-            console.log(this.addressComponents.geometry.location.lng())
-        });
+        // googlePlaces.addListener("place_changed", ()=>{
+        //     this.addressComponents = googlePlaces.getPlace();
+        //     console.log(this.addressComponents)
+        //     console.log("Google Places API (lat/long)")
+        //     console.log(this.addressComponents.geometry.location.lat())
+        //     console.log(this.addressComponents.geometry.location.lng())
+        // });
 
-        googlePlaces.addListener("place_changed", ()=>{
-            const place = googlePlaces.getPlace();
-            for (const component of place.address_components) {
-            const componentType = component.types[0];
+        // googlePlaces.addListener("place_changed", ()=>{
+        //     const place = googlePlaces.getPlace();
+        //     for (const component of place.address_components) {
+        //     const componentType = component.types[0];
 
-            switch (componentType) {
-            case "street_number": {
-                var streetNum = component.long_name;
-                document.querySelector("#streetnumber").value = component.long_name;
-                break;
-            }
+        //     switch (componentType) {
+        //     case "street_number": {
+        //         var streetNum = component.long_name;
+        //         document.querySelector("#streetnumber").value = component.long_name;
+        //         break;
+        //     }
 
-            case "route": {
-                var streetRoute = component.long_name;
-                document.querySelector("#address").value = streetNum + ' ' + streetRoute;
-                document.querySelector("#route").value = component.long_name;
-                this.shipmentData.serviceAddress.address.Address1 = streetNum + ' ' + streetRoute;
-                break;
-            }
+        //     case "route": {
+        //         var streetRoute = component.long_name;
+        //         document.querySelector("#address").value = streetNum + ' ' + streetRoute;
+        //         document.querySelector("#route").value = component.long_name;
+        //         this.shipmentData.serviceAddress.address.Address1 = streetNum + ' ' + streetRoute;
+        //         break;
+        //     }
 
-            case "postal_code": {
-                document.querySelector("#postcode").value = component.long_name;
-                this.shipmentData.serviceAddress.address.ZipCode = component.long_name;
-                break;
-            }
+        //     case "postal_code": {
+        //         document.querySelector("#postcode").value = component.long_name;
+        //         this.shipmentData.serviceAddress.address.ZipCode = component.long_name;
+        //         break;
+        //     }
 
-            case "locality":{
-                document.querySelector("#locality").value = component.long_name;
-                this.shipmentData.serviceAddress.address.City = component.long_name;
-                break;
-            }
+        //     case "locality":{
+        //         document.querySelector("#locality").value = component.long_name;
+        //         this.shipmentData.serviceAddress.address.City = component.long_name;
+        //         break;
+        //     }
 
-            case "administrative_area_level_1": {
-                document.querySelector("#state").value = component.short_name;
-                this.shipmentData.serviceAddress.address.State = component.short_name;
-                break;
-            }
+        //     case "administrative_area_level_1": {
+        //         document.querySelector("#state").value = component.short_name;
+        //         this.shipmentData.serviceAddress.address.State = component.short_name;
+        //         break;
+        //     }
 
-            }
-        }
-        });
+        //     }
+        // }
+        // });
     },
     watch:{
         'searchAddress.userInput': function(){
@@ -1114,6 +1123,77 @@ export default {
         //AWS Location Service
         SelectAddress(index){
             this.selectedAddress = this.autoCompleteData[index].Place.Label;
+
+            this.shipmentData.latitude = this.autoCompleteData[index].Place.Geometry.Point[1];
+            this.shipmentData.longitude = this.autoCompleteData[index].Place.Geometry.Point[0];
+
+                //document.querySelector("#streetnumber").value = this.autoCompleteData[index].Place.Label;
+
+                document.querySelector("#address").value = this.autoCompleteData[index].Place.AddressNumber + ' ' + this.autoCompleteData[index].Place.Street;
+                //document.querySelector("#route").value = this.autoCompleteData[index].Place.Label;
+                this.shipmentData.serviceAddress.address.Address1 = this.autoCompleteData[index].Place.AddressNumber + ' ' + this.autoCompleteData[index].Place.Street;
+            
+                document.querySelector("#postcode").value = this.autoCompleteData[index].Place.PostalCode.substring(0, 5);
+                this.shipmentData.serviceAddress.address.ZipCode = this.autoCompleteData[index].Place.PostalCode.substring(0, 5);
+                //this.shipmentData.serviceAddress.address.PlusFour = this.autoCompleteData[index].Place.PostalCode.substring(6, 10);
+
+                document.querySelector("#locality").value = this.autoCompleteData[index].Place.Municipality;
+                this.shipmentData.serviceAddress.address.City = this.autoCompleteData[index].Place.Municipality;
+                // document.querySelector("#state").value = this.autoCompleteData[index].Place.Region;
+                // this.shipmentData.serviceAddress.address.State = this.autoCompleteData[index].Place.Region;
+
+                switch(this.autoCompleteData[index].Place.Region){
+                case "Connecticut":
+                    this.shipmentData.serviceAddress.address.State = "CT";
+                    document.querySelector("#state").value = "CT";
+                    break;
+                case "District of Columbia":
+                    this.shipmentData.serviceAddress.address.State = "DC";
+                    document.querySelector("#state").value = "DC";
+                    break;
+                case "Delaware":
+                    this.shipmentData.serviceAddress.address.State = "DE";
+                    document.querySelector("#state").value = "DE";
+                    break;
+                case "Massachusetts":
+                    this.shipmentData.serviceAddress.address.State = "MA";
+                    document.querySelector("#state").value = "MA";
+                    break;
+                case "Maryland":
+                    this.shipmentData.serviceAddress.address.State = "MD";
+                    document.querySelector("#state").value = "MD";
+                    break;
+                case "Maine":
+                    this.shipmentData.serviceAddress.address.State = "ME";
+                    document.querySelector("#state").value = "ME";
+                    break;
+                case "New Hampshire":
+                    this.shipmentData.serviceAddress.address.State = "NH";
+                    document.querySelector("#state").value = "NH";
+                    break;
+                case "New Jersey":
+                    this.shipmentData.serviceAddress.address.State = "NJ";
+                    document.querySelector("#state").value = "NJ";
+                    break;
+                case "New York":
+                    this.shipmentData.serviceAddress.address.State = "NY";
+                    document.querySelector("#state").value = "NY";
+                    break;
+                case "Pennsylvania":
+                    this.shipmentData.serviceAddress.address.State = "PA";
+                    document.querySelector("#state").value = "PA";
+                    break;
+                case "Rhode Island":
+                    this.shipmentData.serviceAddress.address.State = "RI";
+                    document.querySelector("#state").value = "RI";
+                    break;
+                case "Virginia":
+                    this.shipmentData.serviceAddress.address.State = "VA";
+                    document.querySelector("#state").value = "VA";
+                    break;
+                default:
+                    alert("Error with State Input")
+            }
         },
         async getClient(){
             const credentials = await Auth.currentCredentials();
@@ -1361,6 +1441,8 @@ export default {
         },
         updateShipmentArray(){
             this.shipmentDataArray = [{
+                latitude: '',
+                longitude: '',
                 secretKey: '',
                 Service: '',
                 serviceAddress: {
@@ -1442,8 +1524,10 @@ export default {
             }]
             for(let i = 1; i < this.count; i++){
             let shipData = {
-              secretKey: '',
-              Service: '',
+            latitude: '',
+            longitude: '',
+            secretKey: '',
+            Service: '',
             serviceAddress: {
                 type: 'Address',
                 location: '',
@@ -1527,6 +1611,8 @@ export default {
         createFinalArray(){
             for(let i = 0; i < this.count; i++){
                 this.shipmentDataArray[i].weight = this.weight[i];
+                this.shipmentDataArray[i].latitude = this.shipmentData.latitude;
+                this.shipmentDataArray[i].longitude = this.shipmentData.longitude;
                 this.shipmentDataArray[i].secretKey = this.shipmentData.secretKey;
                 this.shipmentDataArray[i].Service = this.shipmentData.Service;
                 this.shipmentDataArray[i].serviceAddress.address.CompanyName = this.shipmentData.serviceAddress.address.CompanyName;
@@ -1581,8 +1667,9 @@ export default {
         createShipment(){
             this.createFinalArray();
             this.creatingLabels = true;
+            ///api/Rest/CreateShipmentCognito
             for(let i = 0; i < this.shipmentDataArray.length; i++){
-            axios.post('https://api.stage.njls.com/api/Rest/CreateShipmentCognito', this.shipmentDataArray[i], {
+            axios.post('https://localhost:44368/api/Rest/CreateShipmentCognito', this.shipmentDataArray[i], {
                 headers: {
                     'User': this.user.username,
                     // get the user's JWT token given to it by AWS cognito 
@@ -1738,7 +1825,11 @@ export default {
                 },
             }).then((response)=>{
                     this.addressBook = [];
-                    this.addressBook.push(response.data[0].A);
+                    if(response.data.length != 0){
+                        this.addressBook.push(response.data[0].A);
+                    }
+                    console.log("Response Data:")
+                    console.log(response)
                     console.log(this.addressBook)
                 }
             ).catch(error => alert(error))
@@ -1789,23 +1880,39 @@ export default {
         },
         //Set Address From Address Book
         addressBookSelect(index){
-            document.getElementById('placesAPI').value = '';
-            this.shipmentData.serviceAddress.address.Address1 = this.addressBook[0][index].Address;
+            //document.getElementById('placesAPI').value = '';
+            this.shipmentData.serviceAddress.address.Address1 = this.addressBook[0][index].Address1;
+            this.shipmentData.serviceAddress.address.Address2 = this.addressBook[0][index].Address2;
             this.shipmentData.serviceAddress.address.CompanyName = this.addressBook[0][index].CompanyName;
             this.shipmentData.serviceAddress.address.ZipCode = this.addressBook[0][index].ZipCode;
             this.shipmentData.serviceAddress.address.City = this.addressBook[0][index].City;
             this.shipmentData.serviceAddress.address.State = this.addressBook[0][index].State;
             this.shipmentData.serviceAddress.address.Attention = this.addressBook[0][index].Attention;
+            this.shipmentData.serviceAddress.address.Phone = this.addressBook[0][index].Phone;
+            this.shipmentData.serviceAddress.address.PhoneExt = this.addressBook[0][index].PhoneExt;
+            this.shipmentData.DeliveryInstructions = this.addressBook[0][index].AB[0].DeliveryInstructions;
+            this.shipmentData.latitude = this.addressBook[0][index].Latitude;
+            this.shipmentData.longitude = this.addressBook[0][index].Longitude;
+            console.log(this.addressBook[0][index])
+            console.log(this.shipmentData)
             this.addressBookToggle = false;
         },
         searchAddressBookSelect(index){
-            document.getElementById('placesAPI').value = '';
-            this.shipmentData.serviceAddress.address.Address1 = this.searchAddressBookResult[index].Address;
+            //document.getElementById('placesAPI').value = '';
+            console.log(this.searchAddressBookResult[index])
+            this.shipmentData.serviceAddress.address.Address1 = this.searchAddressBookResult[index].Address1;
+            this.shipmentData.serviceAddress.address.Address2 = this.searchAddressBookResult[index].Address2;
             this.shipmentData.serviceAddress.address.CompanyName = this.searchAddressBookResult[index].CompanyName;
             this.shipmentData.serviceAddress.address.ZipCode = this.searchAddressBookResult[index].ZipCode;
             this.shipmentData.serviceAddress.address.City = this.searchAddressBookResult[index].City;
             this.shipmentData.serviceAddress.address.State = this.searchAddressBookResult[index].State;
             this.shipmentData.serviceAddress.address.Attention = this.searchAddressBookResult[index].Attention;
+            this.shipmentData.serviceAddress.address.Phone = this.searchAddressBookResult[index].Phone;
+            this.shipmentData.serviceAddress.address.PhoneExt = this.searchAddressBookResult[index].PhoneExt;
+            this.shipmentData.DeliveryInstructions = this.searchAddressBookResult[index].AB[0].DeliveryInstructions;
+            this.shipmentData.latitude = this.searchAddressBookResult[index].Latitude;
+            this.shipmentData.longitude = this.searchAddressBookResult[index].Longitude;
+            console.log(this.searchAddressBook[index])
             this.addressBookToggle = false;
         },
         searchAddressBookArray(){

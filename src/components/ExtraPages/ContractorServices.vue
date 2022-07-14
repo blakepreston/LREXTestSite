@@ -365,19 +365,7 @@ export default {
         transform: rotate(45deg);
         border-bottom: 7px solid #fff;
         border-right: 7px solid #fff;
-        animation: rotate-check 1s ease;
         margin-bottom: 7px;
-    }
-
-    @keyframes rotate-check {
-        0%{
-            transform: rotate(0deg) scale(10%);
-            border-color: #33f18a;
-        }
-        100%{
-            transform: rotate(360deg) scale(100%);
-            
-        }
     }
 
     @keyframes animate-check-container {

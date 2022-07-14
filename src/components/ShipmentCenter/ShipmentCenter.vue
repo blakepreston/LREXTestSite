@@ -128,15 +128,17 @@
                 <tbody>
                     <tr v-for="(items, index) in filterArray" v-bind:key="items">
                         <!-- SetShipmentId($event.target.value) || shipmentDetailsProp.shipmentId = $event.target.textContent-->
-                        <td class="shipmentID" id="shipmentID" v-if="filterArray[index].p[0].ShipmentStatus[0].ShipmentStatus != 'Saved Shipment'" @click="shipmentDetailsProp.shipmentId = $event.target.textContent, showData = !showData, scrollToTop()">{{filterArray[index].ShipmentId}}</td>
-                        <td v-if="filterArray[index].p[0].ShipmentStatus[0].ShipmentStatus == 'Saved Shipment'">{{filterArray[index].ShipmentId}}</td>
+                        <!-- <td class="shipmentID" id="shipmentID" v-if="filterArray[index].p[0].ShipmentStatus[0].ShipmentStatus != 'Saved Shipment'" @click="shipmentDetailsProp.shipmentId = $event.target.textContent, showData = !showData, scrollToTop()">{{filterArray[index].ShipmentId}}</td> -->
+                        <td class="shipmentID" id="shipmentID" @click="shipmentDetailsProp.shipmentId = $event.target.textContent, showData = !showData, scrollToTop()">{{filterArray[index].ShipmentId}}</td>
+                        <!-- <td v-if="filterArray[index].p[0].ShipmentStatus[0].ShipmentStatus == 'Saved Shipment'">{{filterArray[index].ShipmentId}}</td> -->
                         <td>{{filterArray[index].p[0].ServiceName}}</td>
                         <td class="table-column-toggle">{{filterArray[index].DeliveryCompanyName}}</td>
                         <td class="table-column-toggle">{{filterArray[index].DeliveryAttention}}</td>
                         <td class="location-column">{{filterArray[index].p[0].AddressLocation}}</td>
                         <td class="table-column-toggle">{{filterArray[index].p[0].ShipmentStatus[0].ShipmentStatus}}</td>
-                        <td class="print-label" @click="GetShipmentLabelsPDF(index)" v-if="filterArray[index].p[0].ShipmentStatus[0].ShipmentStatus == 'Saved Shipment'">Print</td>
-                        <td v-if="filterArray[index].p[0].ShipmentStatus[0].ShipmentStatus != 'Saved Shipment'"></td>
+                        <td class="print-label" @click="GetShipmentLabelsPDF(index)" v-if="(filterArray[index].p[0].ShipmentStatus[0].ShipmentStatus == 'Saved Shipment') || (filterArray[index].p[0].ShipmentStatus[0].ShipmentStatus == 'Shipment Edited')">Print</td>
+                        <!-- <td class="print-label" @click="GetShipmentLabelsPDF(index)" v-if="(filterArray[index].IsPrintable == 1)">Print</td> -->
+                        <td v-else></td>
                         <td><i class="fa fa-times-circle"></i></td>
                     </tr>
                 </tbody>
@@ -215,7 +217,7 @@
                         <td class="table-column-toggle">{{currentShipments[index].DeliveryAttention}}</td>
                         <td class="location-column">{{currentShipments[index].p[0].AddressLocation}}</td>
                         <td class="table-column-toggle">{{currentShipments[index].p[0].ShipmentStatus[0].ShipmentStatus}}</td>
-                        <td class="print-label" @click="GetShipmentLabelsPDF(index)" v-if="currentShipments[index].p[0].ShipmentStatus[0].ShipmentStatus == 'Saved Shipment'">Print</td>
+                        <td class="print-label" @click="GetShipmentLabelsPDF(index)" v-if="(currentShipments[index].p[0].ShipmentStatus[0].ShipmentStatus == 'Saved Shipment') || (currentShipments[index].p[0].ShipmentStatus[0].ShipmentStatus == 'Shipment Edited')">Print</td>
                         <td v-else></td>
                         <td class="delete-shipment"><i class="fa fa-times-circle" @click="deleteShipment.ShipmentId = currentShipments[index].ShipmentId, DeleteShipmentPopUp(index)"></i></td>
                         <td class="select-shipment"><input @click="SelectedShipment(index)" type="checkbox" :name="currentShipments[index].ShipmentId" :id="`select-shipment-${index}`"></td>
@@ -319,7 +321,7 @@
                 <button class="shipment-details-button" v-if="showData" @click="showData = false">Close</button>
             </div> -->
             
-            <ShipmentDetails @toggleShowData="ShowDataToggle($event)" class="shipment-details-component" v-if="shipmentDetailsProp.shipmentId > 0 && showData" :shipmentDetailsProp="shipmentDetailsProp" :username="cognitoUserName" :cognitoJWT="cognitoJWT"/>
+            <ShipmentDetails @toggleShowData="ShowDataToggle($event)" class="shipment-details-component" v-if="shipmentDetailsProp.shipmentId > 0 && showData" :shipmentDetailsProp="shipmentDetailsProp" :Group="userGroup" :username="cognitoUserName" :cognitoJWT="cognitoJWT"/>
         </div>
 
         <div class="delete-confirm" v-if="showDeleteConfirm">
@@ -420,6 +422,7 @@ export default {
             },
             cognitoUserName: '',
             cognitoJWT: '',
+            userGroup: '',
             showData: false,
             showCurrent: false,
             showInTransit: true,
@@ -490,6 +493,7 @@ export default {
                 for(let i = 0; i < response.data.length; i++){
                     this.currentShipments.push(response.data[i]);
                     }
+                    console.log(response.data)
                 }
             ).catch(error => alert(error)).finally(()=> this.gettingShipmentData = false)
         },
@@ -817,6 +821,11 @@ export default {
             this.cognitoUserName = user.username;
             this.cognitoJWT = user.signInUserSession.accessToken.jwtToken;
             this.GetTrackShipmentsByCriteriaInTransit();
+
+            if(user.signInUserSession.idToken.payload['cognito:groups']){
+                this.userGroup = user.signInUserSession.idToken.payload['cognito:groups'][0];
+            }
+            
             console.log(user)
         }).catch(error => {
           console.log(error)
@@ -941,21 +950,6 @@ export default {
     }
 
     /* Loading Shipment Data */
-    /* .loader{
-        margin: auto;
-        margin-bottom: 15px;
-        border: 20px solid #EAF0F6;
-        border-radius: 50%;
-        border-top: 20px solid #33f18a;
-        width: 100px;
-        height: 100px;
-        animation: spinner 2s linear infinite;
-    }
-
-    @keyframes spinner {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    } */
 
     .loader-container{
         width: 100%;

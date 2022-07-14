@@ -121,9 +121,10 @@
                     
                   </div>
                   <div class="address-container-button">
-                    <button v-if="toggleEditAddress == false && shipments[0].shipmentStatusId == 18" class="edit-button" @click="toggleEditAddress = true">Edit</button>
-                    <button v-if="toggleEditAddress == true && shipments[0].shipmentStatusId == 18" class="edit-button" @click="toggleEditAddress = false; GetAllShipmentData()">Cancel</button>
-                    <button v-if="toggleEditAddress == true && shipments[0].shipmentStatusId == 18" class="update-button" @click="EditShipBy()">Update</button>
+                    <!-- {{shipments[0].shipmentStatusId}} -->
+                    <button v-if="toggleEditAddress == false && ((shipments[0].shipmentStatusId != 14) || (shipments[0].shipmentStatusId != 13)) && (Group == 'EditorGroup')" class="edit-button" @click="toggleEditAddress = true">Edit</button>
+                    <button v-if="toggleEditAddress == true && ((shipments[0].shipmentStatusId != 14) || (shipments[0].shipmentStatusId != 13)) && (Group == 'EditorGroup')" class="edit-button" @click="toggleEditAddress = false; GetAllShipmentData()">Cancel</button>
+                    <button v-if="toggleEditAddress == true && ((shipments[0].shipmentStatusId != 14) || (shipments[0].shipmentStatusId != 13)) && (Group == 'EditorGroup')" class="update-button" @click="EditShipBy()">Update</button>
                   </div>
                 </div>
                 
@@ -210,9 +211,9 @@
                     </div>
                   </div>
                   <div class="address-container-button">
-                    <button v-if="toggleEditAddressShipTo == false && shipments[0].shipmentStatusId == 18" class="edit-button" @click="toggleEditAddressShipTo = true">Edit</button>
-                    <button v-if="toggleEditAddressShipTo == true && shipments[0].shipmentStatusId == 18" class="edit-button" @click="toggleEditAddressShipTo = false; GetAllShipmentData()">Cancel</button>
-                    <button v-if="toggleEditAddressShipTo == true && shipments[0].shipmentStatusId == 18" class="update-button" @click="EditShipTo()">Update</button>
+                    <button v-if="toggleEditAddressShipTo == false && ((shipments[0].shipmentStatusId != 14) || (shipments[0].shipmentStatusId != 13)) && (Group == 'EditorGroup')" class="edit-button" @click="toggleEditAddressShipTo = true">Edit</button>
+                    <button v-if="toggleEditAddressShipTo == true && ((shipments[0].shipmentStatusId != 14) || (shipments[0].shipmentStatusId != 13)) && (Group == 'EditorGroup')" class="edit-button" @click="toggleEditAddressShipTo = false; GetAllShipmentData()">Cancel</button>
+                    <button v-if="toggleEditAddressShipTo == true && ((shipments[0].shipmentStatusId != 14) || (shipments[0].shipmentStatusId != 13)) && (Group == 'EditorGroup')" class="update-button" @click="EditShipTo()">Update</button>
                   </div>
                 </div>
 
@@ -226,6 +227,7 @@
                     <th>Delivery Image</th>
                 </tr>
                 <tr v-for="(items, index) in shipmentHistoryData" v-bind:key="items">
+                  <!-- {{shipmentHistoryData[index]}} -->
                     <td>{{shipmentHistoryData[index].description}}</td>
                     <td>{{shipmentHistoryData[index].processedDate}}</td>
                     <td>{{shipmentHistoryData[index].notes}}</td>
@@ -299,15 +301,33 @@ export default {
               deliveryZipCode: "",
               deliveryPhone: "",
               shipmentId: 0
+            },
+            updateShipmentStatus: {
+              shipmentId: 0,
+              statusId: 0
             }
         }
     },
     props:{
         shipmentDetailsProp: Object,
         username: String,
-        cognitoJWT: String
+        cognitoJWT: String,
+        Group: String
     },
     methods: {
+      UpdateAddressStatus(shipmentId, statusId){
+        axios.post('https://localhost:44368/api/Rest/UpdateShipmentStatus', { shipmentId: shipmentId, statusId: statusId}, 
+              {headers:{
+                'User': this.username,
+                // get the user's JWT token given to it by AWS cognito 
+                'Authorization': `Bearer ${this.cognitoJWT}`
+              }})
+            .then((response) => {
+              console.log(response);
+              this.GetAllShipmentData();
+              })
+            .catch(error => alert(error))
+      },
       //Edit Address Information
       async EditShipBy(){
         await this.ShipByAddressEdit();
@@ -319,6 +339,8 @@ export default {
               }})
             .then((response) => {
               console.log(response);
+              //53 is statusId for 'Edited'
+              this.UpdateAddressStatus(this.shipByAddress.shipmentId, 53)
               this.GetAllShipmentData();
               this.toggleEditAddress = false;
               })
@@ -372,6 +394,8 @@ export default {
               }})
             .then((response) => {
               console.log(response);
+              //53 is statusId for 'Edited'
+              this.UpdateAddressStatus(this.shipToAddress.shipmentId, 53)
               this.GetAllShipmentData();
               this.toggleEditAddressShipTo = false;
               })
