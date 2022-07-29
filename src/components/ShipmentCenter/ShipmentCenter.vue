@@ -1,24 +1,4 @@
 <template>
-    <!-- <div class="amplify-container">
-        <amplify-authenticator> -->
-          <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
-          <!-- <amplify-sign-in slot="sign-in"
-                v-if="authState !== 'signedin'"
-                v-show="authState !== 'signup' && authState !== 'forgotpassword'  && authState !== 'confirmSignUp'"
-                header-text="Sign in to create a shipment."
-          ></amplify-sign-in> -->
-
-
-          <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
-          <!-- <amplify-sign-up slot="sign-up"
-                  v-if="authState === 'signup'"
-                  headerText="Sign up to create a shipment."
-                  :formFields="formFields"
-          ></amplify-sign-up>
-              
-        </amplify-authenticator>
-    </div> -->
-
     <div class="container">
         <div class="header-container">
             <div class="header-container-inner">
@@ -26,14 +6,19 @@
                 <h1 v-if="showCurrent">Shipment Information Received</h1>
                 <h1 v-if="showDelivered">Delivered Shipments</h1>
             </div>
-            
         </div>
+
+    <div v-if="gettingShipmentData">
+        <LoadingData :headerMessage="headerMessage"/>
+    </div>
+
+    <div v-if="gettingLabelData">
+        <LoadingData :headerMessage="headerMessage"/>
+    </div>
         
         
         <div class="track-shipment-container">
             <div class="track-shipment">
-                <!-- <label for="shipmentID">Tracking #: </label> -->
-                <!-- shipmentDetailsProp.shipmentId = $event.target.value || SetShipmentId($event.target.value)-->
                 <input placeholder="Enter Tracking Number" name="shipmentID" @input="shipmentDetailsProp.shipmentId = $event.target.value" type="text">
                 <button type="submit" @click="showData = !showData, scrollToTop()">Get Shipment</button>
             </div>
@@ -47,17 +32,18 @@
                 
                 <button v-show="!toggleFilters" @click="showFilters" class="filter-button-right">Filter Shipments <i class="fa fa-filter"></i></button>
                 <button v-show="toggleFilters" @click="removeFilters" class="filter-button-right">Remove Filter Results <i class="fa fa-filter"></i></button>
-                <button class="filter-button" @click="TableToCSV">Download CSV</button>
+                <!-- <button class="filter-button" @click="TableToCSV">Download CSV</button> -->
+                <button class="filter-button" @click="jsonToCSV">Download CSV</button>
             </div>
         </div>
 
         <div v-if="selectedShipments.shipmentIdArray.length > 0" class="print-delete-selected-container">
             <div class="print-delete-selected">
                 <p>Print or Delete selected shipments.</p>
-                <div class="selected-shipment-id-container">
+                <!-- <div class="selected-shipment-id-container">
                     <p class="shipment-id-display"><strong>Selected Shipments</strong></p>
                     <p v-for="(items, index) in selectedShipments.shipmentIdArray" :key="items" class="shipment-id-display">{{selectedShipments.shipmentIdArray[index]}}</p>
-                </div>
+                </div> -->
                 
                 <button class="print-selected-button" @click="PrintSelectedShipments()">Print Labels</button>
                 <button class="delete-selected-button" @click="DeleteSelectedShipments()">Delete Shipments</button>
@@ -91,7 +77,6 @@
                             <option value="Saturday Service">Saturday Service</option>
                             <option value="Pickup Service - NJ only">Pickup Service - NJ only</option>
                         </select>
-                        <!-- <input id="serviceName" name="serviceName" type="text"> -->
                         <button @click="filterServiceName">Filter</button>
                     </div>
                     <div class="filter-input-container">
@@ -127,7 +112,6 @@
                 </thead>
                 <tbody>
                     <tr v-for="(items, index) in filterArray" v-bind:key="items">
-                        <!-- SetShipmentId($event.target.value) || shipmentDetailsProp.shipmentId = $event.target.textContent-->
                         <!-- <td class="shipmentID" id="shipmentID" v-if="filterArray[index].p[0].ShipmentStatus[0].ShipmentStatus != 'Saved Shipment'" @click="shipmentDetailsProp.shipmentId = $event.target.textContent, showData = !showData, scrollToTop()">{{filterArray[index].ShipmentId}}</td> -->
                         <td class="shipmentID" id="shipmentID" @click="shipmentDetailsProp.shipmentId = $event.target.textContent, showData = !showData, scrollToTop()">{{filterArray[index].ShipmentId}}</td>
                         <!-- <td v-if="filterArray[index].p[0].ShipmentStatus[0].ShipmentStatus == 'Saved Shipment'">{{filterArray[index].ShipmentId}}</td> -->
@@ -139,7 +123,8 @@
                         <td class="print-label" @click="GetShipmentLabelsPDF(index)" v-if="(filterArray[index].p[0].ShipmentStatus[0].ShipmentStatus == 'Saved Shipment') || (filterArray[index].p[0].ShipmentStatus[0].ShipmentStatus == 'Shipment Edited')">Print</td>
                         <!-- <td class="print-label" @click="GetShipmentLabelsPDF(index)" v-if="(filterArray[index].IsPrintable == 1)">Print</td> -->
                         <td v-else></td>
-                        <td><i class="fa fa-times-circle"></i></td>
+                        <!-- <td><i class="fa fa-times-circle"></i></td> -->
+                        <td><div @click="deleteShipment.ShipmentId = filterArray[index].ShipmentId, DeleteShipmentPopUp(index)" class="x-button-container"><div class="x-button"></div></div></td>
                     </tr>
                 </tbody>
             </table>
@@ -219,7 +204,8 @@
                         <td class="table-column-toggle">{{currentShipments[index].p[0].ShipmentStatus[0].ShipmentStatus}}</td>
                         <td class="print-label" @click="GetShipmentLabelsPDF(index)" v-if="(currentShipments[index].p[0].ShipmentStatus[0].ShipmentStatus == 'Saved Shipment') || (currentShipments[index].p[0].ShipmentStatus[0].ShipmentStatus == 'Shipment Edited')">Print</td>
                         <td v-else></td>
-                        <td class="delete-shipment"><i class="fa fa-times-circle" @click="deleteShipment.ShipmentId = currentShipments[index].ShipmentId, DeleteShipmentPopUp(index)"></i></td>
+                        <!-- <td class="delete-shipment"><i class="fa fa-times-circle" @click="deleteShipment.ShipmentId = currentShipments[index].ShipmentId, DeleteShipmentPopUp(index)"></i></td> -->
+                        <td><div @click="deleteShipment.ShipmentId = currentShipments[index].ShipmentId, DeleteShipmentPopUp(index)" class="x-button-container"><div class="x-button"></div></div></td>
                         <td class="select-shipment"><input @click="SelectedShipment(index)" type="checkbox" :name="currentShipments[index].ShipmentId" :id="`select-shipment-${index}`"></td>
                     </tr>
                 </tbody>
@@ -317,10 +303,6 @@
         </div>
 
         <div class="shipment-details-container" v-if="showData">
-            <!-- <div class="shipment-details-button-container">
-                <button class="shipment-details-button" v-if="showData" @click="showData = false">Close</button>
-            </div> -->
-            
             <ShipmentDetails @toggleShowData="ShowDataToggle($event)" class="shipment-details-component" v-if="shipmentDetailsProp.shipmentId > 0 && showData" :shipmentDetailsProp="shipmentDetailsProp" :Group="userGroup" :username="cognitoUserName" :cognitoJWT="cognitoJWT"/>
         </div>
 
@@ -334,88 +316,40 @@
                 </div>
                 
                 <div>
-                    <button @click="DeleteShipment()">Delete</button>
-                    <button @click="showDeleteConfirm = false">Cancel</button>
+                    <button class="delete-shipment-button" @click="DeleteShipment()">Delete</button>
+                    <button class="cancel-delete-button" @click="showDeleteConfirm = false">Cancel</button>
                 </div>
             </div>
         </div>
-        
-        <div v-if="gettingShipmentData">
-            <h2>Getting Shipment Data</h2>
-            <!-- <div class="loader"></div> -->
-            <img class="loader-dino" src="../../assets/LREXDinoFooter.jpg" alt="">
-            <div class="dot-container">
-                <div class="dot1"></div>
-                <div class="dot2"></div>
-                <div class="dot3"></div>
-            </div>
-        </div>
-
-        <div class="loader-container" v-if="gettingLabelData">
-            <div class="loader-inner-container">
-                <h2>Getting Shipment Label</h2>
-                <!-- <div class="loader"></div> -->
-                <img class="loader-dino" src="../../assets/LREXDinoFooter.jpg" alt="">
-                <div class="dot-container">
-                    <div class="dot1"></div>
-                    <div class="dot2"></div>
-                    <div class="dot3"></div>
-                </div>
-            </div>
-        </div>
-        
     </div>
-    <!-- <ShipmentDetails/> -->
+
+    <AlertUser v-if="toggleAlertBox" @closeAlertBox="closeAlertBox($event)" :message="alertMessage"/>
 </template>
 
 <script>
-//import {AuthState, onAuthUIStateChange} from "@aws-amplify/ui-components";
 import {Auth} from 'aws-amplify';
 import axios from 'axios';
 import ShipmentDetails from './ShipmentDetails.vue';
+import LoadingData from '../Popups/LoadingData.vue';
+import AlertUser from '../Popups/AlertUser.vue';
 
 export default {
     components:{
-        ShipmentDetails
+        ShipmentDetails,
+        LoadingData,
+        AlertUser
     },
     data(){
         return{
-            authState: undefined,
-            formFields: [
-                {
-                type: "username",
-                label: "Username",
-                placeholder: "Username",
-                required: true,
-                },
-                {
-                type: "password",
-                label: "Password",
-                placeholder: "Password",
-                required: true,
-                },
-                {
-                type: "email",
-                label: "Email",
-                placeholder: "Email",
-                required: true,
-                },
-                {
-                type: "custom:NJLSUsername",
-                label: "NJLS Username",
-                placeholder: "NJLS Username",
-                name: "custom:NJLSUsername",
-                fieldId: "custom:NJLSUsername",
-                },
-            ],
             currentShipments: [],
             inTransitShipments: [],
             deliveredShipments: [],
-            //savedShipments: [],
             filterArray: [],
             deleteShipmentArray: [],
             toggleFilters: false,
             toggleFilterTable: false,
+            toggleAlertBox: false,
+            alertMessage: 'Error Message',
             shipmentDetailsProp: {
                 shipmentId: 0,
                 IncludeImageURL: true
@@ -445,7 +379,8 @@ export default {
             deleteShipment:{
                 ShipmentId: 0
             },
-            selectedShipments:{shipmentIdArray:[]}
+            selectedShipments:{shipmentIdArray:[]},
+            headerMessage: ""
         }
     },
     watch:{
@@ -456,6 +391,9 @@ export default {
         }
     },
     methods:{
+        closeAlertBox(toggleAlertBox){
+            this.toggleAlertBox = toggleAlertBox;
+        },
         //Methods used for selection boxes (Print/Delete Shipments)
         SelectedShipment(index){
             if(document.getElementById('select-shipment-'+index).checked == true){
@@ -469,40 +407,47 @@ export default {
                     this.selectedShipments.shipmentIdArray = newShipmentArr;
             }
         },
-        SetShipmentId(shipmentID){
-            this.shipmentDetailsProp.shipmentId = shipmentID;
-        },
         ShowDataToggle(showData){
             this.showData = showData;
         },
         //Data Methods
         //Gets Shipment Information Received
-        GetShipmentsByUserAndType(){
+        async GetShipmentsByUserAndType(){
             this.gettingShipmentData = true;
-            this.showCurrent = true;
-            this.showInTransit = false; //https://api.stage.njls.com/
-            this.showDelivered = false; //https://localhost:44368/
-            axios.get('https://api.stage.njls.com/api/Rest/GetShipmentsByUserAndTypeCognito', {
+            this.headerMessage = "Getting Shipment Data";
+            this.showInTransit = false;
+            this.showDelivered = false;
+            await axios.get('https://api.stage.njls.com/api/Rest/GetShipmentsByUserAndTypeCognito', {
                 headers: {
                     'User': this.user.username,
                     // get the user's JWT token given to it by AWS cognito 
                     'Authorization': `Bearer ${this.user.signInUserSession.accessToken.jwtToken}`
                 },
             }).then((response)=>{
+                this.showCurrent = true;
                 this.currentShipments = [];
-                for(let i = 0; i < response.data.length; i++){
-                    this.currentShipments.push(response.data[i]);
+                if(response.data.length > 0){
+                    for(let i = 0; i < response.data.length; i++){
+                        this.currentShipments.push(response.data[i]);
                     }
-                    console.log(response.data)
+                    console.log(response.data) 
                 }
-            ).catch(error => alert(error)).finally(()=> this.gettingShipmentData = false)
+            }
+            ).catch(error => {
+                //console.log(error.response.status)
+                if(error.response.status == '401'){
+                    Auth.signOut({global: true})
+                }else{
+                    alert(error)
+                }
+            }).finally(()=> this.gettingShipmentData = false)
         },
-        GetTrackShipmentsByCriteriaInTransit(){
+        async GetTrackShipmentsByCriteriaInTransit(){
             this.gettingShipmentData = true;
-            this.showInTransit = true;
+            this.headerMessage = "Getting Shipment Data";
             this.showCurrent = false;
             this.showDelivered = false;
-            axios.post('https://api.stage.njls.com/api/Rest/GetTrackShipmentsByCriteriaCognito', {searchBy: 'InTransit'}, {
+            await axios.post('https://api.stage.njls.com/api/Rest/GetTrackShipmentsByCriteriaCognito', {searchBy: 'InTransit'}, {
                 headers: {
                     'User': this.user.username,
                     // get the user's JWT token given to it by AWS cognito 
@@ -510,33 +455,55 @@ export default {
                 },
             }).then((response)=>{
                 this.inTransitShipments = [];
-                for(let i = 0; i < response.data.length; i++){
-                    this.inTransitShipments.push(response.data[i]);
+                this.showInTransit = true;
+                if(response.data.length > 0){
+                    for(let i = 0; i < response.data.length; i++){
+                        this.inTransitShipments.push(response.data[i]);
                     }
                 }
-            ).catch(error => alert(error)).finally(()=> this.gettingShipmentData = false)
+            }
+            ).catch(error => {
+                //console.log(error.response.status)
+                if(error.response.status == '401'){
+                    Auth.signOut({global: true})
+                }else{
+                    alert(error)
+                }
+            }).finally(()=> this.gettingShipmentData = false)
+            //console.log(this.inTransitShipments)
         },
-        GetTrackShipmentsByCriteriaDelivered(){
+        async GetTrackShipmentsByCriteriaDelivered(){
             this.gettingShipmentData = true;
+            this.headerMessage = "Getting Shipment Data";
             this.showInTransit = false;
             this.showCurrent = false;
-            this.showDelivered = true;
-            axios.post('https://api.stage.njls.com/api/Rest/GetTrackShipmentsByCriteriaCognito', this.postDelivered, {
+            await axios.post('https://api.stage.njls.com/api/Rest/GetTrackShipmentsByCriteriaCognito', this.postDelivered, {
                 headers: {
                     'User': this.user.username,
                     // get the user's JWT token given to it by AWS cognito 
                     'Authorization': `Bearer ${this.user.signInUserSession.accessToken.jwtToken}`
                 },
             }).then((response)=>{
+                this.showDelivered = true;
                 this.deliveredShipments = [];
-                for(let i = 0; i < response.data.length; i++){
-                    this.deliveredShipments.push(response.data[i]);
-                    }
+                if(response.data.length > 0){
+                    for(let i = 0; i < response.data.length; i++){
+                        this.deliveredShipments.push(response.data[i]);
+                    } 
                 }
-            ).catch(error => alert(error)).finally(()=> this.gettingShipmentData = false)
+            }
+            ).catch(error => {
+                console.log(error.response.status)
+                if(error.response.status == '401'){
+                    Auth.signOut({global: true})
+                }else{
+                    alert(error)
+                }
+            }).finally(()=> this.gettingShipmentData = false)
         },
-        GetShipmentLabelsPDF(index){
+        async GetShipmentLabelsPDF(index){
             this.gettingLabelData = true;
+            this.headerMessage = "Getting Shipment Label";
             this.shipmentLabel.shipmentID.push(this.currentShipments[index].ShipmentId);
             this.scrollToTop();
             axios.post('https://api.stage.njls.com/api/Rest/GetShipmentLabelsCognito', this.shipmentLabel,{
@@ -564,11 +531,14 @@ export default {
                 if(this.deleteShipment.ShipmentId == this.currentShipments[index].ShipmentId){
                     this.deleteShipmentArray.push(this.currentShipments[index]);
                     return;
+                }else if(this.deleteShipment.ShipmentId == this.filterArray[index].ShipmentId){
+                    this.deleteShipmentArray.push(this.filterArray[index]);
+                    return;
                 }
             }
         },
-        DeleteShipment(){
-            axios.post('https://api.stage.njls.com/api/Rest/DeleteShipmentByShipmentId', this.deleteShipment,{
+        async DeleteShipment(){
+            await axios.post('https://api.stage.njls.com/api/Rest/DeleteShipmentByShipmentId', this.deleteShipment,{
                 headers: {
                     'User': this.user.username,
                     // get the user's JWT token given by AWS cognito 
@@ -578,14 +548,15 @@ export default {
                 console.log(response)
                 this.showDeleteConfirm = false;
                 this.deleteShipment.ShipmentId = 0;
+                this.removeFilters();
                 this.GetShipmentsByUserAndType();
             })
             .catch(error => alert(error))
         },
-        DeleteSelectedShipments(){
+        async DeleteSelectedShipments(){
             for(let i = 0; i < this.selectedShipments.shipmentIdArray.length; i++){
-                console.log("Shipment " + this.selectedShipments.shipmentIdArray[i] + " Deleted")
-                axios.post('https://api.stage.njls.com/api/Rest/DeleteShipmentByShipmentId', { ShipmentId: this.selectedShipments.shipmentIdArray[i] },{
+                //console.log("Shipment " + this.selectedShipments.shipmentIdArray[i] + " Deleted")
+                await axios.post('https://api.stage.njls.com/api/Rest/DeleteShipmentByShipmentId', { ShipmentId: this.selectedShipments.shipmentIdArray[i] },{
                     headers: {
                         'User': this.user.username,
                         // get the user's JWT token given by AWS cognito 
@@ -593,7 +564,7 @@ export default {
                     }
                 }).then((response)=>{
                     console.log(response)
-                    alert("Shipment " + (i+1) + " Deleted.")
+                    //alert("Shipment " + (i+1) + " Deleted.")
                     this.GetShipmentsByUserAndType();
                 })
                 .catch(error => alert(error))
@@ -601,10 +572,11 @@ export default {
             this.selectedShipments.shipmentIdArray = []
         },
         //Print the shipments that are selected with selection boxes
-        PrintSelectedShipments(){
+        async PrintSelectedShipments(){
             this.gettingLabelData = true;
+            this.headerMessage = "Getting Shipment Label";
             this.scrollToTop();
-            axios.post('https://api.stage.njls.com/api/Rest/GetShipmentLabelsCognito', 
+            await axios.post('https://api.stage.njls.com/api/Rest/GetShipmentLabelsCognito', 
                 {shipmentID: this.selectedShipments.shipmentIdArray,
                 labelFormat: "PDF",
                 multipleLabelPerSheet: false},{
@@ -624,7 +596,7 @@ export default {
             .catch(error => alert(error)).finally(()=> {
                 this.gettingLabelData = false;
                 this.selectedShipments.shipmentIdArray = [];
-                })
+            })
         },
         //Filter Methods
         filterServiceName(){
@@ -713,17 +685,12 @@ export default {
             this.toggleFilterTable = false;
             this.filterArray = [];
         },
-        //Date Method
-        getDateRange(){
-            this.dateTo = document.getElementById('dateTo').value;
-            this.dateFrom = document.getElementById('dateFrom').value;
-        },
         //Scroll Method
         scrollToTop(){
             window.scrollTo(0,0);
         },
         //Date Filtering
-        setDateGetDelivered(){
+        async setDateGetDelivered(){
             this.toggleFilters = false;
             let today = new Date().toISOString().substr(0, 10);
             let previousDay = new Date();
@@ -735,12 +702,12 @@ export default {
             document.getElementById('dateFrom').value = dateFromTest;
             this.postDelivered.DateTo = document.getElementById('dateTo').value;
             this.postDelivered.DateFrom = document.getElementById('dateFrom').value;
-            this.GetTrackShipmentsByCriteriaDelivered();
+            await this.GetTrackShipmentsByCriteriaDelivered();
         },
-        setDateRange(){
+        async setDateRange(){
             this.postDelivered.DateTo = document.getElementById('dateTo').value;
             this.postDelivered.DateFrom = document.getElementById('dateFrom').value;
-            this.GetTrackShipmentsByCriteriaDelivered();
+            await this.GetTrackShipmentsByCriteriaDelivered();
         },
         GetInTransitDateRange(){
             this.filterArray = [];
@@ -773,25 +740,116 @@ export default {
                     }
                 }
         },
-        //Download table data (CSV)
-        TableToCSV(){
-            var dataCSV = [];
-            var rows = document.getElementsByTagName('tr');
-            for(let i = 0; i < rows.length; i++){
-                var columns = rows[i].querySelectorAll('td,th');
-                var rowCSV = [];
+        //Download CSV From JSON Data
+        jsonToCSV(){
+                let data = [];
 
-                for(let j = 0; j < columns.length; j++){
-                    rowCSV.push('"' + columns[j].innerHTML + '"');
+                if(this.showCurrent == true){
+                    if(this.filterArray.length > 0){
+                        for(let i = 0; i < this.filterArray.length; i++){
+                            let shipmentDataJSON = {
+                                TrackingNumber: this.filterArray[i].ShipmentId,
+                                ServiceName: this.filterArray[i].p[0].ServiceName,
+                                Location: this.filterArray[i].p[0].AddressLocation.replace(/,/g, ''),
+                                DeliveryInstructions: this.filterArray[i].DeliveryInstructions.replace(/,/g, ''),
+                                Description: this.filterArray[i].Description.replace(/,/g, ''),
+                                Created: this.filterArray[i].CreatedDate,
+                                Printed: this.filterArray[i].LabelPrintedDate,
+                                ShipmentStatus: this.filterArray[i].p[0].ShipmentStatus[0].ShipmentStatus
+                            }
+                            data.push(shipmentDataJSON);
+                        }
+                    }else{
+                        for(let i = 0; i < this.currentShipments.length; i++){
+                            let shipmentDataJSON = {
+                                TrackingNumber: this.currentShipments[i].ShipmentId,
+                                ServiceName: this.currentShipments[i].p[0].ServiceName,
+                                Location: this.currentShipments[i].p[0].AddressLocation.replace(/,/g, ''),
+                                DeliveryInstructions: this.currentShipments[i].DeliveryInstructions.replace(/,/g, ''),
+                                Description: this.currentShipments[i].Description.replace(/,/g, ''),
+                                Created: this.currentShipments[i].CreatedDate,
+                                Printed: this.currentShipments[i].LabelPrintedDate,
+                                ShipmentStatus: this.currentShipments[i].p[0].ShipmentStatus[0].ShipmentStatus
+                            }
+                            data.push(shipmentDataJSON);
+                        }
+                    }
                 }
 
-                dataCSV.push(rowCSV.join(","));
-            }
+                if(this.showInTransit == true){
+                    if(this.filterArray.length > 0){
+                        for(let i = 0; i < this.filterArray.length; i++){
+                            let shipmentDataJSON = {
+                                TrackingNumber: this.filterArray[i].ShipmentId,
+                                ServiceName: this.filterArray[i].p[0].ServiceName,
+                                Location: this.filterArray[i].Location.replace(/,/g, ''),
+                                Description: this.filterArray[i].Description.replace(/,/g, ''),
+                                Created: this.filterArray[i].CreatedDate,
+                                Printed: this.filterArray[i].LabelPrintedDate,
+                                ShipmentStatus: this.filterArray[i].p[0].SS[0].ShipmentStatusDesc
+                            }
+                            data.push(shipmentDataJSON);
+                        }
+                    }else{
+                        for(let i = 0; i < this.inTransitShipments.length; i++){
+                            let shipmentDataJSON = {
+                                TrackingNumber: this.inTransitShipments[i].ShipmentId,
+                                ServiceName: this.inTransitShipments[i].p[0].ServiceName,
+                                Location: this.inTransitShipments[i].Location.replace(/,/g, ''),
+                                Description: this.inTransitShipments[i].Description.replace(/,/g, ''),
+                                Created: this.inTransitShipments[i].CreatedDate,
+                                Printed: this.inTransitShipments[i].LabelPrintedDate,
+                                ShipmentStatus: this.inTransitShipments[i].p[0].SS[0].ShipmentStatusDesc
+                            }
+                            data.push(shipmentDataJSON);
+                        }
+                    }
+                    
+                }
 
-            dataCSV = dataCSV.join('\n');
-            this.DownloadCSVData(dataCSV);
+                if(this.showDelivered == true){
+                    if(this.filterArray.length > 0){
+                        for(let i = 0; i < this.filterArray.length; i++){
+                            let shipmentDataJSON = {
+                                TrackingNumber: this.filterArray[i].ShipmentId,
+                                ServiceName: this.filterArray[i].p[0].ServiceName,
+                                Location: this.filterArray[i].Location.replace(/,/g, ''),
+                                DeliveryInstructions: this.filterArray[i].DeliveryInstructions.replace(/,/g, ''),
+                                Description: this.filterArray[i].Description.replace(/,/g, ''),
+                                Created: this.filterArray[i].CreatedDate,
+                                Printed: this.filterArray[i].LabelPrintedDate,
+                                ShipmentStatus: this.filterArray[i].p[0].SS[0].ShipmentStatusDesc
+                            }
+                            data.push(shipmentDataJSON);
+                        }
+                    }else{
+                        for(let i = 0; i < this.deliveredShipments.length; i++){
+                            let shipmentDataJSON = {
+                                TrackingNumber: this.deliveredShipments[i].ShipmentId,
+                                ServiceName: this.deliveredShipments[i].p[0].ServiceName,
+                                Location: this.deliveredShipments[i].Location.replace(/,/g, ''),
+                                DeliveryInstructions: this.deliveredShipments[i].DeliveryInstructions.replace(/,/g, ''),
+                                Description: this.deliveredShipments[i].Description.replace(/,/g, ''),
+                                Created: this.deliveredShipments[i].CreatedDate,
+                                Printed: this.deliveredShipments[i].LabelPrintedDate,
+                                ShipmentStatus: this.deliveredShipments[i].p[0].SS[0].ShipmentStatusDesc
+                            }
+                            data.push(shipmentDataJSON);
+                        }
+                    }
+                    
+                }
+
+                console.log(data)
+                let createCSV = data.map(row => Object.values(row));
+                createCSV.unshift(Object.keys(data[0]));
+                createCSV.join('\n');
+                let returnCSV = `"${createCSV.join('"\n"').replace(/,/g, '","')}"`;
+                console.log(returnCSV)
+
+                this.DownloadCSVDataFromJSON(returnCSV);
         },
-        DownloadCSVData(dataCSV){
+        DownloadCSVDataFromJSON(dataCSV){
             var fileCSV = new Blob([dataCSV], {
                 type: "text/csv;charset=utf-8"
             });
@@ -806,7 +864,6 @@ export default {
             document.body.appendChild(downloadLink);
             downloadLink.click();
             document.body.removeChild(downloadLink);
-
         }
     },
     mounted(){
@@ -865,23 +922,6 @@ export default {
         cursor: pointer;
     }
 
-
-    .fa-times-circle{
-        color: #32ccfe;
-        font-size: 1.25em;
-        text-align: center;
-        cursor: pointer;
-        transition-duration: .5s;
-        vertical-align: baseline;
-        margin-left: 50%;
-    }
-
-    .fa-times-circle:hover{
-        color: #2cb6e4;
-        cursor: pointer;
-        transition-duration: .5s;
-    }
-
     /* Confirm Delete */
     .delete-confirm{
         width: 100%;
@@ -932,7 +972,7 @@ export default {
         padding: 0 10px 10px 10px;
     }
 
-    .delete-confirm-inner button{
+    .delete-shipment-button{
         border: none;
         margin: 1px;
         background-color: #32ccfe;
@@ -944,83 +984,26 @@ export default {
         transition-duration: .5s;
     }
 
-    .delete-confirm-inner button:hover{
+    .delete-shipment-button:hover{
         background-color: #2cb6e4;
         transition-duration: .5s;
     }
 
-    /* Loading Shipment Data */
-
-    .loader-container{
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-    }
-
-    .loader-inner-container{
-      padding: 15px;
-      background-color: #ffffff;
-      border-radius: 10px;
-      box-shadow: 0 0 100px rgba(0, 0, 0, 0.9);
-      z-index: 15;
-      position: absolute;
-      top: 2.5%;
-    }
-
-    .loader-dino{
-        width: 40px;
-        animation: bounce .75s infinite;
-    }
-
-    .dot-container{
-        padding: 0;
-        margin-top: 10px;
-        margin-bottom: 10px;
-        display: flex;
-        justify-content: center;
-    }
-
-    .dot1{
-        width: 4px;
-        height: 4px;
-        border-radius: 50%;
-        background-color: black;
+    .cancel-delete-button{
+        background-color: #fe804d;
+        border: none;
         margin: 1px;
-        animation: dot-bounce .75s infinite;
+        padding: 12px 15px;
+        color: #ffffff;
+        border: 1px solid #ffffff;
+        border-radius: 50px;
+        cursor: pointer;
+        transition-duration: .5s;
     }
 
-    .dot2{
-        width: 4px;
-        height: 4px;
-        border-radius: 50%;
-        background-color: black;
-        margin: 1px;
-        animation: dot-bounce .75s infinite;
-        animation-delay: .25s;
-    }
-
-    .dot3{
-        width: 4px;
-        height: 4px;
-        border-radius: 50%;
-        background-color: black;
-        margin: 1px;
-        animation: dot-bounce .75s infinite;
-        animation-delay: .5s;
-    }
-
-    @keyframes dot-bounce {
-        0%{transform: translateY(0px);}
-        50%{transform: translateY(5px);}
-        100%{transform: translateY(0px);}
-    }
-
-    @keyframes bounce {
-        0%{transform: translateY(0px);}
-        50%{transform: translateY(10px);}
-        100%{transform: translateY(0px);}
+    .cancel-delete-button:hover{
+        background-color: #eb7546;
+        transition-duration: .5s;
     }
 
     /* Shipment Details */
@@ -1089,10 +1072,6 @@ export default {
         animation: shipment-table-animate .5s ease;
     }
 
-    /* .shipment-table thead tr{
-        background-color: #32ccfe;
-        color: #ffffff;
-    } */
     .shipment-table th:first-child{
         border-top-left-radius: 10px;
     }
@@ -1377,11 +1356,6 @@ export default {
         width: 30%;
     }
 
-    /* .track-shipment label{
-        font-weight: bold;
-        margin-left: 5px;
-    } */
-
     .track-shipment button{
         border: none;
         background-color: #33f18a;
@@ -1398,7 +1372,7 @@ export default {
         transition-duration: .5s;
     }
 
-    @media only screen and (max-width: 800px){
+    @media only screen and (max-width: 1000px){
         .container{
             margin-top: 20vh;
         }
@@ -1505,11 +1479,6 @@ export default {
             margin: 2.5px;
             width: 65%;
         }
-
-        /* .track-shipment label{
-            font-size: 12px;
-            margin: 2.5px;
-        } */
 
         .delete-confirm-inner{
             width: 80%;

@@ -22,13 +22,10 @@
       <div v-if="showInsertAddress" class="new-address-container">
           <div class="new-address-inner">
               <div class="address-input-container">
-                    <div class="input-container" style="margin-bottom: 0">
-                        <!-- <label for="awsAddress">AWS Find Address</label> -->
-                        <input id="awsAddress" class="aws-search-address" type="text" placeholder="Search for Address" v-model="searchAddress.userInput">
-                    </div>
-
-                    <div class="autocomplete-result" v-if="searchAddress.userInput.length > 0">
-                        <p @click="SelectAddress(index)" v-for="(autoCompleteResult, index) in autoCompleteData" :key="autoCompleteResult"><i class="fa fa-map-pin"></i>{{autoCompleteResult.Place.Label}}</p>
+                    <div class="input-container">
+                        <div class="aws-search-address-container">
+                            <AWSAutoComplete @GetSelectedAddressData="GetSelectedAddressData($event)" :placeHolder="placeHolder" />
+                        </div>
                     </div>
                   
                     <div class="input-container" style="margin-top: 10px">
@@ -118,26 +115,6 @@
                         <input disabled class="input-container-input" type="text" name="zipcode" v-model="addressBookInput.zipCode">
                     </div>
 
-                    <!-- <div class="input-container">
-                        <label for="phone">Phone Number</label>
-                        <input type="text" name="phone" v-model="addressBookInput.phone">
-                    </div>
-
-                    <div class="input-container">
-                        <label for="fax">Fax Number</label>
-                        <input type="text" name="fax" v-model="addressBookInput.fax">
-                    </div>
-
-                    <div class="input-container">
-                        <label for="email">Email</label>
-                        <input type="text" name="email" v-model="addressBookInput.email">
-                    </div>
-
-                    <div class="input-container">
-                        <label for="deliveryinstructions">Delivery Instructions</label>
-                        <input type="text" name="deliveryinstructions" v-model="addressBookInput.deliveryInstructions">
-                    </div> -->
-
               </div>
               <div class="service-options-container">
                     <div class="input-container">
@@ -162,24 +139,8 @@
 
                     <div class="input-container">
                         <label for="deliveryinstructions">Delivery Instructions</label>
-                        <!-- <input class="input-container-input" type="text" name="deliveryinstructions" v-model="addressBookInput.deliveryInstructions"> -->
                         <textarea class="input-container-input" name="deliveryinstructions" v-model="addressBookInput.deliveryInstructions" id="" cols="30" rows="5"></textarea>
                     </div>
-
-                  <!-- <div class="service-input-container">
-                      <input type="checkbox" name="nextday" id="">
-                      <label for="nextday">Next Day Priority</label>
-                  </div>
-
-                  <div class="service-input-container">
-                      <input type="checkbox" name="signaturerequired" id="">
-                      <label for="signaturerequired">Signature Required</label>
-                  </div>
-
-                  <div class="service-input-container">
-                      <input type="checkbox" name="deliveryemail" id="">
-                      <label for="deliveryemail">Delivery Confirmation Email</label>
-                  </div> -->
               </div>
           </div>
       </div>
@@ -190,22 +151,16 @@
         </div>
     </div>
 
-    <div class="address-book-table-container"  v-if="addressBook[0]">
+    <div class="address-book-table-container"  v-if="showAddressBook && addressBook[0]">
         <div class="address-book-table-inner">
                  
             <div class="search-address-book">
                 <input placeholder="Search Addresses" type="text" id="searchAddressBook" v-model="searchAddressBookValue">
-                <!-- <input placeholder="Search AWS Addresses" type="text" v-model="searchAWSAddress"> -->
-                <!-- <button @click="searchAddressBookArray()">Search</button> -->
-                <!-- <button @click="clearSearchResults()" v-if="searchAddressToggle">Clear Results</button> -->
-            </div>
-
-            <!-- <p v-for="(items, index) in searchAWSArray" v-bind:key="items"><strong>{{searchAWSArray[index].fields.companyname}}</strong> {{searchAWSArray[index].fields.address}}</p> -->
+            </div> 
 
             <table class="address-book-table" id="address-book-table" v-if="searchAddressToggle">
                 <thead>
                     <tr>
-                        <!-- <th></th> -->
                         <th>Company Name</th>
                         <th>Contact Name</th>
                         <th>Address</th>
@@ -216,12 +171,12 @@
                 <tbody>
                     <tr v-if="searchAddressBookResult.length <= 0"><td>No addresses match search.</td></tr>
                     <tr v-for="(items, index) in searchAddressBookResult" v-bind:key="items">
-                        <!-- <td><button @click="searchAddressBookSelect(index)">Select</button></td> -->
                         <td @click="SelectAddressForEdit(index)" class="select-address-edit">{{searchAddressBookResult[index].CompanyName}}</td>
                         <td>{{searchAddressBookResult[index].Attention}}</td>
                         <td>{{searchAddressBookResult[index].Address}}</td>
                         <td>{{searchAddressBookResult[index].Location}}</td>
-                        <td><i class="fa fa-times-circle" @click="SelectDelete(index)"></i></td>
+                        <!-- <td><i class="fa fa-times-circle" @click="SelectDelete(index)"></i></td> -->
+                        <td><div @click="SelectDelete(index)" class="x-button-container"><div class="x-button"></div></div></td>
                     </tr>
                 </tbody>
             </table>
@@ -229,7 +184,6 @@
             <table class="address-book-table" id="address-book-table">
                 <thead>
                     <tr>
-                        <!-- <th></th> -->
                         <th>Company Name</th>
                         <th>Contact Name</th>
                         <th>Address</th>
@@ -239,12 +193,12 @@
                 </thead>
                 <tbody>
                     <tr v-for="(items, index) in addressBook[0]" v-bind:key="items">
-                        <!-- <td><button @click="addressBookSelect(index)">Select</button></td> -->
                         <td @click="SelectAddressForEdit(index)" class="select-address-edit">{{addressBook[0][index].CompanyName}}</td>
                         <td>{{addressBook[0][index].Attention}}</td>
                         <td>{{addressBook[0][index].Address}}</td>
                         <td>{{addressBook[0][index].Location}}</td>
-                        <td><i class="fa fa-times-circle" @click="SelectDelete(index)"></i></td>
+                        <!-- <td><i class="fa fa-times-circle" @click="SelectDelete(index)"></i></td> -->
+                        <td><div @click="SelectDelete(index)" class="x-button-container"><div class="x-button"></div></div></td>
                     </tr>
                 </tbody>
             </table>
@@ -267,19 +221,9 @@
             </table>
         </div>
     </div>
-    
 
-    <div class="loader-container" v-if="gettingAddressData">
-        <div class="loader-inner-container">
-            <h2>Getting Address Book Data</h2>
-            <!-- <div class="loader"></div> -->
-            <img class="loader-dino" src="../../assets/LREXDinoFooter.jpg" alt="">
-            <div class="dot-container">
-                <div class="dot1"></div>
-                <div class="dot2"></div>
-                <div class="dot3"></div>
-            </div>
-        </div>
+    <div v-if="gettingAddressData">
+        <LoadingData :headerMessage="headerMessage"/>
     </div>
 
     <div class="edit-address-container" v-if="editAddressToggle">
@@ -288,17 +232,12 @@
                 <h2>Address Details</h2>
                 <div class="edit-address-inner">
                     <div class="address-input-container">
+                        {{addressBookEdit}}
 
-                            {{addressBookEdit.latitude}}
-                            {{addressBookEdit.longitude}}
-
-                            <div class="input-container" style="margin-bottom: 0">
-                                <!-- <label for="awsAddress">AWS Find Address</label> -->
-                                <input id="awsAddress" class="aws-search-address" type="text" placeholder="Search For Update Address" v-model="searchAddressEdit.userInput">
-                            </div>
-
-                            <div class="autocomplete-result" v-if="searchAddressEdit.userInput.length > 0">
-                                <p @click="SelectAddressEdit(index)" v-for="(autoCompleteResult, index) in autoCompleteDataEdit" :key="autoCompleteResult"><i class="fa fa-map-pin"></i>{{autoCompleteResult.Place.Label}}</p>
+                            <div class="input-container">
+                                <div class="aws-search-address-container">
+                                    <AWSAutoComplete @GetSelectedAddressData="GetSelectedAddressData($event)" :placeHolder="placeHolder" />
+                                </div>
                             </div>
                         
                             <div class="input-container" style="margin-top: 10px">
@@ -411,7 +350,6 @@
 
                             <div class="input-container">
                                 <label for="deliveryinstructions">Delivery Instructions</label>
-                                <!-- <input class="input-container-input" type="text" name="deliveryinstructions" v-model="addressBookEdit.deliveryInstructions"> -->
                                 <textarea class="input-container-input" name="deliveryinstructions" v-model="addressBookEdit.deliveryInstructions" id="" cols="30" rows="5"></textarea>
                             </div>
                     </div>
@@ -504,11 +442,10 @@
                 </div>
                 
                 <div>
-                    <button class="validate-import-button" v-if="showValidateButton" @click="ValidateImport()">Validate</button>
+                    <button class="validate-import-button" v-if="showValidateButton && (ImportCSVData[0].length > 0)" @click="ValidateImport()">Validate</button>
                     <button class="import-import-button" v-if="showImportButton" @click="ImportAddressGeoCode()">Import</button>
                     <button class="validate-import-button" v-if="showOkayButton" @click="CancelImport()">Okay</button>
                     <button class="cancel-import-button" v-if="showCancelButton" @click="CancelImport()">Cancel</button>
-                    <!-- <button @click="geoCodeAddressArray()">Test</button> -->
                 </div>
             </div>
         </div>
@@ -524,7 +461,7 @@
                 </div>
                 
                 <div>
-                    <button @click="DeleteAddressBook()">Delete</button>
+                    <button class="delete-confirm-button" @click="DeleteAddressBook()">Delete</button>
                     <button class="cancel-import-button" @click="showDeleteConfirm = false">Cancel</button>
                 </div>
             </div>
@@ -537,13 +474,18 @@ import axios from 'axios';
 import {Auth} from 'aws-amplify';
 import Location from "aws-sdk/clients/location";
 import AlertUser from '../../components/Popups/AlertUser.vue';
+import AWSAutoComplete from '../AWSLocation/AddressAutoComplete.vue'
+import LoadingData from '../Popups/LoadingData.vue';
 
 export default {
     components:{
-        AlertUser
+        AlertUser,
+        AWSAutoComplete,
+        LoadingData
     },
     data(){
         return{
+            placeHolder: "Search for Address",
             addressBookInput: {
                 companyName: "",
                 attention: "",
@@ -564,7 +506,8 @@ export default {
                 latitude: "",
                 longitude: "",
                 routeCode: "",
-                addressId: 0
+                addressId: 0,
+                relevance: ""
             },
             addressBookEdit: {
                 companyName: "",
@@ -586,19 +529,10 @@ export default {
                 latitude: "",
                 longitude: "",
                 routeCode: "",
-                addressId: 0
+                addressId: 0,
+                relevance: ""
             },
             user: {},
-            searchAddress:{
-                userInput: ""
-            },
-            searchAddressEdit:{
-                userInput: ""
-            },
-            autoCompleteData: {},
-            autoCompleteDataEdit: {},
-            selectedAddress: {},
-            selectedAddressEdit: {},
             showInsertAddress: false,
             addressBook: [],
             addressBookToggle: false,
@@ -617,19 +551,13 @@ export default {
             showValidateButton: false,
             showCancelButton: true,
             showOkayButton: false,
+            showAddressBook: false,
             addressBookImportArray: [],
-            InsertAddressErrorArray: []
+            InsertAddressErrorArray: [],
+            headerMessage: ""
         }
     },
-    mounted(){
-    },
     watch:{
-        'searchAddress.userInput': function(){
-            this.getClient();
-        },
-        'searchAddressEdit.userInput': function(){
-            this.getClientEdit();
-        },
         'searchAddressBookValue': function(){
             if(this.searchAddressBookValue.length >= 1){
                 this.searchAddressBookArray();
@@ -714,30 +642,24 @@ export default {
         },
         //Download table data (CSV)
         DownloadCSVTemplate(){
-                let headers = ['CompanyName', 'ContactName', 'Address1', 'Address2', 'City', 'State', 'ZipCode', 'PlusFour', 'Phone', 'PhoneExt', 'Fax', 'Email', 'DeliveryInstructions']
-                
-                console.log(headers)
-                console.log(this.addressBook[0][0])
-
                 let data = [];
+                let addressData = {
+                    CompanyName: "",
+                    ContactName: "",
+                    Address1: "",
+                    Address2: "",
+                    City: "",
+                    State: "",
+                    ZipCode: "",
+                    PlusFour: "",
+                    Phone: "",
+                    PhoneExt: "",
+                    Fax: "",
+                    Email: "",
+                    DeliveryInstructions: ""
+                }
 
-                    let addressData = {
-                        CompanyName: "",
-                        ContactName: "",
-                        Address1: "",
-                        Address2: "",
-                        City: "",
-                        State: "",
-                        ZipCode: "",
-                        PlusFour: "",
-                        Phone: "",
-                        PhoneExt: "",
-                        Fax: "",
-                        Email: "",
-                        DeliveryInstructions: ""
-                    }
-
-                    data.push(addressData);
+                data.push(addressData);
 
                 let Testcsv = data.map(row => Object.values(row));
                 Testcsv.unshift(Object.keys(data[0]));
@@ -748,11 +670,6 @@ export default {
                 this.DownloadCSVData(returnCSV);
         },
         jsonToCSV(){
-                let headers = ['CompanyName', 'Attention', 'Address1', 'Address2', 'City', 'State', 'ZipCode', 'PlusFour', 'Phone', 'PhoneExt', 'Fax', 'Email', 'DeliveryInstructions']
-                
-                console.log(headers)
-                console.log(this.addressBook[0][0])
-
                 let data = [];
 
                 for(let i = 0; i < this.addressBook[0].length; i++){
@@ -771,15 +688,14 @@ export default {
                         Email: this.addressBook[0][i].Email,
                         DeliveryInstructions: this.addressBook[0][i].AB[0].DeliveryInstructions
                     }
-
                     data.push(addressData);
                 }
 
                 console.log(data)
-                let Testcsv = data.map(row => Object.values(row));
-                Testcsv.unshift(Object.keys(data[0]));
-                Testcsv.join('\n');
-                let returnCSV = `"${Testcsv.join('"\n"').replace(/,/g, '","')}"`;
+                let createCSV = data.map(row => Object.values(row));
+                createCSV.unshift(Object.keys(data[0]));
+                createCSV.join('\n');
+                let returnCSV = `"${createCSV.join('"\n"').replace(/,/g, '","')}"`;
                 console.log(returnCSV)
 
                 this.DownloadCSVData(returnCSV);
@@ -826,6 +742,7 @@ export default {
 
             //Check for empty rows/rows with no values
             this.ImportCSVData.push(obj);
+            console.log(this.ImportCSVData)
 
             for(let i = this.ImportCSVData[0].length - 1; i >= 0; i--){
                     if((this.ImportCSVData[0][i].CompanyName === null || this.ImportCSVData[0][i].CompanyName.trim().length === 0 || this.ImportCSVData[0][i].CompanyName == "\r") 
@@ -875,15 +792,15 @@ export default {
                 if(this.ImportCSVData[0][i].CompanyName == ""){
                     this.ValidateImportErrors.push("Enter a Company Name for Address " + (i+1));
                 }
-
                 if(this.ImportCSVData[0][i].Address1 == ""){
                     this.ValidateImportErrors.push("Enter an Address1 for Address " + (i+1));
                 }
-
                 if(this.ImportCSVData[0][i].City == ""){
                     this.ValidateImportErrors.push("Enter a City for Address " + (i+1));
                 }
-                
+                if(this.ImportCSVData[0][i].ZipCode.length != 5){
+                    this.ValidateImportErrors.push("Invalid Zip Code in Address " + (i+1));
+                }
                 if((/^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/.test(this.ImportCSVData[0][i].Phone) == true) || (this.ImportCSVData[0][i].Phone == "")){
                     if(this.ImportCSVData[0][i].Phone != ""){
                         let trimPhone = this.ImportCSVData[0][i].Phone.replace(/[^0-9]/g, '');
@@ -893,7 +810,6 @@ export default {
                 }else{
                     this.ValidateImportErrors.push("Invalid Phone Number in Address " + (i+1));
                 }
-
                 if((/^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/.test(this.ImportCSVData[0][i].Fax) == true) || (this.ImportCSVData[0][i].Fax == "")){
                     if(this.ImportCSVData[0][i].Fax != ""){
                         let trimFax = this.ImportCSVData[0][i].Fax.replace(/[^0-9]/g, '');
@@ -903,13 +819,11 @@ export default {
                 }else{
                     this.ValidateImportErrors.push("Invalid Fax Number in Address " + (i+1));
                 }
-
                 if((/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.ImportCSVData[0][i].Email) == true) || (this.ImportCSVData[0][i].Email == "")){
                     //break;
                 }else{
                     this.ValidateImportErrors.push("Invalid Email in Address " + (i+1));
                 }
-
                 if(this.ImportCSVData[0][i].State.length != 2){
                     this.ValidateImportErrors.push("Invalid State Value in Address " + (i+1));
                 }else{
@@ -917,11 +831,6 @@ export default {
                     let resultState = stateUpper.toUpperCase();
                     this.ImportCSVData[0][i].State = resultState;
                 }
-                
-                if(this.ImportCSVData[0][i].ZipCode.length != 5){
-                    this.ValidateImportErrors.push("Invalid Zip Code in Address " + (i+1));
-                }
-
                 if((this.ImportCSVData[0][i].PlusFour.length == 4) || (this.ImportCSVData[0][i].PlusFour == "")){
                     //break;
                 }else{
@@ -984,10 +893,11 @@ export default {
             this.addressBookEdit.latitude = this.addressBook[0][index].Latitude;
             this.addressBookEdit.longitude = this.addressBook[0][index].Longitude;
             this.addressBookEdit.plusFour = this.addressBook[0][index].PlusFour;
+            this.addressBookEdit.relevance = this.addressBook[0][index].Relevance;
         },
         GetAddressBookData(){
-            //this.addressBookToggle = true;
             this.gettingAddressData = true;
+            this.headerMessage = "Getting Address Book Data";
             axios.get('https://api.stage.njls.com/api/Rest/GetAddressesByUserName', {
                 headers: {
                     'User': this.user.username,
@@ -995,9 +905,13 @@ export default {
                     'Authorization': `Bearer ${this.user.signInUserSession.accessToken.jwtToken}`
                 },
             }).then((response)=>{
+                    this.showAddressBook = true;
                     this.addressBook = [];
                     if(response.data.length != 0){
                         this.addressBook.push(response.data[0].A);
+                    }else{
+                        this.alertMessage = "Unable to get addresses.";
+                        this.toggleAlertBox = true;
                     }
                     console.log(this.addressBook)
                 }
@@ -1014,7 +928,6 @@ export default {
                 this.alertMessage = "Successfully added address to address book.";
                 this.toggleAlertBox = true;
                 console.log(response)
-                //alert('Success')
                 this.showInsertAddress = false;
                 this.addressBookInput = {
                     companyName: "",
@@ -1036,23 +949,30 @@ export default {
                     latitude: "",
                     longitude: "",
                     routeCode: "",
-                    addressId: 0
+                    addressId: 0,
+                    relevance: ""
                 };
                 this.GetAddressBookData();
             })
             .catch(error => {
-                if(error.response.data.error == "Unable to add address."){
-                    this.alertMessage = "Unable to add address.";
+                if(error.response.data.error){
+                    this.alertMessage = error.response.data.error;
                     this.toggleAlertBox = true;
                 }else{
                     alert(error)
                 }
-                })
+            })
         },
         //Import Address and GeoCode with AWS Location
         async getClientImport(addressInput){
             const credentials = await Auth.currentCredentials();
             let geoCodeDataReturn = [];
+
+            //Testing
+            let AWSLocationData = {
+                geoCodeDataReturnTest: [],
+                relevanceTest: ""
+            }
 
             const locationClient = new Location({
                 credentials,
@@ -1062,7 +982,6 @@ export default {
             const params = {
                 IndexName: "lrex-place",
                 Text: addressInput,
-                //Text: "233 Washington St, Newark, NJ, 07102, USA",
                 FilterCountries: ["USA"],
                 BiasPosition: [-74.1724, 40.7357],
                 MaxResults: 5
@@ -1075,17 +994,27 @@ export default {
                     }
                 if(data){
                     let returnedData = data.Results[0].Place.Geometry.Point;
-                    console.log(data.Results[0].Place)
+                    //console.log(data.Results[0].Place)
                     geoCodeDataReturn.push(returnedData);
+
+                    //Testing
+                    let returnedDataTest = data.Results[0].Place.Geometry.Point;
+                    let returnRelevanceTest = data.Results[0].Relevance;
+                    AWSLocationData.geoCodeDataReturnTest.push(returnedDataTest);
+                    AWSLocationData.relevanceTest = returnRelevanceTest;
+                    //console.log(AWSLocationData)
                 }
             })
-            return geoCodeDataReturn;
+            //return geoCodeDataReturn;
+
+            return AWSLocationData;
         },
         async CreateAddressBookImportArray(){
             for(let i = 0; i < this.ImportCSVData[0].length; i++){
                 let addressInput = this.ImportCSVData[0][i].Address1 + ", " + this.ImportCSVData[0][i].City + ", " + this.ImportCSVData[0][i].State + ", " + this.ImportCSVData[0][i].ZipCode;
-                console.log(addressInput)
+                //console.log(addressInput)
                 let geoCodeData = await this.getClientImport(addressInput);
+                console.log(geoCodeData)
 
                 let addressBookImport = {
                     companyName: "",
@@ -1107,9 +1036,12 @@ export default {
                     latitude: "",
                     longitude: "",
                     routeCode: "",
-                    addressId: 0
+                    addressId: 0,
+                    relevance: ""
                 };
 
+                //Passing the GeoCode Data and Relevance Objects for geocode function
+                addressBookImport.relevance = geoCodeData;
                 addressBookImport.latitude = geoCodeData;
                 addressBookImport.longitude = geoCodeData;
                 addressBookImport.companyName = this.ImportCSVData[0][i].CompanyName;
@@ -1128,22 +1060,25 @@ export default {
 
                 this.addressBookImportArray.push(addressBookImport);
             }
+            console.log("Create Address")
+            console.log(this.addressBookImportArray)
         },
-        geoCodeAddressArray(callback){
-            let newAddressArray = this.addressBookImportArray;
+        async geoCodeAddressArray(){
             for(let i = 0; i < this.addressBookImportArray.length; i++){
-                console.log(JSON.stringify(newAddressArray[i].latitude[0][1]))
-                console.log(JSON.stringify(newAddressArray[i].longitude[0][0]))
-                this.addressBookImportArray[i].latitude = JSON.stringify(newAddressArray[i].latitude[0][1]);
-                this.addressBookImportArray[i].longitude = JSON.stringify(newAddressArray[i].longitude[0][0]);
+                this.addressBookImportArray[i].latitude = JSON.stringify(this.addressBookImportArray[i].latitude.geoCodeDataReturnTest[0][1]);
+                this.addressBookImportArray[i].longitude = JSON.stringify(this.addressBookImportArray[i].longitude.geoCodeDataReturnTest[0][0]);
+                this.addressBookImportArray[i].relevance = JSON.stringify(this.addressBookImportArray[i].relevance.relevanceTest);
+                console.log(JSON.stringify(this.addressBookImportArray[i].relevance.relevanceTest))
             }
             let returnArray = [];
             returnArray.push(this.addressBookImportArray);
-
-            callback(returnArray);
+            console.log(returnArray)
+            await this.testFunction(returnArray);
         },
-        InsertAddressFromImport(returnArray){
-            console.log(returnArray[0]);
+        async testFunction(returnArray){
+            console.log("Test Function");
+            console.log(returnArray[0])
+
             let counter = 0;
             for(let i = 0; i < returnArray[0].length; i++){
                 counter += 1;
@@ -1156,34 +1091,34 @@ export default {
                 }).then((response)=>{
                     console.log(response)
                     if(counter == returnArray[0].length){
-                        //this.showImportAddress = false;
                         this.showImportButton = false;
                         this.showValidateButton = false;
                         this.showOkayButton = true;
-                        //this.ImportCSVData = [];
                         this.ValidateImportErrors = [];
                         this.GetAddressBookData();
                     }
                 })
                 .catch(error => {
-                        if(error.response.data.error == "Unable to add address."){
-                            this.InsertAddressErrorArray.push(error.response.data.error + " " + "Address " + (i+1) + " is already in your address book.");
-                            document.getElementById("csvFile").value = "";
-                            this.showCancelButton = false;
-                            this.showImportButton = false;
-                            this.showOkayButton = true;
-                        }else{
-                            alert(error)
-                            document.getElementById("csvFile").value = "";
-                            this.showCancelButton = false;
-                            this.showImportButton = false;
-                            this.showOkayButton = true;
-                        }
-                    })
+                    if(error.response.data.error){
+                        this.alertMessage = error.response.data.error;
+                        this.toggleAlertBox = true;
+                        this.InsertAddressErrorArray.push(error.response.data.error + " " + "Address " + (i+1) + " is already in your address book.");
+                        document.getElementById("csvFile").value = "";
+                        this.showCancelButton = false;
+                        this.showImportButton = false;
+                        this.showOkayButton = true;
+                    }else{
+                        alert(error)
+                        document.getElementById("csvFile").value = "";
+                        this.showCancelButton = false;
+                        this.showImportButton = false;
+                        this.showOkayButton = true;
+                    }
+                })
             }
         },
         ImportAddressGeoCode(){
-            this.geoCodeAddressArray(this.InsertAddressFromImport)
+            this.geoCodeAddressArray()
         },
         //End AWS Location GeoCode and Import Logic
         DeleteAddressBook(){
@@ -1200,7 +1135,6 @@ export default {
                 this.toggleAlertBox = true;
                 this.showDeleteConfirm = false;
                 console.log(response)
-                //alert('Success')
                 this.GetAddressBookData();
             })
             .catch(error => alert(error))
@@ -1217,7 +1151,6 @@ export default {
                 this.toggleAlertBox = true;
                 this.editAddressToggle = false;
                 console.log(response)
-                //alert('Success')
                 this.GetAddressBookData();
             })
             .catch(error => alert(error))
@@ -1234,15 +1167,12 @@ export default {
                 let city = this.addressBook[0][i].City.toLowerCase();
                 let state = this.addressBook[0][i].State.toLowerCase();
                 let attention = this.addressBook[0][i].Attention.toLowerCase();
-
                 let searchArray = [address, companyName, zipcode, city, state, attention]
                
                 this.searchAddressBook.push(searchArray.join(''));
-                
             }
 
             let searchValue = this.searchAddressBookValue;
-            //let searchValue = document.getElementById('searchAddressBook').value;
             for(let j = 0; j < this.searchAddressBook.length; j++){
                 if(this.searchAddressBook[j].includes(searchValue)){
                     this.searchAddressBookResult.push(this.addressBook[0][j]);
@@ -1256,202 +1186,29 @@ export default {
             document.getElementById('searchAddressBook').value = '';
         },
         //AWS Location Service
-        SelectAddress(index){
-            this.selectedAddress = this.autoCompleteData[index].Place;
-            console.log(this.selectedAddress)
-
-            if(this.selectedAddress.AddressNumber && this.selectedAddress.Street){
-                this.addressBookInput.address1 = this.selectedAddress.AddressNumber + " " + this.selectedAddress.Street;
-            }
-            if(this.selectedAddress.Municipality){
-                this.addressBookInput.city = this.selectedAddress.Municipality;
-            }
-            if(this.selectedAddress.PostalCode){
-                this.addressBookInput.zipCode = this.selectedAddress.PostalCode.substring(0, 5);
-                this.addressBookInput.plusFour = this.selectedAddress.PostalCode.substring(6, 10);
-            }
-            if(this.selectedAddress.Geometry){
-                this.addressBookInput.latitude = this.selectedAddress.Geometry.Point[1];
-                this.addressBookInput.longitude = this.selectedAddress.Geometry.Point[0];
+        GetSelectedAddressData(selectedAddress){
+            if(this.showInsertAddress == true){
+                this.addressBookInput.latitude = selectedAddress.latitude;
+                this.addressBookInput.longitude = selectedAddress.longitude;
+                this.addressBookInput.address1 = selectedAddress.address1;
+                this.addressBookInput.zipCode = selectedAddress.zipCode;
+                this.addressBookInput.plusFour = selectedAddress.plusFour;
+                this.addressBookInput.city = selectedAddress.city;
+                this.addressBookInput.state = selectedAddress.state;
+                this.addressBookInput.relevance = selectedAddress.relevance;
+                console.log(this.addressBookInput)
             }
 
-            switch(this.selectedAddress.Region){
-                case "Connecticut":
-                    this.addressBookInput.state = "CT";
-                    break;
-                case "District of Columbia":
-                    this.addressBookInput.state = "DC";
-                    break;
-                case "Delaware":
-                    this.addressBookInput.state = "DE";
-                    break;
-                case "Massachusetts":
-                    this.addressBookInput.state = "MA";
-                    break;
-                case "Maryland":
-                    this.addressBookInput.state = "MD";
-                    break;
-                case "Maine":
-                    this.addressBookInput.state = "ME";
-                    break;
-                case "New Hampshire":
-                    this.addressBookInput.state = "NH";
-                    break;
-                case "New Jersey":
-                    this.addressBookInput.state = "NJ";
-                    break;
-                case "New York":
-                    this.addressBookInput.state = "NY";
-                    break;
-                case "Pennsylvania":
-                    this.addressBookInput.state = "PA";
-                    break;
-                case "Rhode Island":
-                    this.addressBookInput.state = "RI";
-                    break;
-                case "Virginia":
-                    this.addressBookInput.state = "VA";
-                    break;
-                default:
-                    alert("Error with State Input")
-            }
-            this.searchAddress.userInput = "";
-        },
-        //AWS Location Service
-        SelectAddressEdit(index){
-            this.selectedAddressEdit = this.autoCompleteDataEdit[index].Place;
-            console.log(this.selectedAddressEdit)
-
-            if(this.selectedAddressEdit.AddressNumber && this.selectedAddressEdit.Street){
-                this.addressBookEdit.address1 = this.selectedAddressEdit.AddressNumber + " " + this.selectedAddressEdit.Street;
-            }
-            if(this.selectedAddressEdit.Municipality){
-                this.addressBookEdit.city = this.selectedAddressEdit.Municipality;
-            }
-            if(this.selectedAddressEdit.PostalCode){
-                this.addressBookEdit.zipCode = this.selectedAddressEdit.PostalCode.substring(0, 5);
-                this.addressBookEdit.plusFour = this.selectedAddressEdit.PostalCode.substring(6, 10);
-            }
-            if(this.selectedAddressEdit.Geometry){
-                this.addressBookEdit.latitude = this.selectedAddressEdit.Geometry.Point[1];
-                this.addressBookEdit.longitude = this.selectedAddressEdit.Geometry.Point[0];
-            }
-
-            switch(this.selectedAddressEdit.Region){
-                case "Connecticut":
-                    this.addressBookEdit.state = "CT";
-                    break;
-                case "District of Columbia":
-                    this.addressBookEdit.state = "DC";
-                    break;
-                case "Delaware":
-                    this.addressBookEdit.state = "DE";
-                    break;
-                case "Massachusetts":
-                    this.addressBookEdit.state = "MA";
-                    break;
-                case "Maryland":
-                    this.addressBookEdit.state = "MD";
-                    break;
-                case "Maine":
-                    this.addressBookEdit.state = "ME";
-                    break;
-                case "New Hampshire":
-                    this.addressBookEdit.state = "NH";
-                    break;
-                case "New Jersey":
-                    this.addressBookEdit.state = "NJ";
-                    break;
-                case "New York":
-                    this.addressBookEdit.state = "NY";
-                    break;
-                case "Pennsylvania":
-                    this.addressBookEdit.state = "PA";
-                    break;
-                case "Rhode Island":
-                    this.addressBookEdit.state = "RI";
-                    break;
-                case "Virginia":
-                    this.addressBookEdit.state = "VA";
-                    break;
-                default:
-                    alert("Error with State Input")
-            }
-            this.searchAddressEdit.userInput = "";
-        },
-        async getClient(){
-            const credentials = await Auth.currentCredentials();
-
-            const locationClient = new Location({
-                credentials,
-                region: 'us-east-1'
-            });
-
-            const params = {
-                IndexName: "lrex-place",
-                Text: this.searchAddress.userInput,
-                //Text: "233 Washington St, Newark, NJ, 07102, USA",
-                FilterCountries: ["USA"],
-                BiasPosition: [-74.1724, 40.7357],
-                MaxResults: 5
-            };
-
-            if(this.searchAddress.userInput.length > 1){
-                locationClient.searchPlaceIndexForSuggestions(params,(err,data)=>{
-                    if(err){
-                        console.log(err)
-                        console.log(credentials)
-                        }
-                    if(data){
-                        console.log("Suggestion Data:")
-                        console.log(data);
-                    }
-                })
-
-                locationClient.searchPlaceIndexForText(params,(err,data)=>{
-                    if(err){
-                        console.log(err)
-                        console.log(credentials)
-                        }
-                    if(data){
-                        console.log("Text Data:")
-                        console.log(data);
-                        this.autoCompleteData = data.Results;
-                    }
-                })
-            }
-        },
-        async getClientEdit(){
-            const credentials = await Auth.currentCredentials();
-
-            const locationClient = new Location({
-                credentials,
-                region: 'us-east-1'
-            });
-
-            const params = {
-                IndexName: "lrex-place",
-                Text: this.searchAddressEdit.userInput,
-                //Text: "233 Washington St, Newark, NJ, 07102, USA",
-                FilterCountries: ["USA"],
-                BiasPosition: [-74.1724, 40.7357],
-                MaxResults: 5
-            };
-
-            if(this.searchAddressEdit.userInput.length > 1){
-
-                locationClient.searchPlaceIndexForText(params,(err,data)=>{
-                    if(err){
-                        console.log(err)
-                        console.log(credentials)
-                        }
-                    if(data){
-                        console.log("Text Data:")
-                        console.log(data);
-                        this.autoCompleteDataEdit = data.Results;
-                    }
-                })
-            }
+            if(this.editAddressToggle == true){
+                this.addressBookEdit.latitude = selectedAddress.latitude;
+                this.addressBookEdit.longitude = selectedAddress.longitude;
+                this.addressBookEdit.address1 = selectedAddress.address1;
+                this.addressBookEdit.zipCode = selectedAddress.zipCode;
+                this.addressBookEdit.plusFour = selectedAddress.plusFour;
+                this.addressBookEdit.city = selectedAddress.city;
+                this.addressBookEdit.state = selectedAddress.state;
+                this.addressBookEdit.relevance = selectedAddress.relevance;
+            } 
         }
     }
 }
@@ -1560,80 +1317,6 @@ export default {
         border-radius: 15px;
     }
 
-    /* Loading Shipment Data */
-
-    .loader-container{
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-    }
-
-    .loader-inner-container{
-      padding: 15px;
-      background-color: #ffffff;
-      border-radius: 10px;
-      box-shadow: 0 0 100px rgba(0, 0, 0, 0.9);
-      z-index: 15;
-      position: absolute;
-      top: 2.5%;
-    }
-
-    .loader-dino{
-        width: 40px;
-        animation: bounce .75s infinite;
-    }
-
-    .dot-container{
-        padding: 0;
-        margin-top: 10px;
-        margin-bottom: 10px;
-        display: flex;
-        justify-content: center;
-    }
-
-    .dot1{
-        width: 4px;
-        height: 4px;
-        border-radius: 50%;
-        background-color: black;
-        margin: 1px;
-        animation: dot-bounce .75s infinite;
-    }
-
-    .dot2{
-        width: 4px;
-        height: 4px;
-        border-radius: 50%;
-        background-color: black;
-        margin: 1px;
-        animation: dot-bounce .75s infinite;
-        animation-delay: .25s;
-    }
-
-    .dot3{
-        width: 4px;
-        height: 4px;
-        border-radius: 50%;
-        background-color: black;
-        margin: 1px;
-        animation: dot-bounce .75s infinite;
-        animation-delay: .5s;
-    }
-
-    @keyframes dot-bounce {
-        0%{transform: translateY(0px);}
-        50%{transform: translateY(5px);}
-        100%{transform: translateY(0px);}
-    }
-
-    @keyframes bounce {
-        0%{transform: translateY(0px);}
-        50%{transform: translateY(10px);}
-        100%{transform: translateY(0px);}
-    }
-
     /* Edit Address */
 
     .edit-address-container{
@@ -1710,15 +1393,8 @@ export default {
         width: 50%;
     }
 
-    .aws-search-address{
-        padding: 10px;
-        font-size: 15px;
-        border: 1px solid rgba(0, 0, 0, 0.336);
-        border-radius: 5px;
-        outline: none;
-        margin-left: auto;
+    .aws-search-address-container{
         width: 100%;
-        margin-bottom: 0;
     }
 
     .serivce-options-container{
@@ -1920,12 +1596,6 @@ export default {
         top{margin-left: 0%;}
     }
 
-    /* .address-book-table{
-        text-align: left;
-        background-color: #ffffff;
-        animation: address-book-table-animate .25s ease;
-    } */
-
     .address-book-table button{
         background-color: #33f18a;
         box-shadow: rgba(0, 0, 0, 0.164) 0px 1px 5px;
@@ -2079,7 +1749,7 @@ export default {
         padding: 0 10px 10px 10px;
     }
 
-    .delete-confirm-inner button{
+    .delete-confirm-button{
         border: none;
         margin: 1px;
         background-color: #32ccfe;
@@ -2091,7 +1761,7 @@ export default {
         transition-duration: .5s;
     }
 
-    .delete-confirm-inner button:hover{
+    .delete-confirm-button:hover{
         background-color: #2cb6e4;
         transition-duration: .5s;
     }
@@ -2146,23 +1816,6 @@ export default {
         border-radius: 10px;
         padding: 0 10px 10px 10px;
     }
-
-    /* .import-confirm-inner button{
-        border: none;
-        margin: 1px;
-        background-color: #32ccfe;
-        padding: 12px 15px;
-        color: #ffffff;
-        border: 1px solid #ffffff;
-        border-radius: 50px;
-        cursor: pointer;
-        transition-duration: .5s;
-    }
-
-    .import-confirm-inner button:hover{
-        background-color: #2cb6e4;
-        transition-duration: .5s;
-    } */
 
     input[type=file]::file-selector-button {
         border: none;
@@ -2255,6 +1908,55 @@ export default {
         }
     }
 
-    /* @media screen and (max-width: 1000px) {
-    } */
+    @media screen and (max-width: 1000px) {
+        .button-container-inner, .new-address-inner{
+            width: 95%;
+        }
+
+        .delete-confirm-inner{
+            width: 80%;
+        }
+    }
+
+    @media screen and (max-width: 650px){
+        .input-container{
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .input-container-input{
+            width: 80%;
+            margin-left: 0;
+        }
+
+        .stateInput{
+            width: 80%;
+            margin-left: 0;
+        }
+
+        .service-options-container{
+            margin-top: 15%;
+            margin-left: 5%;
+        }
+
+        .button-container-inner{
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .csv-import-export-container{
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .header-container-inner{
+            width: 90%;
+        }
+
+        .address-book-table-inner{
+            overflow-x: auto;
+        }
+    }
 </style>

@@ -20,9 +20,9 @@
                 <li v-if="shipmentPages">
                   <a v-on:click="showDropDown = !showDropDown">My LREX</a>
                   <div v-show="showDropDown" class="dropdown-container">
-                    <router-link to="/ShipmentCenter">Profile</router-link>
-                    <router-link to="/ShipmentCenter">Billing</router-link>
-                    <router-link to="/AddressBook">Address Book</router-link>
+                    <router-link class="dropdown-link" to="/ShipmentCenter">Profile</router-link>
+                    <router-link class="dropdown-link" to="/ShipmentCenter">Billing</router-link>
+                    <router-link class="dropdown-link-address-book" to="/AddressBook">Address Book</router-link>
                   </div>
                 </li>
                 <li class="create-account-mobile"><a href="https://www.stage.njls.com/clients/RegisterNewCustomer.aspx" target="_blank"><strong style="color: #fff">Create an account</strong></a></li>
@@ -272,16 +272,20 @@ export default {
       const el = this.$refs[refName];
       el.scrollIntoView({behavior: 'smooth'})
       var x = document.getElementById("mobileLinks");
-      x.style.marginTop = "-100%";
+      if(x){
+        x.style.marginTop = "-100%";
+      }
     },
     moveNav(){
       var x = document.getElementById("mobileLinks");
-      if (x.style.marginTop === "0%") {
-        x.style.marginTop = "-100%";
-        x.style.transitionDuration = "1s"
-      } else {
-        x.style.marginTop = "0%";
-        x.style.transitionDuration = ".5s"
+      if(x){
+          if (x.style.marginTop === "0%") {
+            x.style.marginTop = "-100%";
+            x.style.transitionDuration = "1s"
+          } else {
+            x.style.marginTop = "0%";
+            x.style.transitionDuration = ".5s"
+          }
         }
       },
   },
@@ -358,6 +362,30 @@ export default {
 
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Work+Sans&display=swap");
+.x-button::after{
+    content: ' \002B';
+    font-weight: bold;
+    color: #fff;
+    font-size: 17.5px;
+}
+
+.x-button-container{
+    width: 20px;
+    height: 20px;
+    background-color: #32ccfe;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(45deg);
+    border-radius: 50px;
+    cursor: pointer;
+    transition-duration: .2s;
+}
+
+.x-button-container:hover{
+    background-color: #2db9e7;
+    transition-duration: .2s;
+}
 /* Amplify Authenticator */
 
     amplify-sign-out{
@@ -383,7 +411,7 @@ export default {
 }
 
 input{
-  font-family: 'Work Sans', sans-serif;;
+  font-family: 'Work Sans', sans-serif;
 }
 
 textarea{
@@ -635,21 +663,6 @@ button{
   margin-top: -5px;
 }
 
-/* Sign-Out Container */
-/* amplify-sign-out{
-  --amplify-primary-color: #32ccfe;
-  --amplify-secondary-tint: #32ccfe;
-  --amplify-primary-shade: #2c82e4;
-  --amplify-primary-tint: #32ccfe;
-}
-
-.sign-out-container{
-  background-color: #32ccfe;
-  padding: 5px;
-  border-radius: 10px;
-  margin-left: 10px;
-} */
-
 /**************************/
 /* || Footer Syles */
 .footer{
@@ -771,8 +784,23 @@ button{
 
 @media only screen and (max-width: 1000px){
 /**************************/
+    .x-button::after{
+        font-size: 12.5px;
+    }
+
+    .x-button-container{
+        width: 15px;
+        height: 15px;
+    }
+
+    .sign-out-container{
+      background-color: #32ccfe;
+      padding: 10px;
+      border-radius: 50px;
+      margin-left: -10px;
+    }
 /* || Header Syles */
-  .nav_links{
+    .nav_links{
         display: flex;
         flex-direction: column;
     }
@@ -827,14 +855,23 @@ button{
     }
 
     .dropdown-container{
+      position: relative;
       background-color: #fff;
       box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
       border-radius: 0 0 15px 15px;
       text-align: left;
       display: flex;
       flex-direction: column;
-      /* padding: 0px 5px 10px 2.5px; */
+      padding: 10px 5px 10px 2.5px;
       animation: drop-down-animate 1s ease;
+    }
+
+    .dropdown-link{
+      padding: 5px;
+    }
+
+    .dropdown-link-address-book{
+      padding: 5px;
     }
 
     .nav_links li{

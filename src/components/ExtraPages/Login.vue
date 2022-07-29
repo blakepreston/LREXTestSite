@@ -2,11 +2,11 @@
   <div class="amplify-container">
         <amplify-authenticator>
           <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
-          <amplify-sign-in slot="sign-in"
+          <!-- <amplify-sign-in slot="sign-in"
                 v-if="authState !== 'signedin'"
                 v-show="authState !== 'signup' && authState !== 'forgotpassword'  && authState !== 'confirmSignUp'"
                 header-text="Sign in to create a shipment."
-          ></amplify-sign-in>
+          ></amplify-sign-in> -->
 
 
           <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
@@ -29,16 +29,31 @@
 </template>
 
 <script>
-//import {AuthState, onAuthUIStateChange} from "@aws-amplify/ui-components";
+import { Auth } from 'aws-amplify';
 import { Hub } from "aws-amplify"
 export default {
     mounted(){
         Hub.listen('auth', (data) => {
         switch (data.payload.event) {
             case 'signIn':
-                console.log('user signed in TEST');
                 this.$router.push('ship')
                 break;
+            }
+        });
+    },
+    beforeMount(){
+        //Check if user is signed in before loading page.
+        Auth.currentSession()
+        .then(data => {
+            //User is logged in
+            if(data){
+                this.$router.push('ship');
+            }
+        })
+        .catch(err => {
+            //User is not logged in
+            if(err){
+                Auth.signOut({global: true});
             }
         });
     }

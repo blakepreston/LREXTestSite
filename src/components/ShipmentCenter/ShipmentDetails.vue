@@ -1,20 +1,10 @@
 <template>
 
 <div class="main-container">
-    <div class="loader-container" v-if="gettingShipmentDetails">
-      <h2>Getting Shipment Details</h2>
-      <!-- <div class="loader"></div> -->
-      <img class="loader-dino" src="../../assets/LREXDinoFooter.jpg" alt="">
-            <div class="dot-container">
-                <div class="dot1"></div>
-                <div class="dot2"></div>
-                <div class="dot3"></div>
-            </div>
-    </div>
-
 <div class="container" v-if="showData">
     <div class="shipment-details-button-container">
-      <button class="shipment-details-button" v-if="showData && shipments.length > 0" @click="ToggleShowData">Close</button>
+      <!-- <button class="shipment-details-button" v-if="showData && shipments.length > 0" @click="ToggleShowData">Close</button> -->
+      <div v-if="showData && shipments.length > 0" @click="ToggleShowData" class="x-button-container"><div class="x-button"></div></div>
     </div>
     <div id="shipmentTrackingContents" class="shipment_data" v-for="ship in shipments" v-bind:key="ship"> 
                 <img class="logo" src="../../assets/LREXHeaderLogo.jpg" alt="LREX" style="width: 80px;">
@@ -48,6 +38,8 @@
                       <p>{{shipments[0].pickupCity}}, {{shipments[0].pickupState}}, {{shipments[0].pickupZipCode}} </p>
                     </div>
                     <div class="address-input" v-if="toggleEditAddress == true">
+                      <AWSAutoComplete @GetSelectedAddressData="GetSelectedAddressData($event)" :placeHolder="placeHolder"/>
+                      <!-- {{shipByAddress}} -->
                       <label for="companyname">Company Name</label>
                       <input v-model="shipments[0].pickupCompanyName" id="shipByCompanyName" name="companyname" type="text" v-on:blur="ShipByAddressEdit()">
                       <label for="attention">Contact Name</label>
@@ -55,13 +47,13 @@
                       <label for="phone">Phone</label>
                       <input v-model="shipments[0].pickupPhone" id="shipByPickupPhone" name="phone" type="text" v-on:blur="ShipByAddressEdit()">
                       <label for="address1">Address</label>
-                      <input v-model="shipments[0].pickupAddress1" id="shipByPickupAddress1" name="address1" type="text" v-on:blur="ShipByAddressEdit()">
+                      <input disabled v-model="shipments[0].pickupAddress1" id="shipByPickupAddress1" name="address1" type="text" v-on:blur="ShipByAddressEdit()">
                       <label for="address2">Suite/Floor/Bldg.</label>
                       <input v-model="shipments[0].pickupAddress2" id="shipByPickupAddress2" name="address2" type="text" v-on:blur="ShipByAddressEdit()">
                       <label for="city">City</label>
-                      <input v-model="shipments[0].pickupCity" id="shipByPickupCity" name="city" type="text" v-on:blur="ShipByAddressEdit()">
+                      <input disabled v-model="shipments[0].pickupCity" id="shipByPickupCity" name="city" type="text" v-on:blur="ShipByAddressEdit()">
                       <label for="state">State</label>
-                      <select required name="state" id="shipByPickupstate" v-model="shipments[0].pickupState" v-on:blur="ShipByAddressEdit()">
+                      <select disabled required name="state" id="shipByPickupstate" v-model="shipments[0].pickupState" v-on:blur="ShipByAddressEdit()">
                                 <option value="AL">Alabama</option>
                                 <option value="AK">Alaska</option>
                                 <option value="AZ">Arizona</option>
@@ -115,14 +107,14 @@
                                 <option value="WY">Wyoming</option>
                       </select>
                       <label for="zipcode">Zip Code</label>
-                      <input v-model="shipments[0].pickupZipCode" id="shipByZipCode" name="zipcode" type="text" v-on:blur="ShipByAddressEdit()">
+                      <input disabled v-model="shipments[0].pickupZipCode" id="shipByZipCode" name="zipcode" type="text" v-on:blur="ShipByAddressEdit()">
 
                     </div>
                     
                   </div>
                   <div class="address-container-button">
-                    <!-- {{shipments[0].shipmentStatusId}} -->
-                    <button v-if="toggleEditAddress == false && ((shipments[0].shipmentStatusId != 14) || (shipments[0].shipmentStatusId != 13)) && (Group == 'EditorGroup')" class="edit-button" @click="toggleEditAddress = true">Edit</button>
+                    {{shipments[0].shipmentStatusId}}
+                    <button v-if="toggleEditAddress == false && ((shipments[0].shipmentStatusId != 14) || (shipments[0].shipmentStatusId != 13)) && (Group == 'EditorGroup')" class="edit-button" @click="toggleShipByEdit()">Edit</button>
                     <button v-if="toggleEditAddress == true && ((shipments[0].shipmentStatusId != 14) || (shipments[0].shipmentStatusId != 13)) && (Group == 'EditorGroup')" class="edit-button" @click="toggleEditAddress = false; GetAllShipmentData()">Cancel</button>
                     <button v-if="toggleEditAddress == true && ((shipments[0].shipmentStatusId != 14) || (shipments[0].shipmentStatusId != 13)) && (Group == 'EditorGroup')" class="update-button" @click="EditShipBy()">Update</button>
                   </div>
@@ -140,6 +132,8 @@
                       <p>{{shipments[0].deliveryCity}}, {{shipments[0].deliveryState}}, {{shipments[0].deliveryZipCode}} </p>
                     </div>
                     <div class="address-input" v-if="toggleEditAddressShipTo == true">
+                      <AWSAutoComplete @GetSelectedAddressData="GetSelectedAddressData($event)" :placeHolder="placeHolder" />
+                      <!-- {{shipToAddress}} -->
                       <label for="companyname">Company Name</label>
                       <input v-model="shipments[0].deliveryCompanyName" id="shipToCompanyName" name="companyname" type="text" v-on:blur="ShipToAddressEdit()">
                       <label for="attention">Contact Name</label>
@@ -147,13 +141,13 @@
                       <label for="phone">Phone</label>
                       <input v-model="shipments[0].deliveryPhone" id="shipToDeliveryPhone" name="phone" type="text" v-on:blur="ShipToAddressEdit()">
                       <label for="address1">Address</label>
-                      <input v-model="shipments[0].deliveryAddress1" id="shipToDeliveryAddress1" name="address1" type="text" v-on:blur="ShipToAddressEdit()">
+                      <input disabled v-model="shipments[0].deliveryAddress1" id="shipToDeliveryAddress1" name="address1" type="text" v-on:blur="ShipToAddressEdit()">
                       <label for="address2">Suite/Floor/Bldg.</label>
                       <input v-model="shipments[0].deliveryAddress2" id="shipToDeliveryAddress2" name="address2" type="text" v-on:blur="ShipToAddressEdit()">
                       <label for="city">City</label>
-                      <input v-model="shipments[0].deliveryCity" id="shipToDeliveryCity" name="city" type="text" v-on:blur="ShipToAddressEdit()">
+                      <input disabled v-model="shipments[0].deliveryCity" id="shipToDeliveryCity" name="city" type="text" v-on:blur="ShipToAddressEdit()">
                       <label for="state">State</label>
-                      <select required name="state" id="shipToDeliverystate" v-model="shipments[0].deliveryState" v-on:blur="ShipToAddressEdit()">
+                      <select disabled required name="state" id="shipToDeliverystate" v-model="shipments[0].deliveryState" v-on:blur="ShipToAddressEdit()">
                                 <option value="AL">Alabama</option>
                                 <option value="AK">Alaska</option>
                                 <option value="AZ">Arizona</option>
@@ -207,69 +201,70 @@
                                 <option value="WY">Wyoming</option>
                       </select>
                       <label for="zipcode">Zip Code</label>
-                      <input v-model="shipments[0].deliveryZipCode" id="shipToZipCode" name="zipcode" type="text" v-on:blur="ShipToAddressEdit()">
+                      <input disabled v-model="shipments[0].deliveryZipCode" id="shipToZipCode" name="zipcode" type="text" v-on:blur="ShipToAddressEdit()">
                     </div>
                   </div>
                   <div class="address-container-button">
-                    <button v-if="toggleEditAddressShipTo == false && ((shipments[0].shipmentStatusId != 14) || (shipments[0].shipmentStatusId != 13)) && (Group == 'EditorGroup')" class="edit-button" @click="toggleEditAddressShipTo = true">Edit</button>
+                    <button v-if="toggleEditAddressShipTo == false && ((shipments[0].shipmentStatusId != 14) || (shipments[0].shipmentStatusId != 13)) && (Group == 'EditorGroup')" class="edit-button" @click="toggleShipToEdit()">Edit</button>
                     <button v-if="toggleEditAddressShipTo == true && ((shipments[0].shipmentStatusId != 14) || (shipments[0].shipmentStatusId != 13)) && (Group == 'EditorGroup')" class="edit-button" @click="toggleEditAddressShipTo = false; GetAllShipmentData()">Cancel</button>
                     <button v-if="toggleEditAddressShipTo == true && ((shipments[0].shipmentStatusId != 14) || (shipments[0].shipmentStatusId != 13)) && (Group == 'EditorGroup')" class="update-button" @click="EditShipTo()">Update</button>
                   </div>
                 </div>
 
-                <h3>Package History</h3>
+                <h3 v-if="!shipmentHistoryUnavailable">Package History</h3>
 
-                <table v-if="shipmentHistoryData" class="shipment-table">
-                <tr>
-                    <th>Description</th>
-                    <th>Date</th>
-                    <th>Notes</th>
-                    <th>Delivery Image</th>
-                </tr>
-                <tr v-for="(items, index) in shipmentHistoryData" v-bind:key="items">
-                  <!-- {{shipmentHistoryData[index]}} -->
-                    <td>{{shipmentHistoryData[index].description}}</td>
-                    <td>{{shipmentHistoryData[index].processedDate}}</td>
-                    <td>{{shipmentHistoryData[index].notes}}</td>
-                    <td v-if="!shipmentHistoryData[index].imageURL"></td>
-                    <td v-if="shipmentHistoryData[index].imageURL">
-                      <div class="delivery-image-container">
-                        <!-- <a v-if="shipmentHistoryData[index].signatureId > 0" :href="shipmentHistoryData[index].imageURL" class="delivery-image-link" target="_blank">Go</a> -->
-                        <button v-if="shipmentHistoryData[index].signatureId > 0" @click="GetDeliveryImages(shipmentHistoryData[index].imageURL, index)" class="show-delivery-image">Show Image</button>
-                        <img loading="lazy" v-if="index == indexImageURL" :src="linkImageURL" alt="">
-                      </div>
-                    </td>
-                </tr>
+                <table v-if="!shipmentHistoryUnavailable" class="shipment-table">
+                  <tr>
+                      <th>Description</th>
+                      <th>Date</th>
+                      <th>Notes</th>
+                      <th>Delivery Image</th>
+                  </tr>
+                  <tr v-for="(items, index) in shipmentHistoryData" v-bind:key="items">
+                    <!-- {{shipmentHistoryData[index]}} -->
+                      <td>{{shipmentHistoryData[index].description}}</td>
+                      <td>{{shipmentHistoryData[index].processedDate}}</td>
+                      <td>{{shipmentHistoryData[index].notes}}</td>
+                      <td v-if="!shipmentHistoryData[index].imageURL"></td>
+                      <td v-if="shipmentHistoryData[index].imageURL">
+                        <div class="delivery-image-container">
+                          <button v-if="shipmentHistoryData[index].signatureId > 0" @click="GetDeliveryImages(shipmentHistoryData[index].imageURL, index)" class="show-delivery-image">Show Image</button>
+                          <img loading="lazy" v-if="index == indexImageURL" :src="linkImageURL" alt="">
+                        </div>
+                      </td>
+                  </tr>
                 </table>
 
                 <button class="print-page" @click.prevent="PrintDiv()">Print this page</button>
-                
                 <div class="shipmentError">
-                  <div v-if="!shipments">
-                      <!-- <p>{{error[0].errMsg}}</p> -->
+                  <div v-if="shipmentDataUnavailable">
                       <p>Unable to get Shipment Data.</p>
                   </div>
-                  <div v-if="!shipmentHistoryData">
-                      <!-- <p>{{error[0].errMsg}}</p> -->
+                  <div v-if="shipmentHistoryUnavailable">
                       <p>Unable to get Shipment History Data.</p>
                   </div>
               </div>
-        </div>  
+        </div> 
     </div> 
+    <AlertUser v-if="toggleAlertBox" @closeAlertBox="closeAlertBox($event)" :message="alertMessage"/> 
 </div>
-    
-
-  
 </template>
 
 <script>
 import axios from 'axios'
+import {Auth} from 'aws-amplify';
+import AWSAutoComplete from '../AWSLocation/AddressAutoComplete.vue';
+import AlertUser from '../Popups/AlertUser.vue';
 //http://localhost:8080/Track/24042223
 
 export default {
-
+    components:{
+        AWSAutoComplete,
+        AlertUser
+    },
     data(){
         return{
+            placeHolder: "Search for Update Address",
             shipmentHistoryData: {},
             shipments: {},
             error: {data: []},
@@ -280,6 +275,8 @@ export default {
             indexImageURL: '',
             toggleEditAddress: false,
             toggleEditAddressShipTo: false,
+            toggleAlertBox: false,
+            alertMessage: 'Error Message',
             shipByAddress: {
               pickupCompanyName: "",
               pickupAttention: "",
@@ -289,6 +286,8 @@ export default {
               pickupState: "",
               pickupZipCode: "",
               pickupPhone: "",
+              pickupLatitude: "",
+              pickupLongitude: "",
               shipmentId: 0
             },
             shipToAddress: {
@@ -300,12 +299,17 @@ export default {
               deliveryState: "",
               deliveryZipCode: "",
               deliveryPhone: "",
+              deliveryLatitude: "",
+              deliveryLongitude: "",
               shipmentId: 0
             },
             updateShipmentStatus: {
               shipmentId: 0,
               statusId: 0
-            }
+            },
+            selectedAddress: {},
+            shipmentHistoryUnavailable: false,
+            shipmentDataUnavailable: false
         }
     },
     props:{
@@ -315,6 +319,40 @@ export default {
         Group: String
     },
     methods: {
+      closeAlertBox(toggleAlertBox){
+            this.toggleAlertBox = toggleAlertBox;
+            this.ToggleShowData();
+      },
+      toggleShipToEdit(){
+        this.toggleEditAddressShipTo = true;
+        this.toggleEditAddress = false;
+
+      },
+      toggleShipByEdit(){
+        this.toggleEditAddressShipTo = false;
+        this.toggleEditAddress = true;
+      },
+      GetSelectedAddressData(selectedAddress){
+        if(this.toggleEditAddressShipTo == true){
+          this.shipments[0].deliveryAddress1 = selectedAddress.address1;
+          this.shipments[0].deliveryCity = selectedAddress.city;
+          this.shipments[0].deliveryState = selectedAddress.state;
+          this.shipments[0].deliveryZipCode = selectedAddress.zipCode;
+          this.shipToAddress.deliveryLatitude = selectedAddress.latitude.toString();
+          this.shipToAddress.deliveryLongitude = selectedAddress.longitude.toString();
+          this.ShipToAddressEdit();
+        }
+
+        if(this.toggleEditAddress == true){
+          this.shipments[0].pickupAddress1 = selectedAddress.address1;
+          this.shipments[0].pickupCity = selectedAddress.city;
+          this.shipments[0].pickupState = selectedAddress.state;
+          this.shipments[0].pickupZipCode = selectedAddress.zipCode;
+          this.shipByAddress.pickupLatitude = selectedAddress.latitude.toString();
+          this.shipByAddress.pickupLongitude = selectedAddress.longitude.toString();
+          this.ShipByAddressEdit()
+        }
+      },
       UpdateAddressStatus(shipmentId, statusId){
         axios.post('https://localhost:44368/api/Rest/UpdateShipmentStatus', { shipmentId: shipmentId, statusId: statusId}, 
               {headers:{
@@ -386,6 +424,7 @@ export default {
       },
       async EditShipTo(){
         await this.ShipToAddressEdit();
+        console.log(this.shipToAddress)
         axios.post('https://localhost:44368/api/Rest/UpdateShipTo', this.shipToAddress, 
               {headers:{
                 'User': this.username,
@@ -414,50 +453,71 @@ export default {
         a.document.write('</body></html>');
         a.document.close();
         a.print();
-    },
-        GetDeliveryImages(imageURL, indexImageURL){
-          axios.get(imageURL).then((response)=>{
-            console.log(indexImageURL);
-            this.indexImageURL = indexImageURL;
-            this.linkImageURL = response.data;
-          }).catch((err)=>{alert(err + "\n" + "Request file does not exist.")})
-        },
-        GetShipmentHistoryByID() {
-            axios.post('https://api.stage.njls.com/api/rest/GetShipmentHistoryByShipmentIdCognito', this.shipmentDetailsProp, 
-              {headers:{
-                'User': this.username,
-                // get the user's JWT token given to it by AWS cognito 
-                'Authorization': `Bearer ${this.cognitoJWT}`
-              }})
-            .then((response) => {
-              this.shipmentHistoryData = response.data.shipmentHistory;
-              console.log("Shipment History Data:");
-              console.log(this.shipmentHistoryData);
-              this.coldStorageData = response.data.coldstorageTable[0];
-              this.error = response.data.error
-              })
-            .catch(error => alert(error))
+      },
+      GetDeliveryImages(imageURL, indexImageURL){
+        axios.get(imageURL).then((response)=>{
+          console.log(indexImageURL);
+          this.indexImageURL = indexImageURL;
+          this.linkImageURL = response.data;
+        }).catch((err)=>{alert(err + "\n" + "Request file does not exist.")})
+      },
+      GetShipmentHistoryByID() {
+        axios.post('https://api.stage.njls.com/api/rest/GetShipmentHistoryByShipmentIdCognito', this.shipmentDetailsProp, 
+          {headers:{
+            'User': this.username,
+            // get the user's JWT token given to it by AWS cognito 
+            'Authorization': `Bearer ${this.cognitoJWT}`
+          }})
+        .then((response) => {
+          console.log(response)
+          if(response.data.shipmentHistory){
+            this.shipmentHistoryData = response.data.shipmentHistory;
+            this.coldStorageData = response.data.coldstorageTable[0];
+          }else{
+            this.shipmentHistoryUnavailable = true;
+          }
+          })
+        .catch(error => {
+          console.log(error.response.status)
+            if(error.response.status == '401'){
+                Auth.signOut({global: true})
+            }else{
+                alert(error)
+            }
+          })
         },
       GetShipmentByID() {
-            axios.post('https://api.stage.njls.com/api/rest/GetShipmentByShipmentIdCognito', this.shipmentDetailsProp, 
+        //this.headerMessage = "Getting Shipment Details";
+        axios.post('https://api.stage.njls.com/api/rest/GetShipmentByShipmentIdCognito', this.shipmentDetailsProp, 
             {headers:{
                 'User': this.username,
                 // get the user's JWT token given to it by AWS cognito 
                 'Authorization': `Bearer ${this.cognitoJWT}`
               }})
             .then((response) => {
-              this.shipments = response.data.shipment
-              console.log('Shipment Data: ')
-              console.log(this.shipments)
-              this.error = response.data.error
+              if(response.data.shipment){
+                this.shipments = response.data.shipment;
+                this.showData = true;
+              }else if(response.data.error != 0){
+                this.error = response.data.error;
+                this.shipmentDataUnavailable = true;
+                this.toggleAlertBox = true;
+                this.alertMessage = "Unable to get shipment data."
+              }
               })
-            .catch((error) => {alert(error)})
+            .catch((error) => {
+                console.log(error.response.status)
+                if(error.response.status == '401'){
+                    Auth.signOut({global: true})
+                }else{
+                    alert(error)
+                }
+            })
             .finally(()=> this.gettingShipmentDetails = false)
         },
         GetAllShipmentData(){
             this.GetShipmentByID();
             this.GetShipmentHistoryByID();
-            this.showData = true;
         }
     },
     mounted(){
@@ -467,6 +527,32 @@ export default {
 </script>
 
 <style scoped>
+/* .x-button::after{
+    content: ' \002B';
+    font-weight: bold;
+    color: #fff;
+    font-size: 17.5px;
+}
+
+.x-button-container{
+    width: 25px;
+    height: 25px;
+    background-color: #32ccfe;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(45deg);
+    border-radius: 50px;
+    cursor: pointer;
+    transition-duration: .2s;
+}
+
+.x-button-container:hover{
+    background-color: #2db9e7;
+    transition-duration: .2s;
+} */
+
+/* Main Container */
     .main-container{
       width: 100%;
       display: flex;
@@ -482,88 +568,6 @@ export default {
       text-align: left;
       flex-direction: column;
     }
-
-/* Loading Shipment Data */
-    .loader-container{
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      padding: 15px;
-      background-color: #ffffff;
-      border-radius: 10px;
-      box-shadow: 0 0 100px rgba(0, 0, 0, 0.9);
-    }
-
-     .loader-dino{
-        width: 40px;
-        animation: bounce .75s infinite;
-    }
-
-    .dot-container{
-        padding: 0;
-        margin-top: 10px;
-        margin-bottom: 10px;
-        display: flex;
-        justify-content: center;
-    }
-
-    .dot1{
-        width: 4px;
-        height: 4px;
-        border-radius: 50%;
-        background-color: black;
-        margin: 1px;
-        animation: dot-bounce .75s infinite;
-    }
-
-    .dot2{
-        width: 4px;
-        height: 4px;
-        border-radius: 50%;
-        background-color: black;
-        margin: 1px;
-        animation: dot-bounce .75s infinite;
-        animation-delay: .25s;
-    }
-
-    .dot3{
-        width: 4px;
-        height: 4px;
-        border-radius: 50%;
-        background-color: black;
-        margin: 1px;
-        animation: dot-bounce .75s infinite;
-        animation-delay: .5s;
-    }
-
-    @keyframes dot-bounce {
-        0%{transform: translateY(0px);}
-        50%{transform: translateY(5px);}
-        100%{transform: translateY(0px);}
-    }
-
-    @keyframes bounce {
-        0%{transform: translateY(0px);}
-        50%{transform: translateY(10px);}
-        100%{transform: translateY(0px);}
-    }
-
-    /* .loader{
-        margin: auto;
-        margin-bottom: 15px;
-        border: 20px solid #EAF0F6;
-        border-radius: 50%;
-        border-top: 20px solid #33f18a;
-        width: 100px;
-        height: 100px;
-        animation: spinner 2s linear infinite;
-    }
-
-    @keyframes spinner {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    } */
 
   .shipment_data{
     display: block;
@@ -714,20 +718,6 @@ export default {
         transition-duration: .5s;
     }
 
-    /* .delivery-image-link{
-      text-decoration: none;
-      color: #ffffff;
-      background-color: #32ccfe;
-      border-radius: 50%;
-      padding: 2.5px;
-      transition-duration: .5s ease;
-    }
-
-    .delivery-image-link:hover{
-      background-color: #2877d1;
-      transition-duration: .5s ease;
-    } */
-
     .show-delivery-image{
       cursor: pointer;
       color: #ffffff;
@@ -753,6 +743,45 @@ export default {
     .delivery-image-container img{
       width: 40%;
       margin-top: 10px;
+    }
+
+    /* AWS Location Service */
+    .fa-map-pin{
+        color: #999;
+        margin-right: 5px;
+        font-size: 1em;
+    }
+    .autocomplete-result{
+        background-color: #fff;
+        width: 90%;
+        border-radius: 5px;
+        text-align: left;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.062);
+        margin-bottom: 10px;
+    }
+
+    @keyframes animate-result {
+        from{
+            margin-top: -5px;
+        }
+        to{
+            margin-top: 0;
+        }
+    }
+
+    .autocomplete-result p{
+        cursor: pointer;
+        transition-duration: .5s;
+        margin: 0;
+        padding: 10px;
+        font-size: 12px;
+        animation: animate-result .5s ease;
+        border-bottom: 1px solid rgb(235, 235, 235);
+    }
+
+    .autocomplete-result p:hover{
+        background-color: rgb(235, 235, 235);
+        transition-duration: .5s;
     }
 
     @media only screen and (max-width: 600px){
